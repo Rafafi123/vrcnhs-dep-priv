@@ -77,7 +77,7 @@ class Student(models.Model):
     father_name = models.CharField(max_length=120) # this section is for the parents and guardian
     father_contact = models.CharField(max_length=15)
     mother_name = models.CharField(max_length=120) # this section is for the parents and guardian
-    mother_contact = models.IntegerField()
+    mother_contact = models.CharField(max_length=15)
     guardian_name = models.CharField(max_length=120) # this section is for the parents and guardian
     guardian_contact = models.IntegerField()
     last_grade_level = models.IntegerField() # this is for the returning learner
