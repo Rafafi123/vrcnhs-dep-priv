@@ -115,7 +115,6 @@ class Student(models.Model):
         ('0', 'No')
     )
     is_a_working_student = models.CharField(max_length=1, choices=working_student)######
-    previous_school = models.CharField(max_length=50)
     previous_adviser = models.CharField(max_length=50)
     adviser_contact = models.IntegerField()
     health_bmi =  models.DecimalField(max_digits=10, decimal_places=2)
