@@ -45,14 +45,14 @@ class Student(models.Model):
     suffix_name = models.CharField(max_length=10, blank=True) # "Jr., I, II, III, etc. 
     birthday = models.DateField(default=date.today)
     RELIGION_CHOICES = [
-        ('christianity', 'Christianity'),
-        ('roman catholic', 'Roman Catholic'),
-        ('islam', 'Islam'),
-        ('hinduism', 'Hinduism'),
-        ('buddhism', 'Buddhism'),
-        ('judaism', 'Judaism'),
-        ('sikhism', 'Sikhism'),
-        ('other', 'Other'),
+        ('Christianity', 'Christianity'),
+        ('Roman catholic', 'Roman Catholic'),
+        ('Islam', 'Islam'),
+        ('Hinduism', 'Hinduism'),
+        ('Buddhism', 'Buddhism'),
+        ('Judaism', 'Judaism'),
+        ('Sikhism', 'Sikhism'),
+        ('Other', 'Other'),
     ]
     religion = models.CharField(max_length=30, choices=RELIGION_CHOICES, default='other')
     other_religion = models.CharField(max_length=30, blank=True)# This is finally working can now be added inside the information of the students
@@ -89,7 +89,11 @@ class Student(models.Model):
     ('C', 'HESS'),
     ('D', 'SPORTS & ARTS'),
     ('E', 'TVL'),
-    ('N/A', 'Not Applicable'),
+    ('GAS', 'GAS'), #added for the strand
+    ('HE', 'HE'),
+    ('ICT', 'ICT'),
+    ('IA', 'IA'),
+    ('N/A', 'Not Applicable (JHS)'),
     )
     strand = models.CharField(choices=academic_strand, max_length=15)
     text = models.TextField(blank=True, null=True)
