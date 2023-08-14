@@ -9,7 +9,7 @@ from simple_history.models import HistoricalRecords
 class Teacher(models.Model):
    user = models.OneToOneField(User, on_delete=models.CASCADE)
    birthday = models.DateField(default=date.today)
-   tid = models.CharField(max_length=30)
+   employee_id = models.CharField(max_length=30)
    last_name = models.CharField(max_length=30)
    first_name = models.CharField(max_length=30)
    middle_name = models.CharField(max_length=30)
@@ -38,7 +38,7 @@ class Classroom(models.Model):
 
 
 class Student(models.Model):
-    LRN = models.PositiveIntegerField()
+    LRN = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     first_name = models.CharField(max_length=30)
     middle_name = models.CharField(max_length=30, blank=True)
@@ -79,10 +79,10 @@ class Student(models.Model):
     mother_name = models.CharField(max_length=120) # this section is for the parents and guardian
     mother_contact = models.CharField(max_length=15)
     guardian_name = models.CharField(max_length=120) # this section is for the parents and guardian
-    guardian_contact = models.IntegerField()
+    guardian_contact = models.CharField(max_length=15)
     last_grade_level = models.IntegerField() # this is for the returning learner
     last_school_attended = models.CharField(max_length=30)
-    last_schoolyear_completed = models.CharField(max_length=4)
+    last_schoolyear_completed = models.CharField(max_length=12)
     academic_strand = (
     ('A', 'STEM'),
     ('B', 'BAM'),
