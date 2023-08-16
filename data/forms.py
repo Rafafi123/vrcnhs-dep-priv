@@ -12,12 +12,17 @@ class StudentForm(forms.ModelForm):
         is_admin = kwargs.pop('is_admin', False)
         super().__init__(*args, **kwargs)
         
-        if self.instance.birthday:
+        if self.instance.birthday: # this will automatically calculate the age of the student when the new year comes 
             today = date.today()
-            age = today.year - self.instance.birthday.year
-            if today.month < self.instance.birthday.month or (today.month == self.instance.birthday.month and today.day < self.instance.birthday.day):
+            next_birthday = self.instance.birthday.replace(year=today.year + 1)
+            age = next_birthday.year - self.instance.birthday.year
+            
+            if today < next_birthday:
                 age -= 1
+            
             self.fields['age'] = forms.IntegerField(initial=age, disabled=True)
+
+
 
         if teacher and not is_admin:
             # Limit the choices for the classroom field to the classrooms of the teacher
