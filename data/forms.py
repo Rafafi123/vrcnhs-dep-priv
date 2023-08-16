@@ -36,6 +36,7 @@ class AdminTeacherStudentForm(forms.ModelForm):
         is_admin = kwargs.pop('is_admin', False)
         super().__init__(*args, **kwargs)
         
+        #When the dae is placed it should adjust to the code.
         if self.instance.birthday:
             today = date.today()
             age = today.year - self.instance.birthday.year
@@ -54,35 +55,45 @@ class AdminTeacherStudentForm(forms.ModelForm):
         fields = '__all__'
         
 class TeacherSignupForm(UserCreationForm):
-    birthday = forms.DateField(widget=DateInput(attrs={'type': 'date'}), required=True)
-    tid = forms.CharField(max_length=30, required=True)
+    # Additional fields for Teacher model
+    birthday = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), required=True)
+    appt_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), required=False)  # Date of Appointment
+    special_assignment = forms.CharField(max_length=100, required=False)  # Special Assignment
+    department = forms.CharField(max_length=50, required=False)  # Department
+    employee_id = forms.CharField(max_length=30, required=True)
     last_name = forms.CharField(max_length=30, required=True)
     first_name = forms.CharField(max_length=30, required=True)
     middle_name = forms.CharField(max_length=30, required=False)
-    rank = forms.IntegerField(required=True)
+    rank = forms.ChoiceField(choices=Teacher.RANK_CHOICES, required=True)
 
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = ('first_name', 'last_name','middle_name', 'username', 'password1', 'password2', 'birthday')
+        fields = ('first_name', 'last_name', 'middle_name', 'username', 'password1', 'password2', 'birthday')
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        
+
         if commit:
             user.save()
-            
+
+            # Add user to TEACHER group
             teacher_group = Group.objects.get(name='TEACHER')
             user.groups.add(teacher_group)
 
+            # Create Teacher instance with additional fields
             Teacher.objects.create(
                 user=user,
                 birthday=self.cleaned_data['birthday'],
-                tid=self.cleaned_data['tid'],
+                appt_date=self.cleaned_data['appt_date'],  # Date of Appointment
+                special_assignment=self.cleaned_data['special_assignment'],  # Special Assignment
+                department=self.cleaned_data['department'],  # Department
+                employee_id=self.cleaned_data['employee_id'],
                 first_name=self.cleaned_data['first_name'],
                 last_name=self.cleaned_data['last_name'],
+                middle_name=self.cleaned_data['middle_name'],
                 rank=self.cleaned_data['rank']
             )
-        
+
         return user
 
 
@@ -95,7 +106,7 @@ class TeacherForm(forms.ModelForm):
 
     class Meta:
         model = Teacher
-        fields = '__all__'
+        fields = '__all__'  # Use all fields from the Teacher model in the form
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

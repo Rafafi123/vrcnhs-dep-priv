@@ -7,16 +7,32 @@ from simple_history.models import HistoricalRecords
 
 #Teachers will be a custom user connected with django's built in User models
 class Teacher(models.Model):
-   user = models.OneToOneField(User, on_delete=models.CASCADE)
-   birthday = models.DateField(default=date.today)
-   employee_id = models.CharField(max_length=30)
-   last_name = models.CharField(max_length=30)
-   first_name = models.CharField(max_length=30)
-   middle_name = models.CharField(max_length=30)
-   rank = models.IntegerField() # ranking of teachers
-   history = HistoricalRecords() 
-   def __str__(self):
-    return self.last_name + ' ' + self.first_name
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    birthday = models.DateField(default=date.today)
+    appt_date = models.DateField(null=True, blank=True)  # Date of Appointment
+    special_assignment = models.CharField(max_length=100, blank=True)  # Special Assignment
+    department = models.CharField(max_length=50, blank=True)  # Department
+    employee_id = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    first_name = models.CharField(max_length=30)
+    middle_name = models.CharField(max_length=30)
+    RANK_CHOICES = [
+    ('Teacher I', 'Teacher I'),
+    ('Teacher II', 'Teacher II'),
+    ('Teacher III', 'Teacher III'),
+    ('Teacher IV', 'Teacher IV'),
+    ('Teacher V', 'Teacher V'),
+    ('Teacher VI', 'Teacher VI'),
+    ('Teacher VII', 'Teacher VII'),
+    ('Master Teacher I', 'Master Teacher I'),
+    ('Master Teacher II', 'Master Teacher II'),
+    ('Master Teacher III', 'Master Teacher III'),
+    ('Master Teacher IV', 'Master Teacher IV'),
+]
+    rank = models.CharField(max_length=30, choices=RANK_CHOICES, default='None')
+    history = HistoricalRecords()
+    def __str__(self):
+        return self.last_name + ' ' + self.first_name
 
 class Gradelevel(models.Model):
     grade = models.CharField(max_length=50)
