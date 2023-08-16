@@ -37,11 +37,14 @@ class AdminTeacherStudentForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         
         #When the dae is placed it should adjust to the code.
-        if self.instance.birthday:
+        if self.instance.birthday: # the student age automatically calculated when new year comes
             today = date.today()
-            age = today.year - self.instance.birthday.year
-            if today.month < self.instance.birthday.month or (today.month == self.instance.birthday.month and today.day < self.instance.birthday.day):
+            next_birthday = self.instance.birthday.replace(year=today.year + 1)
+            age = next_birthday.year - self.instance.birthday.year
+            
+            if today < next_birthday:
                 age -= 1
+            
             self.fields['age'] = forms.IntegerField(initial=age, disabled=True)
         
         if teacher and is_admin:
