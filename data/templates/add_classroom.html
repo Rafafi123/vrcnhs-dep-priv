@@ -4,6 +4,8 @@
 
 <h1>LIST OF SECTIONS</h1>
 
+<center><a href="{% url 'grade_sections' %}" class="btn btn-primary">Back to View Classrooms</a></center>
+
 <form method="POST" action="{% url 'add_classroom' %}">
   {% csrf_token %}
   <label for="classroom_name">Classroom Name:</label>

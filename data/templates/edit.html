@@ -8,6 +8,9 @@
 
 
 {% block content %}
+
+<center><a href="{% url 'students' %}" class="btn btn-primary">Back to View Students</a></center>
+
 <div class="container mt-3">
     <form method="POST">
       {% csrf_token %}
