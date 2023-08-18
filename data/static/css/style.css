@@ -104,6 +104,12 @@ button {
     padding: 4px; /* adjust to make the table more compact */
   }
 
+  /*This specific table fix for the classroom table*/
+  .classroom-table th,
+  .classroom-table td {
+    width: 33%; /* Adjust the width as needed */
+  }
+
   td, th {
     border: 1px solid #dddddd;
     text-align: left;
