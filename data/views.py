@@ -26,6 +26,7 @@ import plotly.express as px
 import datetime
 import plotly.graph_objects as go
 import logging
+from django.forms.models import model_to_dict
 # Create your views here.
 
 @unauthenticated_user
@@ -250,24 +251,36 @@ def destroy(request, id):
 @login_required
 def edit(request, id):
     student = Student.objects.get(id=id)
+    initial_data = model_to_dict(student)  # Store initial data for comparison
     if request.method == 'POST':
         form = StudentForm(request.POST, instance=student)
         if form.is_valid():
+            edited_fields = []  # Create a list to store edited fields and their previous values
+
+            # Compare the new data with the initial data to detect edits
+            for field_name, new_value in form.cleaned_data.items():
+                if initial_data[field_name] != new_value:
+                    previous_value = initial_data[field_name]
+                    field_verbose_name = Student._meta.get_field(field_name).verbose_name
+                    edited_fields.append(f"{field_verbose_name} (before: {previous_value})")
+
+            # Store edited fields in the student object
+            student.edited_fields = ', '.join(edited_fields)
+            student.save()
+
             form.save()
-            print(f"Student edited: {student}")  # Print the edited student object
-            messages.success(request, "Student Updated Successfully") # Notify user of successful UPDATES of student
-            # Check if user belongs to the "TEACHER" group
+            messages.success(request, "Student Updated Successfully")
+
             if request.user.groups.filter(name='TEACHER').exists():
-                # Redirect to "user_page" if user is a teacher
                 return redirect("user_page")
             else:
-                # Redirect to "students" if user is not a teacher
                 return redirect("students")
     else:
         form = StudentForm(instance=student)
     context = {'form': form, 'student': student}
-    print(student)  # Check the student object in the console
     return render(request, 'edit.html', context)
+
+
 
 
 @login_required(login_url='login')
