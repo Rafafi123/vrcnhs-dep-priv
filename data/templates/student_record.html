@@ -23,6 +23,7 @@
                 <th>LAST UPDATED</th>
                 <th>EDITED BY</th>
                 <th>ACTION</th>
+                <th>CHECK</th>
             </tr>
         </thead>
         <tbody>
@@ -45,11 +46,42 @@
                           DELETED
                         {% endif %}
                       </td>
-
-                </tr>
+                      <!-- Add the "Show Edited Fields" button to each row -->
+                    <td>
+                      <button class="show-edited-button">Show Edited Fields</button>
+                  </td>
+              </tr>
+              <!-- Add a hidden row to display edited fields -->
+              <!-- Add a hidden row to display edited fields -->
+              <tr class="edited-row" style="display: none;">
+                <td colspan="10">
+                    {% if record.edited_fields %}
+                        <!-- Display edited fields here -->
+                        Edited Fields: {{ record.edited_fields }}
+                    {% endif %}
+                </td>
+              </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      const showButtons = document.querySelectorAll(".show-edited-button");
+      
+      showButtons.forEach(function (button) {
+          button.addEventListener("click", function () {
+              const editedRow = button.parentElement.parentElement.nextElementSibling;
+              if (editedRow.style.display === "none" || editedRow.style.display === "") {
+                  editedRow.style.display = "table-row";
+              } else {
+                  editedRow.style.display = "none";
+              }
+          });
+      });
+  });
+</script>
 
 {% endblock content %}
