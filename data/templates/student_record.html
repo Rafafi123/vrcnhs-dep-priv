@@ -3,84 +3,84 @@
 {% load static %}
 
 {% block head_block %}
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.7.0/dist/js/bootstrap.bundle.min.js"></script>
-<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.7.0/dist/js/bootstrap.bundle.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+  
 {% endblock %}
-
 
 {% block content %}
 <h1><center>STUDENT RECORD</center></h1>
 <div class="table-container">
-    <table class='table'>
-        <thead>
-            <tr>
-                <th>COUNT</th>
-                <th>LRN</th>
-                <th>LAST NAME</th>
-                <th>FIRST NAME</th>
-                <th>GRADE LEVEL</th>
-                <th>SECTION</th>
-                <th>LAST UPDATED</th>
-                <th>EDITED BY</th>
-                <th>ACTION</th>
-                <th>CHECK</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for record in student_records %}
-                <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ record.LRN }}</td>
-                    <td>{{ record.last_name }}</td>
-                    <td>{{ record.first_name }}</td>
-                    <td>{{ record.gradelevel }}</td>
-                    <td>{{ record.classroom }}</td>
-                    <td>{{ record.history_date }}</td>
-                    <td>{{ record.history_user.get_username }}, {{ record.history_user.first_name }} {{ record.history_user.last_name }}</td>
-                    <td>
-                        {% if record.history_type == '~' %}
-                          EDITED
-                        {% elif record.history_type == '+' %}
-                          ADDED
-                        {% elif record.history_type == '-' %}
-                          DELETED
-                        {% endif %}
-                      </td>
-                      <!-- Add the "Show Edited Fields" button to each row -->
-                    <td>
-                      <button class="show-edited-button">Show Edited Fields</button>
-                  </td>
-              </tr>
-              <!-- Add a hidden row to display edited fields -->
-              <!-- Add a hidden row to display edited fields -->
-              <tr class="edited-row" style="display: none;">
-                <td colspan="10">
-                    {% if record.edited_fields %}
-                        <!-- Display edited fields here -->
-                        Edited Fields: {{ record.edited_fields }}
-                    {% endif %}
-                </td>
-              </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+  <table class='table'>
+    <thead>
+      <tr>
+        <th>COUNT</th>
+        <th>LRN</th>
+        <th>LAST NAME</th>
+        <th>FIRST NAME</th>
+        <th>GRADE LEVEL</th>
+        <th>SECTION</th>
+        <th>LAST UPDATED</th>
+        <th>EDITED BY</th>
+        <th>ACTION</th>
+        <th>AUDIT</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for record in student_records %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ record.LRN }}</td>
+        <td>{{ record.last_name }}</td>
+        <td>{{ record.first_name }}</td>
+        <td>{{ record.gradelevel }}</td>
+        <td>{{ record.classroom }}</td>
+        <td>{{ record.history_date }}</td>
+        <td>{{ record.history_user.get_username }}, {{ record.history_user.first_name }} {{ record.history_user.last_name }}</td>
+        <td>
+          {% if record.history_type == '~' %}
+          EDITED
+          {% elif record.history_type == '+' %}
+          ADDED
+          {% elif record.history_type == '-' %}
+          DELETED
+          {% endif %}
+        </td>
+        <!-- Add the "Show Edited Fields" button to each row -->
+        <td>
+          <button class="show-edited-button btn btn-primary">Show Edited Fields</button>
+        </td>
+      </tr>
+      <!-- Add a hidden row to display edited fields -->
+      <tr class="edited-row" style="display: none;">
+        <td colspan="10" class="edited-fields">
+          {% if record.edited_fields %}
+          <!-- Display edited fields here -->
+          <div class="edited-fields-box">
+            Edited Fields: {{ record.edited_fields }}
+          </div>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
-
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-      const showButtons = document.querySelectorAll(".show-edited-button");
-      
-      showButtons.forEach(function (button) {
-          button.addEventListener("click", function () {
-              const editedRow = button.parentElement.parentElement.nextElementSibling;
-              if (editedRow.style.display === "none" || editedRow.style.display === "") {
-                  editedRow.style.display = "table-row";
-              } else {
-                  editedRow.style.display = "none";
-              }
-          });
+    const showButtons = document.querySelectorAll(".show-edited-button");
+
+    showButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        const editedRow = button.parentElement.parentElement.nextElementSibling;
+        if (editedRow.style.display === "none" || editedRow.style.display === "") {
+          editedRow.style.display = "table-row";
+        } else {
+          editedRow.style.display = "none";
+        }
       });
+    });
   });
 </script>
 
