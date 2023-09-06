@@ -248,3 +248,25 @@ margin-top: -3rem;
 .messae-text{
   color: white;
 }
+
+/* For the design of Student Records /*
+/* Styling for the "Show Edited Fields" button */
+.show-edited-button {
+  background-color: #007bff; /* Blue color for the button */
+  color: #fff; /* White text color */
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+/* Styling for the hidden row containing edited fields */
+.edited-row {
+  background-color: #f2f2f2; /* Light gray background color */
+}
+
+/* Styling for the edited fields display box */
+.edited-fields-box {
+  border: 1px solid #ccc; /* Gray border */
+  padding: 10px;
+  background-color: #fff; /* White background */
+}
