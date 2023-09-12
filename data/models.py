@@ -3,6 +3,7 @@ from django.utils import timezone
 from datetime import date
 from django.contrib.auth.models import User
 from simple_history.models import HistoricalRecords
+from django.forms.models import model_to_dict  # Import model_to_dict
 # Create your models here.
 
 #Teachers will be a custom user connected with django's built in User models
@@ -145,6 +146,7 @@ class Student(models.Model):
     )
     is_a_four_ps_scholar = models.CharField(max_length=1, choices=scholarship_program) #4ps scholarship program ##########
     history = HistoricalRecords()
+    edited_fields = models.CharField(max_length=255, blank=True)  # Field to store edited fields
   
     class Meta:
         verbose_name_plural = "Students"   
