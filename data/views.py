@@ -172,24 +172,25 @@ def classroom_detail(request, classroom_id): # this is for the individual classr
 #####################################################################
 @login_required
 @admin_only
-def teachers_page(request):
-        return render(request,"view_teachers.html")  
-
-@login_required
-@admin_only
 def edit_teacher(request, teacher_id):
     teacher = Teacher.objects.get(id=teacher_id)
+    user = teacher.user
+
     if request.method == 'POST':
         form = TeacherForm(request.POST, instance=teacher)
-        if form.is_valid():
+        username = request.POST.get('username', '')
+
+        if form.is_valid() and not User.objects.filter(username=username).exclude(pk=user.pk).exists():
+            user.username = username
+            user.save()
             form.save()
             return redirect('teachers')
+        else:
+            messages.error(request, "Username already exists or form is invalid.")
     else:
         form = TeacherForm(instance=teacher)
-        if 'password' in form.fields:  # Check if 'password' field exists
-            del form.fields['password']  # Remove the 'password' field
-    
-    return render(request, 'edit_teacher.html', {'form': form, 'teacher_id': teacher_id})
+
+    return render(request, 'edit_teacher.html', {'form': form, 'teacher_id': teacher_id, 'username': user.username})
 
 @login_required
 def students_page(request):

@@ -4,7 +4,8 @@ from data.models import Student, Teacher, Classroom
 from django.contrib.auth.models import User, Group
 from datetime import date
 from django.contrib.auth.forms import UserCreationForm
-from django.forms import DateInput
+from django.forms import DateInput, SelectDateWidget
+import datetime
 
 class StudentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -104,12 +105,16 @@ class TeacherSignupForm(UserCreationForm):
 class TeacherForm(forms.ModelForm):
     # Additional fields for username, password, and group
     username = forms.CharField(max_length=150, required=True)
-    password = forms.CharField(widget=forms.PasswordInput, required=True)
     group = forms.ChoiceField(choices=((1, 'TEACHER'), (2, 'ADMIN'), (3, 'BOTH TEACHER AND ADMIN')), required=True)
 
     class Meta:
         model = Teacher
         fields = '__all__'  # Use all fields from the Teacher model in the form
+        exclude = ['user']  # Exclude the user field
+        widgets = {
+            'birthday': SelectDateWidget(years=range(1900, datetime.date.today().year+1)),
+            'appt_date': SelectDateWidget(years=range(1900, datetime.date.today().year+1)),
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -128,7 +133,6 @@ class TeacherForm(forms.ModelForm):
         # Save the teacher model
         teacher = super().save(commit=False)
         username = self.cleaned_data['username']
-        password = self.cleaned_data['password']
         group_choice = int(self.cleaned_data['group'])
 
         # Update the associated user model
@@ -136,8 +140,7 @@ class TeacherForm(forms.ModelForm):
         user.username = username
         user.first_name = teacher.first_name  # Update the first name
         user.last_name = teacher.last_name  # Update the last name
-        if password:
-            user.set_password(password)
+
         if commit:
             teacher.save()
             user.save()

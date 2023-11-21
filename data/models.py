@@ -146,7 +146,7 @@ class Student(models.Model):
     is_returnee = models.CharField(max_length=5, choices=is_returnee_student)####
     drop_out = (
         ('Yes', 'Yes'),
-        ('Yes', 'No')
+        ('No', 'No')
     )
     is_a_dropout = models.CharField(max_length=5, choices=drop_out)#####
     working_student = (
