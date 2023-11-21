@@ -183,9 +183,11 @@ def edit_teacher(request, teacher_id):
         form = TeacherForm(request.POST, instance=teacher)
         if form.is_valid():
             form.save()
-            return redirect('teachers')  # Redirect to the teacher list page
+            return redirect('teachers')
     else:
         form = TeacherForm(instance=teacher)
+        if 'password' in form.fields:  # Check if 'password' field exists
+            del form.fields['password']  # Remove the 'password' field
     
     return render(request, 'edit_teacher.html', {'form': form, 'teacher_id': teacher_id})
 
@@ -409,14 +411,13 @@ def report_page(request):
     # Calculate economic status distribution
     economic_counts = dict()
     for student in students:
-        economic = student.economic_range
+        economic = student.household_income
         economic_counts[economic] = economic_counts.get(economic, 0) + 1
 
     # Prepare data for economic status bar chart
-    economic_labels = [economic[1] for economic in Student.economic_status]
-    economic_sizes = [economic_counts.get(economic[0], 0) for economic in Student.economic_status]
-    economic_title = 'Distribution of Economic Status'
-
+    economic_labels = [choice[1] for choice in Student.household_income_choices]
+    economic_sizes = [economic_counts.get(choice[0], 0) for choice in Student.household_income_choices]
+    economic_title = 'Distribution of household income'
     # Calculate religion distribution
     religion_counts = dict()
     for student in students:
@@ -665,3 +666,41 @@ def student_record(request):
     
     context = {'student_records': student_records}
     return render(request, 'student_record.html', context)
+
+#EXPORT 
+
+def export_students_to_excel(request):
+    students = Student.objects.all().values()
+    df = pd.DataFrame(list(students))
+
+    # Convert DataFrame to Excel
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="students_data.xlsx"'
+
+    with pd.ExcelWriter(response) as writer:
+        df.to_excel(writer, index=False)
+
+    return response
+
+#IMPORT
+
+def import_students_from_excel(request):
+    if request.method == 'POST':
+        excel_file = request.FILES['excel_file']
+
+        # Read the Excel file
+        df = pd.read_excel(excel_file)
+
+        for index, row in df.iterrows():
+            student, created = Student.objects.get_or_create(LRN=row['LRN'])
+            student.last_name = row['last_name']
+            student.first_name = row['first_name']
+            # ... set other fields
+            student.save()
+
+        messages.success(request, "Students imported successfully!")
+        return redirect('some-view')  # Replace with your desired redirect
+
+    return render(request, 'import_students.html')
+
+#BULKPROMOTE

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'chartjs', # this is for the charts and graphs
     'data.apps.DataConfig',
     'simple_history',
+    'import_export',
     
 ]
 

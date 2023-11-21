@@ -1,38 +1,54 @@
 {% extends 'base.html' %}
 {% load static %}
+
+{% block head_block %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+{% endblock %}
+
 {% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="text-center">Edit Classroom</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
 
-<center><a href="{% url 'grade_sections' %}" class="btn btn-primary">Back to View Classrooms</a></center>
+                        <div class="form-group">
+                            <label for="classroom_name">Classroom Name:</label>
+                            <input type="text" name="classroom_name" id="classroom_name" value="{{ classroom.classroom }}" required>
+                        </div>
 
-<h1>Edit Classroom</h1>
-<!--Updated edit classroom code wherein it will now accept the assigned option value for assigned teacher as none-->
-<form method="post">
-    {% csrf_token %}
+                        <div class="form-group">
+                            <label for="gradelevel_id">Grade Level:</label>
+                            <select name="gradelevel_id" id="gradelevel_id" required>
+                                {% for gradelevel in gradelevels %}
+                                    <option value="{{ gradelevel.id }}" {% if gradelevel.id == current_gradelevel %}selected{% endif %}>{{ gradelevel.grade }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
-    <label for="classroom_name">Classroom Name:</label>
-    <input type="text" name="classroom_name" id="classroom_name" value="{{ classroom.classroom }}" required><br><br>
+                        <div class="form-group">
+                            <label for="teacher_id">Assign Teacher:</label>
+                            <select name="teacher_id" id="teacher_id">
+                                <option value="-1" {% if classroom.teacher is None %}selected{% endif %}>None</option>
+                                {% for teacher in teachers %}
+                                    <option value="{{ teacher.id }}" {% if teacher.id == classroom.teacher_id %}selected{% endif %}>{{ teacher.user.last_name }}, {{ teacher.user.first_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
-    <label for="gradelevel_id">Grade level:</label>
-    <select name="gradelevel_id" id="gradelevel_id" required>
-        {% for gradelevel in gradelevels %}
-            <option value="{{ gradelevel.id }}" {% if gradelevel.id == current_gradelevel %}selected{% endif %}>{{ gradelevel.grade }}</option>
-        {% endfor %}
-    </select><br><br>
-
-    <label for="teacher_id">Assign Teacher:</label>
-    <select name="teacher_id" id="teacher_id">
-        <option value="-1" {% if classroom.teacher is None %}selected{% endif %}>None</option>
-        {% for teacher in teachers %}
-            <option value="{{ teacher.id }}" {% if teacher.id == classroom.teacher_id %}selected{% endif %}>{{ teacher.user.last_name }}, {{ teacher.user.first_name }}</option>
-        {% endfor %}
-    </select><br>
-
-    <input type="submit" value="Save">
-</form>
-
-
-
-  
-  
-
-{% endblock content %}
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <a href="{% url 'grade_sections' %}" class="btn btn-secondary">Back to View Classrooms</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

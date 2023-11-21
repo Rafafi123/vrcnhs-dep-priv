@@ -1,39 +1,54 @@
 {% extends 'base.html' %}
 {% load static %}
+
+{% block head_block %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+{% endblock %}
+
 {% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="text-center">Add Classroom</h2>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'add_classroom' %}">
+                        {% csrf_token %}
 
-<h1>LIST OF SECTIONS</h1>
+                        <div class="form-group">
+                            <label for="classroom_name">Classroom Name:</label>
+                            <input type="text" name="classroom_name" id="classroom_name">
+                        </div>
 
-<center><a href="{% url 'grade_sections' %}" class="btn btn-primary">Back to View Classrooms</a></center>
+                        <div class="form-group">
+                            <label for="gradelevel_id">Grade Level:</label>
+                            <select name="gradelevel_id" id="gradelevel_id">
+                                {% for gradelevel in gradelevels %}
+                                    <option value="{{ gradelevel.id }}">{{ gradelevel.grade }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
-<form method="POST" action="{% url 'add_classroom' %}">
-  {% csrf_token %}
-  <label for="classroom_name">Classroom Name:</label>
-  <input type="text" id="classroom_name" name="classroom_name">
-  
-  <label for="gradelevel_id">Grade Level:</label>
-  <select id="gradelevel_id" name="gradelevel_id">
-    {% for gradelevel in gradelevels %}
-      <option value="{{ gradelevel.id }}">{{ gradelevel.grade }}</option>
-    {% endfor %}
-  </select>
-  
-  <label for="teacher_id">Assign Teacher:</label>
-  <select name="teacher_id" id="teacher_id">
-      <option value="">None</option>
-      {% for teacher in teachers %}
-      <option value="{{ teacher.id }}">{{ teacher.last_name }}, {{ teacher.first_name }}</option>
+                        <div class="form-group">
+                            <label for="teacher_id">Assign Teacher:</label>
+                            <select name="teacher_id" id="teacher_id">
+                                <option value="">None</option>
+                                {% for teacher in teachers %}
+                                    <option value="{{ teacher.id }}">{{ teacher.last_name }}, {{ teacher.first_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
-      {% endfor %}
-  </select><br><br>
-
-  <button type="submit">Add Classroom</button>
-</form>
-
-  
-  
-
-  
-  
-
-{% endblock content %}
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-primary">Add Classroom</button>
+                            <a href="{% url 'grade_sections' %}" class="btn btn-secondary">Back to View Classrooms</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -60,6 +60,12 @@ urlpatterns = [
     path('student_record/', views.student_record, name='student_record'),
 
     #Back button from register a student to view all students
-    path('students/', views.students_page, name='students')
+    path('students/', views.students_page, name='students'),
 
+    #import export
+    path('export_students/', views.export_students_to_excel, name='export_students'),
+    path('import_students/', views.import_students_from_excel, name='import_students'),
+
+    #Bulk Promote
+    
 ]
