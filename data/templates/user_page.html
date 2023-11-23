@@ -50,11 +50,11 @@
         <tr>
           <th>LRN</th>
           <th>Name</th>
-          <th>Religion</th>
+          <th>Status</th>
           <th>Age</th>
           <th>Grade & Section</th>
-          <th>Semester</th>
-          <th></th>
+          <th>General Average</th>
+          <th>Detail</th>
         </tr>
       </thead>
       <tbody>
@@ -62,10 +62,10 @@
         <tr>
           <td>{{ student.LRN }}</td>
           <td>{{ student.last_name }}, {{ student.first_name }} {{ student.middle_name }} {{ student.suffix_name }}</td>
-          <td>{{ student.religion }}</td>
+          <td>{{ student.status }}</td>
           <td>{{ student.age }}</td>
-          <td>{{ student.classroom }}</td>
-          <td>{{ student.get_sem_display }}</td>
+          <td>{{ student.gradelevel.grade }} {{ student.classroom }}</td>
+          <td>{{ student.general_average }}</td>
           <td>
             <button type="button" class="btn btn-primary view-button" data-bs-toggle="modal" data-bs-target="#studentModal{{ student.id }}">
               View Profile
@@ -152,6 +152,9 @@
       });
     });
   </script>
-
-
+<center>
+<button style="background-color: #4CAF50; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);">
+  PROMOTE
+</button>
+</center>
 {% endblock content %}

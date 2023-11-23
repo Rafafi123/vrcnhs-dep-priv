@@ -22,6 +22,7 @@
   <a href="{% url 'add_student' %}" style="background-color: #4CAF50; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);">
     Add New Student
   </a>
+
 </center>
 <br>
 
@@ -42,30 +43,31 @@
   <table id="studentTable" class="table table-striped">
     <thead>
       <tr>
-        <th></th>
+        
         <th>LRN</th>
         <th>Name</th>
         <th>Religion</th>
         <th>Age</th>
         <th>Grade & Section</th>
-        <th>Semester</th>
-        
+        <th>General Average</th>
+        <th>Detail</th>
       </tr>
     </thead>
     <tbody>
       {% for student in students %}
       <tr>
+        
+        <td>{{ student.LRN }}</td>
+        <td>{{ student.last_name }} {{ student.suffix_name }}, {{ student.first_name }} {{ student.middle_name }} </td>
+        <td>{{ student.religion }}</td>
+        <td>{{ student.age }}</td>
+        <td>{{ student.gradelevel.grade }} {{ student.classroom }}</td>
+        <td>{{ student.general_average }}</td>
         <td>
           <button type="button" class="btn btn-primary view-button" data-bs-toggle="modal" data-bs-target="#studentModal{{ student.id }}">
             View Profile
           </button> 
         </td>
-        <td>{{ student.LRN }}</td>
-        <td>{{ student.last_name }} {{ student.suffix_name }}, {{ student.first_name }} {{ student.middle_name }} </td>
-        <td>{{ student.religion }}</td>
-        <td>{{ student.age }}</td>
-        <td>{{ student.classroom }}</td>
-        <td>{{ student.get_sem_display }}</td>
       </tr>
       {% endfor %}
     </tbody>
@@ -191,6 +193,7 @@
       displayStudents();
     }
   });
+  
 
   displayStudents();
 
@@ -220,5 +223,9 @@
   });
 
 </script>
+<br>
+<center><a href="{% url 'export_students' %}" class="btn btn-primary">Export Students</a></center>
+<br>
+<br>
 
 {% endblock %}

@@ -67,5 +67,8 @@ urlpatterns = [
     path('import_students/', views.import_students_from_excel, name='import_students'),
 
     #Bulk Promote
-    
+    path('students_for_promotion/', views.students_for_promotion, name='students_for_promotion'),
+
+    path('assign_classroom_bulk/<str:grade>/', views.assign_classroom_bulk, name='assign_classroom_bulk'),
+    path('bulk_promote_students/', views.bulk_promote_students, name='bulk_promote_students'),
 ]

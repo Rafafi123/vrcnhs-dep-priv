@@ -52,9 +52,13 @@
                 <li class="nav-item {% if url_name == 'report_page' %}active{% endif %}">
                 <a class="nav-link" href="{% url 'report_page' %}">Report</a>
               </li>
+              <li class="nav-item {% if url_name == 'students_for_promotion' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'students_for_promotion' %}">Students for Promotion</a>
+              </li>
               <li class="nav-item {% if url_name == 'student_record' %}active{% endif %}">
                 <a class="nav-link" href="{% url 'student_record' %}">Student Record</a>
-             </li>
+              </li>
+
             
             
             {% elif user.groups.all.0.name == 'TEACHER' and user.groups.count == 1 %}

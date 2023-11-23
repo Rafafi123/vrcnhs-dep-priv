@@ -669,7 +669,7 @@ def student_record(request):
     return render(request, 'student_record.html', context)
 
 #EXPORT 
-
+@allowed_users(allowed_roles=['ADMIN'])
 def export_students_to_excel(request):
     students = Student.objects.all().values()
     df = pd.DataFrame(list(students))
@@ -704,4 +704,134 @@ def import_students_from_excel(request):
 
     return render(request, 'import_students.html')
 
+#===============================================================#
 #BULKPROMOTE
+
+@login_required(login_url='login')
+def students_for_promotion(request):
+    # Get students for promotion
+    students_grade_8 = Student.objects.filter(
+        Q(status='For Promotion') | Q(status='For Retention'),
+        gradelevel__grade='Grade 8',
+        classroom__classroom='FOR PROMOTION',
+    )
+
+    # Add queries for other grade levels
+    students_grade_9 = Student.objects.filter(
+        Q(status='For Promotion') | Q(status='For Retention'),
+        gradelevel__grade='Grade 9',
+        classroom__classroom='FOR PROMOTION',
+    )
+
+    students_grade_10 = Student.objects.filter(
+        Q(status='For Promotion') | Q(status='For Retention'),
+        gradelevel__grade='Grade 10',
+        classroom__classroom='FOR PROMOTION',
+    )
+
+    students_grade_11 = Student.objects.filter(
+        Q(status='For Promotion') | Q(status='For Retention'),
+        gradelevel__grade='Grade 11',
+        classroom__classroom='FOR PROMOTION',
+    )
+
+    students_grade_12 = Student.objects.filter(
+        Q(status='For Promotion') | Q(status='For Retention'),
+        gradelevel__grade='Grade 12',
+        classroom__classroom='FOR PROMOTION',
+    )
+
+    classrooms = Classroom.objects.all()
+
+    # A dictionary to hold classrooms for each grade level
+
+     # Assuming you have a predefined list of grade levels
+    grade_levels = Gradelevel.objects.all()
+    grade_level_classrooms = {grade.id: Classroom.objects.filter(gradelevel=grade) for grade in grade_levels}
+
+    for grade, students in [('Grade 8', students_grade_8), ('Grade 9', students_grade_9), ('Grade 10', students_grade_10), ('Grade 11', students_grade_11), ('Grade 12', students_grade_12)]:  # and so on for each grade
+        for student in students:
+            student.classroom_options = grade_level_classrooms[student.gradelevel_id]
+
+
+    # Other necessary context data (if needed)
+    context = {
+        'students_grade_8': students_grade_8,
+        'students_grade_9': students_grade_9,
+        'students_grade_10': students_grade_10,
+        'students_grade_11': students_grade_11,
+        'students_grade_12': students_grade_12,
+        'classrooms' : classrooms,
+    }
+
+    return render(request, 'students_for_promotion.html', context)
+
+@login_required(login_url='login')
+def assign_classroom_bulk(request, grade):
+    if request.method == 'POST':
+        for key, value in request.POST.items():
+            if key.startswith('classroom_'):
+                student_id = key.split('_')[1]
+                classroom_id = value
+                student = Student.objects.get(id=student_id)
+                classroom = Classroom.objects.get(id=classroom_id)
+                student.classroom = classroom
+                student.save()
+
+        return redirect('students_for_promotion')  # Redirect back to the promotion page
+
+@login_required(login_url='login')
+def bulk_promote_students(request):
+    if request.method == 'POST':
+        try:
+            # Assuming there is a direct reference from Classroom to Teacher
+            user_classroom = Classroom.objects.get(teacher__user=request.user)
+        except Classroom.DoesNotExist:
+            # Handle the case where there is no associated Classroom for the teacher
+            messages.error(request, 'User is not associated with a classroom.')
+            return redirect('students')  # Replace 'students' with the actual URL name of your students page
+
+        current_grade = user_classroom.gradelevel.grade
+
+        if current_grade == 'Grade 12':
+            students_for_graduation = Student.objects.filter(
+                classroom=user_classroom,
+                # Add other conditions based on your model structure
+                # For example, grade = 'Grade 12'
+            )
+
+            for student in students_for_graduation:
+                student.status = 'For Graduation'
+                student.save()
+
+            messages.success(request, 'Bulk graduation successful!')
+        else:
+            next_grade = None
+            if current_grade == 'Grade 7':
+                next_grade = 'Grade 8'
+            elif current_grade == 'Grade 8':
+                next_grade = 'Grade 9'
+            elif current_grade == 'Grade 9':
+                next_grade = 'Grade 10'
+            elif current_grade == 'Grade 10':
+                next_grade = 'Grade 11'
+            elif current_grade == 'Grade 11':
+                next_grade = 'Grade 12'
+
+            next_grade_instance = Gradelevel.objects.get(grade=next_grade)
+
+            students_to_promote = Student.objects.filter(
+                classroom=user_classroom,
+                # Add other conditions based on your model structure
+                # For example, grade = 'Grade 7', 'Grade 8', 'Grade 10', 'Grade 11'
+            )
+
+            for student in students_to_promote:
+                student.gradelevel = next_grade_instance
+                student.status = 'For Promotion'
+                student.classroom = 'FOR PROMOTION'
+                student.save()
+
+            messages.success(request, 'Bulk promotion successful!')
+
+    return redirect('students')  # Replace 'students' with the actual URL name of your students page

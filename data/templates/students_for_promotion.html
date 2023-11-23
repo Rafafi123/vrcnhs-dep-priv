@@ -1,0 +1,275 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head_block %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+     <!-- Add DataTables CSS -->
+     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+{% endblock %}
+
+{% block content %}
+
+<div class="search-container">
+    <form action="{% url 'students' %}" method="get" class="search-form">
+        <input type="text" name="query" placeholder="Student Name/LRN" required class="search-input">
+        <button type="submit" class="search-button">Search</button>
+    </form>
+</div>
+
+<center>
+    <h1>Grade 8 "FOR PROMOTION" Students</h1>
+</center>
+<br>
+
+
+{% for message in messages %}
+    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+        <p id="message-timer" class="alert alert-success float-center text-center message-text">{{message}}</p>
+    {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+        <p id="message-timer" class="alert alert-danger float-center text-center message-text">{{ message }}</p>
+    {% endif %}
+{% endfor %}
+
+<br>
+<form action="{% url 'assign_classroom_bulk' 'Grade 8' %}" method="post" id="form-grade-8">
+    {% csrf_token %}
+    <div class="table-container">
+        <table class="table table-striped" id="student-table-grade-8">
+            <thead>
+                <tr>
+                    <th>LRN</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Grade & Section</th>
+                    <th>General Average</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students_grade_8 %}
+                <tr>
+                    <td>{{ student.LRN }}</td>
+                    <td>{{ student.last_name }}, {{ student.first_name }} {{ student.middle_name }} {{ student.suffix_name }}</td>
+                    <td>{{ student.status }}</td>
+                    <td>{{ student.gradelevel.grade }} {{ student.classroom }}
+                        <select name="classroom_{{ student.id }}" class="form-select" required>
+                            {% for classroom in student.classroom_options %}
+                                <option value="{{ classroom.id }}" {% if classroom.id == student.classroom.id %} selected {% endif %}>
+                                    {{ classroom }}
+                                </option>
+                            {% endfor %}
+                        </select>              
+                    </td>
+                    <td>{{ student.general_average }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</form>
+<center>
+    <button type="submit" class="btn btn-primary" onclick="submitForm('form-grade-8')">Assign Classrooms for Grade 8</button>
+</center>
+
+<center>
+    <h1>Grade 9 "FOR PROMOTION" Students</h1>
+</center>
+<br>
+<div class="table-container">
+    <table class="table table-striped" id="student-table-grade-9">
+        <thead>
+            <tr>
+                <th>LRN</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Age</th>
+                <th>Grade & Section</th>
+                <th>General Average</th>
+                <th>Detail</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students_grade_9 %}
+            <tr>
+                <td>{{ student.LRN }}</td>
+                <td>{{ student.last_name }}, {{ student.first_name }} {{ student.middle_name }} {{ student.suffix_name }}</td>
+                <td>{{ student.status }}</td>
+                <td>{{ student.age }}</td>
+                <td>{{ student.gradelevel.grade }} {{ student.classroom }}</td>
+                <td>{{ student.general_average }}</td>
+                <td>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#studentModalGrade8{{ student.id }}">
+                        View Profile
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<center>
+    <h1>Grade 10 "FOR PROMOTION" Students</h1>
+</center>
+<br>
+<div class="table-container">
+    <table class="table table-striped" id="student-table-grade-10">
+        <thead>
+            <tr>
+                <th>LRN</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Age</th>
+                <th>Grade & Section</th>
+                <th>General Average</th>
+                <th>Detail</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students_grade_10 %}
+            <tr>
+                <td>{{ student.LRN }}</td>
+                <td>{{ student.status }}</td>
+                <td>{{ student.religion }}</td>
+                <td>{{ student.age }}</td>
+                <td>{{ student.gradelevel.grade }} {{ student.classroom }}</td>
+                <td>{{ student.general_average }}</td>
+                <td>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#studentModalGrade8{{ student.id }}">
+                        View Profile
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<center>
+    <h1>Grade 11 "FOR PROMOTION" Students</h1>
+</center>
+<br>
+<div class="table-container">
+    <table class="table table-striped" id="student-table-grade-11">
+        <thead>
+            <tr>
+                <th>LRN</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Age</th>
+                <th>Grade & Section</th>
+                <th>General Average</th>
+                <th>Detail</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students_grade_11 %}
+            <tr>
+                <td>{{ student.LRN }}</td>
+                <td>{{ student.status }}</td>
+                <td>{{ student.religion }}</td>
+                <td>{{ student.age }}</td>
+                <td>{{ student.gradelevel.grade }} {{ student.classroom }}</td>
+                <td>{{ student.general_average }}</td>
+                <td>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#studentModalGrade8{{ student.id }}">
+                        View Profile
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+
+<script src="{% static 'js/script.js' %}"></script>
+{% for student in students %}
+<!-- Modal - Student Profile -->
+<div class="modal fade" id="studentModal{{ student.id }}" tabindex="-1" aria-labelledby="studentModalLabel{{ student.id }}"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="studentModalLabel{{ student.id }}">Student Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="profile-section">
+                    <h4>Student Information</h4>
+                    <!-- Add student information details here -->
+                </div>
+
+                <div class="profile-section">
+                    <h4>Parents Information</h4>
+                    <!-- Add parent information details here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="{% url 'edit_student' student.id %}" class="btn btn-secondary">Edit</a>
+                <a href="{% url 'delete_student' student.id %}" class="btn btn-danger" title="Delete"
+                    onclick="return confirm('Are you sure you want to delete this item?');">
+                    Delete
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<script>
+    const viewButtons = document.querySelectorAll('.view-button');
+
+    viewButtons.forEach((button) => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            const target = button.dataset.bsTarget;
+            const modal = document.querySelector(target);
+            const backdrop = document.querySelector('.modal-backdrop');
+            modal.classList.add('show');
+            modal.style.display = 'block';
+            backdrop.classList.add('show');
+        });
+    });
+
+    // Close modal when the close button is clicked
+    const closeButtons = document.querySelectorAll('.btn-close[data-bs-dismiss="modal"]');
+    closeButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+            const modal = button.closest('.modal');
+            const backdrop = document.querySelector('.modal-backdrop');
+            modal.classList.remove('show');
+            modal.style.display = 'none';
+            backdrop.classList.remove('show');
+        });
+    });
+
+    function submitForm(formId) {
+        const form = document.getElementById(formId);
+        form.submit();
+    }
+</script>
+
+<!-- Add DataTables JS -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+<!-- Your existing scripts -->
+<script src="{% static 'js/script.js' %}"></script>
+
+<!-- DataTables Initialization -->
+<script>
+    $(document).ready(function () {
+        $('#student-table-grade-8').DataTable();
+        $('#student-table-grade-9').DataTable();
+        $('#student-table-grade-10').DataTable();
+        $('#student-table-grade-11').DataTable();
+        $('#student-table-grade-12').DataTable();
+    });
+</script>
+
+{% endblock content %}

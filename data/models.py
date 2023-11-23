@@ -43,9 +43,9 @@ class Gradelevel(models.Model):
         ('Grade 10', 'Grade 10'),
         ('Grade 11', 'Grade 11'),
         ('Grade 12', 'Grade 12'),
-        ('Graduates', 'Graduates'),
+        ('Transitioning', 'Transitioning'),
     ]
-    grade = models.CharField(max_length=10, choices=GRADE_CHOICES, unique=True)
+    grade = models.CharField(max_length=20, choices=GRADE_CHOICES, unique=True)
 
     def __str__(self):
         return self.grade
@@ -71,9 +71,9 @@ class Student(models.Model):
     suffix_name = models.CharField(max_length=10, blank=True) # "Jr., I, II, III, etc. 
     STATUS_CHOICES = [
         ('Processing', 'Processing'),
-        ('Dropout', 'Dropout'),
-        ('Transferee', 'Transferee'),
-        ('For Promotion/Retention', 'For Promotion/Retention'),
+        ('For Dropout', 'For Dropout'),
+        ('For Promotion', 'For Promotion'),
+        ('For Retention', 'For Retention'),
         ('For Graduation', 'For Graduation'),
     ]
     status = models.CharField(max_length=30, choices=STATUS_CHOICES, blank=True, null=True)
@@ -98,7 +98,7 @@ class Student(models.Model):
         ('2nd Semester', '2nd Semester'),
     )
     sem = models.CharField(max_length=30, choices=semester, null=True, default='None')####   
-    classroom = models.ForeignKey(Classroom, default=1, verbose_name =  "Classrooms", on_delete=models.SET_DEFAULT)
+    classroom = models.ForeignKey(Classroom, null = True, verbose_name =  "Classrooms", on_delete=models.SET_NULL)
     gradelevel = models.ForeignKey(Gradelevel, on_delete=models.SET_NULL, null=True)
     sex_student = (
     ('M', 'Male'),
@@ -130,8 +130,7 @@ class Student(models.Model):
     ('IA', 'IA'),
     ('Not Applicable (JHS)', 'Not Applicable (JHS)'),
     )
-    strand = models.CharField(choices=academic_strand, max_length=50)
-    text = models.TextField(blank=True, null=True)
+    strand = models.CharField(choices=academic_strand, max_length=50, null=True)
     household_income_choices = (
     ('above Php 35,000', 'above Php 35,000'),
     ('from Php 18,000 - Php 35,000', 'from Php 18,000 - Php 35,000'),
@@ -165,6 +164,8 @@ class Student(models.Model):
     is_a_four_ps_scholar = models.CharField(max_length=5, choices=scholarship_program) #4ps scholarship program ##########
     history = HistoricalRecords()
     edited_fields = models.CharField(max_length=255, blank=True)  # Field to store edited fields
+    notes = models.CharField(max_length=300, blank=True, null=True)
+
   
     class Meta:
         verbose_name_plural = "Students"   

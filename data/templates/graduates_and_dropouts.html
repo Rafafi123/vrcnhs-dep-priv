@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+@allowed_users(allowed_roles=['ADMIN'])
+
+{% block content %}
+<h1>GRADUATES AND DROPOUTS</h1>
+
+<h2>Graduates</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Grade Level</th>
+            <th>Status</th>
+            <th>General Average</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for student in students.filter(status="For Graduation") %}
+            <tr>
+                <td>{{ student.first_name }}</td>
+                <td>{{ student.last_name }}</td>
+                <td>{{ student.gradelevel.grade }}</td>
+                <td>{{ student.status }}</td>
+                <td>{{ student.general_average }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Dropouts</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Grade Level</th>
+            <th>Status</th>
+            <th>General Average</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for student in students.filter(status="Dropout") %}
+            <tr>
+                <td>{{ student.first_name }}</td>
+                <td>{{ student.last_name }}</td>
+                <td>{{ student.gradelevel.grade }}</td>
+                <td>{{ student.status }}</td>
+                <td>{{ student.general_average }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

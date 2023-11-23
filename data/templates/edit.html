@@ -1,285 +1,278 @@
 {% extends 'base.html' %}
 {% load static %}
 
-
 {% block head_block %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 {% endblock %}
 
-
 {% block content %}
+  <center><a href="{% url 'students' %}" class="btn btn-primary">Back to View Students</a></center>
 
-<center><a href="{% url 'students' %}" class="btn btn-primary">Back to View Students</a></center>
-
-<div class="container mt-3">
+  <div class="container mt-3">
     <form method="POST">
       {% csrf_token %}
       {{ form.non_field_errors }}
-  
-      <div class="row jumbotron box8">
-        <div class="col-sm-12 mx-t3 mb-4">
-          <h2 class="text-center">Register Student</h2>
-        </div>
-        
-        <!-- PERSONAL DETAILS -->
-        <div class="col-sm-12 mx-t5 mb-2">
-          <h4>Personal Details</h4>
-        </div>
-        
-        <div class="col-sm-4 form-group">
-          <label for="{{ form.first_name.id_for_label }}">First Name:</label>
-          {{ form.first_name }}
-          {{ form.first_name.errors }}
-        </div>
-  
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.last_name.id_for_label }}">Last Name:</label>
-          {{ form.middle_name }}
-          {{ form.middle_name.errors }}
-        </div>
-  
-        <div class="col-sm-4 form-group">
-          <label for="{{ form.middle_name.id_for_label }}">Middle Name:</label>
-          {{ form.last_name }}
-          {{ form.last_name.errors }}
-        </div>
-  
-        <div class="col-sm-1 form-group">
-          <label for="{{ form.suffix_name.id_for_label }}">Suffix:</label>
-          {{ form.suffix_name }}
-          {{ form.suffix_name.errors }}
-        </div>
-  
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.LRN.id_for_label }}">LRN:</label>
-          {{ form.LRN }}
-          {{ form.LRN.errors }}
-        </div>
-        
-        <div class="col-sm-3 form-group">
-            <label for="{{ form.birthday.id_for_label }}">Birthday:</label>
-            <div class="birthday-input">
-              <input type="date" id="{{ form.birthday.id_for_label }}" name="{{ form.birthday.html_name }}" value="{{ form.instance.birthday|date:'Y-m-d' }}">
-            </div>
-            {{ form.birthday.errors }}
-        </div>
-          
-        
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.religion.id_for_label }}">Religion:</label>
-          {{ form.religion }}
-          {{ form.religion.errors }}
-        </div>
-        
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.other_religion.id_for_label }}">Other Religion:</label>
-          {{ form.other_religion }}
-          {{ form.other_religion.errors }}
-        </div>
-        
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.age.id_for_label }}">Age:</label>
-          {{ form.age }}
-          {{ form.age.errors }}
-        </div>
-        
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.gradelevel.id_for_label }}">Grade Level:</label>
-          {{ form.gradelevel }}
-          {{ form.gradelevel.errors }}
-        </div>
 
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.sem.id_for_label }}">Semester:</label>
-          {{ form.sem }}
-          {{ form.sem.errors }}
-        </div>
-        
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.classroom.id_for_label }}">Classroom:</label>
-          {{ form.classroom }}
-          {{ form.classroom.errors }}
-        </div>
-  
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.sex.id_for_label }}">Sex:</label>
-          {{ form.sex }}
-          {{ form.sex.errors }}
-        </div>
-        
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.birth_place.id_for_label }}">Birth Place:</label>
-          {{ form.birth_place }}
-          {{ form.birth_place.errors }}
-        </div>
-        
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.mother_tongue.id_for_label }}">Mother Tongue:</label>
-          {{ form.mother_tongue }}
-          {{ form.mother_tongue.errors }}
-        </div>
-        
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.father_name.id_for_label }}">Father Name:</label>
-          {{ form.father_name }}
-          {{ form.father_name.errors }}
-        </div>
-      
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.father_contact.id_for_label }}">Father Contact:</label>
-          {{ form.father_contact }}
-          {{ form.father_contact.errors }}
-        </div>
-      
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.mother_name.id_for_label }}">Mother Name:</label>
-          {{ form.mother_name }}
-          {{ form.mother_name.errors }}
-        </div>
-      
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.mother_contact.id_for_label }}">Mother Contact:</label>
-          {{ form.mother_contact }}
-          {{ form.mother_contact.errors }}
-        </div>
-      
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.guardian_name.id_for_label }}">Guardian Name:</label>
-          {{ form.guardian_name }}
-          {{ form.guardian_name.errors }}
-        </div>
-      
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.guardian_contact.id_for_label }}">Guardian Contact:</label>
-          {{ form.guardian_contact }}
-          {{ form.guardian_contact.errors }}
-        </div>
-      
-        
-        <div class="col-sm-12 form-group">
-          <label for="{{ form.address.id_for_label }}">Address:</label>
-          {{ form.address }}
-          {{ form.address.errors }}
-        </div>
+      <div class="container mt-3">
+        <form method="POST">
+          {% csrf_token %}
+          {{ form.non_field_errors }}
     
-  
-        <!-- ACADEMIC BACKGROUND -->
-        <div class="col-sm-12 mx-t5 mb-2">
-          <h4>Academic Background</h4>
-        </div>
-  
-  
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.last_grade_level.id_for_label }}">Last Grade Level:</label>
-          {{ form.last_grade_level }}
-          {{ form.last_grade_level.errors }}
-        </div>
-        
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.last_school_attended.id_for_label }}">Last School Attended:</label>
-          {{ form.last_school_attended }}
-          {{ form.last_school_attended.errors }}
-        </div>
-        
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.last_schoolyear_completed.id_for_label }}">Last School Year Completed:</label>
-          {{ form.last_schoolyear_completed }}
-          {{ form.last_schoolyear_completed.errors }}
-        </div>
-        
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.school_id_number.id_for_label }}">School ID Number:</label>
-          {{ form.school_id_number }}
-          {{ form.school_id_number.errors }}
-        </div>
-        
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.strand.id_for_label }}">Academic Strand:</label>
-          {{ form.strand }}
-          {{ form.strand.errors }}
-        </div>
-        
-  
-  
-  
-        <!-- OTHER DETAILS -->
-        <div class="col-sm-12 mx-t5 mb-2">
-          <h4>Other Details</h4>
-        </div>
-        
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.modality_options.id_for_label }}">Preferred Distance Modality:</label>
-          {{ form.modality_options }}
-          {{ form.modality_options.errors }}
-        </div>
-        
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.economic_range.id_for_label }}">Economic Range:</label>
-          {{ form.economic_range }}
-          {{ form.economic_range.errors }}
-        </div>
-        
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.is_returnee.id_for_label }}">Is Returnee:</label>
-          {{ form.is_returnee }}
-          {{ form.is_returnee.errors }}
-        </div>
-        
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.is_a_dropout.id_for_label }}">Is a Dropout:</label>
-          {{ form.is_a_dropout }}
-          {{ form.is_a_dropout.errors }}
-        </div>
-        
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.is_a_working_student.id_for_label }}">Is a Working Student:</label>
-          {{ form.is_a_working_student }}
-          {{ form.is_a_working_student.errors }}
-        </div>
-        
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.previous_school.id_for_label }}">Previous School:</label>
-          {{ form.previous_school }}
-          {{ form.previous_school.errors }}
-        </div>
-        
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.previous_adviser.id_for_label }}">Previous Adviser:</label>
-          {{ form.previous_adviser }}
-          {{ form.previous_adviser.errors }}
-        </div>
-        
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.adviser_contact.id_for_label }}">Adviser Contact:</label>
-          {{ form.adviser_contact }}
-          {{ form.adviser_contact.errors }}
-        </div>
-        
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.health_bmi.id_for_label }}">Health BMI:</label>
-          {{ form.health_bmi }}
-          {{ form.health_bmi.errors }}
-        </div>
-        
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.general_average.id_for_label }}">General Average:</label>
-          {{ form.general_average }}
-          {{ form.general_average.errors }}
-        </div>
-        
-        <div class="col-sm-3 form-group">
-          <label for="{{ form.is_a_four_ps_scholar.id_for_label }}">Is a 4Ps Scholar:</label>
-          {{ form.is_a_four_ps_scholar }}
-          {{ form.is_a_four_ps_scholar.errors }}
-        </div>
-        
-        <div class="col-sm-12 form-group mb-0">
-          <button type = "submit" class="btn btn-primary float-right">Save Changes</button>
-        </div>
-        
-  
+          <div class="row jumbotron box8">
+            <div class="col-sm-12 mx-t3 mb-4">
+              <h2 class="text-center">Register Student</h2>
+            </div>
+            
+            <!-- PERSONAL DETAILS -->
+            <div class="col-sm-12 mx-t5 mb-2">
+              <h4>Personal Details</h4>
+            </div>
+            
+            <div class="col-sm-4 form-group">
+              <label for="{{ form.first_name.id_for_label }}">First Name:</label>
+              {{ form.first_name }}
+              {{ form.first_name.errors }}
+            </div>
+    
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.last_name.id_for_label }}">Last Name:</label>
+              {{ form.last_name }}
+              {{ form.last_name.errors }}
+            </div>
+    
+            <div class="col-sm-4 form-group">
+              <label for="{{ form.middle_name.id_for_label }}">Middle Name:</label>
+              {{ form.middle_name }}
+              {{ form.middle_name.errors }}
+            </div>
+    
+            <div class="col-sm-1 form-group">
+              <label for="{{ form.suffix_name.id_for_label }}">Suffix:</label>
+              {{ form.suffix_name }}
+              {{ form.suffix_name.errors }}
+            </div>
+
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.status.id_for_label }}">Status:</label>
+              {{ form.status }}
+              {{ form.status.errors }}
+           </div>
+    
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.LRN.id_for_label }}">LRN:</label>
+              {{ form.LRN }}
+              {{ form.LRN.errors }}
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.birthday.id_for_label }}">Birthday:</label>
+              <div class="birthday-input">
+                <input type="date" id="{{ form.birthday.id_for_label }}" name="{{ form.birthday.html_name }}" value="{{ form.instance.birthday|date:'Y-m-d' }}">
+              </div>
+              {{ form.birthday.errors }}
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.religion.id_for_label }}">Religion:</label>
+              {{ form.religion }}
+              {{ form.religion.errors }}
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.other_religion.id_for_label }}">Other Religion:</label>
+              {{ form.other_religion }}
+              {{ form.other_religion.errors }}
+            </div>
+    
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.gradelevel.id_for_label }}">Grade Level:</label>
+              {{ form.gradelevel }}
+              {{ form.gradelevel.errors }}
+            </div>
+          
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.sem.id_for_label }}">Semester:</label>
+              {{ form.sem }}
+              {{ form.sem.errors }}
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.classroom.id_for_label }}">Classroom:</label>
+              {% if form.classroom.initial %}
+                <select name="{{ form.classroom.html_name }}" class="form-control">
+                  {% for choice in form.classroom.field.choices %}
+                    <option value="{{ choice.0 }}" {% if choice.0|stringformat:"s" == form.classroom.initial|stringformat:"s" %}selected{% endif %}>{{ choice.1 }}</option>
+                  {% endfor %}
+                </select>
+              {% else %}
+                {{ form.classroom }}
+              {% endif %}
+              {{ form.classroom.errors }}
+            </div>
+    
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.sex.id_for_label }}">Sex:</label>
+              {{ form.sex }}
+              {{ form.sex.errors }}
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.birth_place.id_for_label }}">Birth Place:</label>
+              {{ form.birth_place }}
+              {{ form.birth_place.errors }}
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.mother_tongue.id_for_label }}">Mother Tongue:</label>
+              {{ form.mother_tongue }}
+              {{ form.mother_tongue.errors }}
+            </div>
+    
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.father_name.id_for_label }}">Father Name:</label>
+              {{ form.father_name }}
+              {{ form.father_name.errors }}
+            </div>
+          
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.father_contact.id_for_label }}">Father Contact Information:</label>
+              {{ form.father_contact }}
+              {{ form.father_contact.errors }}
+            </div>
+          
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.mother_name.id_for_label }}">Mother Name:</label>
+              {{ form.mother_name }}
+              {{ form.mother_name.errors }}
+            </div>
+          
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.mother_contact.id_for_label }}">Mother Contact Information:</label>
+              {{ form.mother_contact }}
+              {{ form.mother_contact.errors }}
+            </div>
+          
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.guardian_name.id_for_label }}">Guardian Name:</label>
+              {{ form.guardian_name }}
+              {{ form.guardian_name.errors }}
+            </div>
+          
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.guardian_contact.id_for_label }}">Guardian Contact Information:</label>
+              {{ form.guardian_contact }}
+              {{ form.guardian_contact.errors }}
+            </div>
+    
+            <div class="col-sm-12 form-group">
+              <label for="{{ form.address.id_for_label }}">Address:</label>
+              {{ form.address }}
+              {{ form.address.errors }}
+            </div>
+          
+    
+            <!-- ACADEMIC BACKGROUND -->
+            <div class="col-sm-12 mx-t5 mb-2">
+              <h4>Academic Background</h4>
+            </div>
+    
+    
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.last_grade_level.id_for_label }}">Last Grade Level:</label>
+              {{ form.last_grade_level }}
+              {{ form.last_grade_level.errors }}
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.last_school_attended.id_for_label }}">Last School Attended:</label>
+              {{ form.last_school_attended }}
+              {{ form.last_school_attended.errors }}
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.last_schoolyear_completed.id_for_label }}">Last School Year Completed:</label>
+              {{ form.last_schoolyear_completed }}
+              {{ form.last_schoolyear_completed.errors }}
+            </div>
+          
+    
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.strand.id_for_label }}">Strand:</label>
+              {{ form.strand }}
+              {{ form.strand.errors }}
+            </div>
+    
+            <!-- OTHER DETAILS -->
+            <div class="col-sm-12 mx-t5 mb-2">
+              <h4>Other Details</h4>
+            </div>
+    
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.household_income.id_for_label }}">Household Income:</label>
+              {{ form.household_income }}
+              {{ form.household_income.errors }}
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.is_returnee.id_for_label }}">Is Returnee:</label>
+              {{ form.is_returnee }}
+              {{ form.is_returnee.errors }}
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.is_a_dropout.id_for_label }}">Is a Dropout:</label>
+              {{ form.is_a_dropout }}
+              {{ form.is_a_dropout.errors }}
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.is_a_working_student.id_for_label }}">Is a Working Student:</label>
+              {{ form.is_a_working_student }}
+              {{ form.is_a_working_student.errors }}
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.previous_adviser.id_for_label }}">Previous Adviser:</label>
+              {{ form.previous_adviser }}
+              {{ form.previous_adviser.errors }}
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.adviser_contact.id_for_label }}">Adviser Contact Information:</label>
+              {{ form.adviser_contact }}
+              {{ form.adviser_contact.errors }}
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.health_bmi.id_for_label }}">Health BMI:</label>
+              {{ form.health_bmi }}
+              {{ form.health_bmi.errors }}
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.general_average.id_for_label }}">General Average:</label>
+              {{ form.general_average }}
+              {{ form.general_average.errors }}
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.is_a_four_ps_scholar.id_for_label }}">Is a 4Ps Scholar:</label>
+              {{ form.is_a_four_ps_scholar }}
+              {{ form.is_a_four_ps_scholar.errors }}
+            </div>
+    
+                  <!-- New Notes Field -->
+            <div class="col-sm-12 form-group">
+              <label for="{{ form.notes.id_for_label }}">Notes (Other scholarships, conduct, PWD, etc.):</label>
+              {{ form.notes }}
+              {{ form.notes.errors }}
+            </div>
+    
+            <div class="col-sm-12 form-group mb-0">
+              <button type="submit" class="btn btn-primary float-right">Submit</button>
+            </div>
+          </div>
+        </form>
       </div>
-    </form>
-  </div>
 
 {% endblock %}
