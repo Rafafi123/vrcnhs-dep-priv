@@ -713,32 +713,27 @@ def students_for_promotion(request):
     students_grade_8 = Student.objects.filter(
         Q(status='For Promotion') | Q(status='For Retention'),
         gradelevel__grade='Grade 8',
-        classroom__classroom='FOR PROMOTION',
     )
 
     # Add queries for other grade levels
     students_grade_9 = Student.objects.filter(
         Q(status='For Promotion') | Q(status='For Retention'),
         gradelevel__grade='Grade 9',
-        classroom__classroom='FOR PROMOTION',
     )
 
     students_grade_10 = Student.objects.filter(
         Q(status='For Promotion') | Q(status='For Retention'),
         gradelevel__grade='Grade 10',
-        classroom__classroom='FOR PROMOTION',
     )
 
     students_grade_11 = Student.objects.filter(
         Q(status='For Promotion') | Q(status='For Retention'),
         gradelevel__grade='Grade 11',
-        classroom__classroom='FOR PROMOTION',
     )
 
     students_grade_12 = Student.objects.filter(
         Q(status='For Promotion') | Q(status='For Retention'),
         gradelevel__grade='Grade 12',
-        classroom__classroom='FOR PROMOTION',
     )
 
     classrooms = Classroom.objects.all()
