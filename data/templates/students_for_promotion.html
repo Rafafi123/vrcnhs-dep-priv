@@ -17,7 +17,7 @@
 </div>
 
 <center>
-    <h1>Grade 8 "FOR PROMOTION" Students</h1>
+    <h1>Grade 8 "SECTIONING" Students</h1>
 </center>
 <br>
 
@@ -74,116 +74,131 @@
     <h1>Grade 9 "FOR PROMOTION" Students</h1>
 </center>
 <br>
-<div class="table-container">
-    <table class="table table-striped" id="student-table-grade-9">
-        <thead>
-            <tr>
-                <th>LRN</th>
-                <th>Name</th>
-                <th>Status</th>
-                <th>Age</th>
-                <th>Grade & Section</th>
-                <th>General Average</th>
-                <th>Detail</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for student in students_grade_9 %}
-            <tr>
-                <td>{{ student.LRN }}</td>
-                <td>{{ student.last_name }}, {{ student.first_name }} {{ student.middle_name }} {{ student.suffix_name }}</td>
-                <td>{{ student.status }}</td>
-                <td>{{ student.age }}</td>
-                <td>{{ student.gradelevel.grade }} {{ student.classroom }}</td>
-                <td>{{ student.general_average }}</td>
-                <td>
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#studentModalGrade8{{ student.id }}">
-                        View Profile
-                    </button>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-
+<form action="{% url 'assign_classroom_bulk' 'Grade 9' %}" method="post" id="form-grade-9">
+    {% csrf_token %}
+    <div class="table-container">
+        <table class="table table-striped" id="student-table-grade-9">
+            <thead>
+                <tr>
+                    <th>LRN</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Grade & Section</th>
+                    <th>General Average</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students_grade_9 %}
+                <tr>
+                    <td>{{ student.LRN }}</td>
+                    <td>{{ student.last_name }}, {{ student.first_name }} {{ student.middle_name }} {{ student.suffix_name }}</td>
+                    <td>{{ student.status }}</td>
+                    <td>{{ student.gradelevel.grade }} {{ student.classroom }}
+                        <select name="classroom_{{ student.id }}" class="form-select" required>
+                            {% for classroom in student.classroom_options %}
+                                <option value="{{ classroom.id }}" {% if classroom.id == student.classroom.id %} selected {% endif %}>
+                                    {{ classroom }}
+                                </option>
+                            {% endfor %}
+                        </select>              
+                    </td>
+                    <td>{{ student.general_average }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</form>
+<center>
+    <button type="submit" class="btn btn-primary" onclick="submitForm('form-grade-9')">Assign Classrooms for Grade 9</button>
+</center>
 
 <center>
-    <h1>Grade 10 "FOR PROMOTION" Students</h1>
+    <h1>Grade 10 "SECTIONING" Students</h1>
 </center>
 <br>
-<div class="table-container">
-    <table class="table table-striped" id="student-table-grade-10">
-        <thead>
-            <tr>
-                <th>LRN</th>
-                <th>Name</th>
-                <th>Status</th>
-                <th>Age</th>
-                <th>Grade & Section</th>
-                <th>General Average</th>
-                <th>Detail</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for student in students_grade_10 %}
-            <tr>
-                <td>{{ student.LRN }}</td>
-                <td>{{ student.status }}</td>
-                <td>{{ student.religion }}</td>
-                <td>{{ student.age }}</td>
-                <td>{{ student.gradelevel.grade }} {{ student.classroom }}</td>
-                <td>{{ student.general_average }}</td>
-                <td>
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#studentModalGrade8{{ student.id }}">
-                        View Profile
-                    </button>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+<form action="{% url 'assign_classroom_bulk' 'Grade 10' %}" method="post" id="form-grade-10">
+    {% csrf_token %}
+    <div class="table-container">
+        <table class="table table-striped" id="student-table-grade-10">
+            <thead>
+                <tr>
+                    <th>LRN</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Grade & Section</th>
+                    <th>General Average</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students_grade_10 %}
+                <tr>
+                    <td>{{ student.LRN }}</td>
+                    <td>{{ student.last_name }}, {{ student.first_name }} {{ student.middle_name }} {{ student.suffix_name }}</td>
+                    <td>{{ student.status }}</td>
+                    <td>{{ student.gradelevel.grade }} {{ student.classroom }}
+                        <select name="classroom_{{ student.id }}" class="form-select" required>
+                            {% for classroom in student.classroom_options %}
+                                <option value="{{ classroom.id }}" {% if classroom.id == student.classroom.id %} selected {% endif %}>
+                                    {{ classroom }}
+                                </option>
+                            {% endfor %}
+                        </select>              
+                    </td>
+                    <td>{{ student.general_average }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</form>
+<center>
+    <button type="submit" class="btn btn-primary" onclick="submitForm('form-grade-10')">Assign Classrooms for Grade 10</button>
+</center>
 
 <center>
-    <h1>Grade 11 "FOR PROMOTION" Students</h1>
+    <h1>Grade 11 "SECTIONING" Students</h1>
 </center>
 <br>
-<div class="table-container">
-    <table class="table table-striped" id="student-table-grade-11">
-        <thead>
-            <tr>
-                <th>LRN</th>
-                <th>Name</th>
-                <th>Status</th>
-                <th>Age</th>
-                <th>Grade & Section</th>
-                <th>General Average</th>
-                <th>Detail</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for student in students_grade_11 %}
-            <tr>
-                <td>{{ student.LRN }}</td>
-                <td>{{ student.status }}</td>
-                <td>{{ student.religion }}</td>
-                <td>{{ student.age }}</td>
-                <td>{{ student.gradelevel.grade }} {{ student.classroom }}</td>
-                <td>{{ student.general_average }}</td>
-                <td>
-                    <!-- Button trigger modal -->
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#studentModalGrade8{{ student.id }}">
-                        View Profile
-                    </button>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+<form action="{% url 'assign_classroom_bulk' 'Grade 11' %}" method="post" id="form-grade-11">
+    {% csrf_token %}
+    <div class="table-container">
+        <table class="table table-striped" id="student-table-grade-11">
+            <thead>
+                <tr>
+                    <th>LRN</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Grade & Section</th>
+                    <th>General Average</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students_grade_11 %}
+                <tr>
+                    <td>{{ student.LRN }}</td>
+                    <td>{{ student.last_name }}, {{ student.first_name }} {{ student.middle_name }} {{ student.suffix_name }}</td>
+                    <td>{{ student.status }}</td>
+                    <td>{{ student.gradelevel.grade }} {{ student.classroom }}
+                        <select name="classroom_{{ student.id }}" class="form-select" required>
+                            {% for classroom in student.classroom_options %}
+                                <option value="{{ classroom.id }}" {% if classroom.id == student.classroom.id %} selected {% endif %}>
+                                    {{ classroom }}
+                                </option>
+                            {% endfor %}
+                        </select>              
+                    </td>
+                    <td>{{ student.general_average }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</form>
+<center>
+    <button type="submit" class="btn btn-primary" onclick="submitForm('form-grade-11')">Assign Classrooms for Grade 11</button>
+</center>
+
 
 
 

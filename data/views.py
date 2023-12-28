@@ -683,26 +683,50 @@ def export_students_to_excel(request):
 
     return response
 
+#EXPORT 
+@allowed_users(allowed_roles=['ADMIN'])
+def export_classrooms_to_excel(request):
+    classrooms = Classroom.objects.all().values()
+    df = pd.DataFrame(list(classrooms))
+
+    # Convert DataFrame to Excel
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="classrooms_data.xlsx"'
+
+    with pd.ExcelWriter(response) as writer:
+        df.to_excel(writer, index=False)
+
+    return response
+
 #IMPORT
+
+from django.contrib import messages
 
 def import_students_from_excel(request):
     if request.method == 'POST':
-        excel_file = request.FILES['excel_file']
+        try:
+            excel_file = request.FILES['excel_file']
 
-        # Read the Excel file
-        df = pd.read_excel(excel_file)
+            # Read the Excel file
+            df = pd.read_excel(excel_file)
 
-        for index, row in df.iterrows():
-            student, created = Student.objects.get_or_create(LRN=row['LRN'])
-            student.last_name = row['last_name']
-            student.first_name = row['first_name']
-            # ... set other fields
-            student.save()
+            for index, row in df.iterrows():
+                try:
+                    student, created = Student.objects.get_or_create(LRN=row['LRN'])
+                    student.last_name = row['last_name']
+                    student.first_name = row['first_name']
+                    # ... set other fields
+                    student.save()
+                except Exception as e:
+                    messages.error(request, f"Error importing student with LRN {row['LRN']}: {str(e)}")
 
-        messages.success(request, "Students imported successfully!")
-        return redirect('some-view')  # Replace with your desired redirect
+            messages.success(request, "Students imported successfully!")
+            return redirect('view_students')  # Replace with your desired redirect
+        except Exception as e:
+            messages.error(request, f"Error importing students: {str(e)}")
 
-    return render(request, 'import_students.html')
+    return render(request, 'students_page')
+
 
 #===============================================================#
 #BULKPROMOTE
@@ -764,6 +788,9 @@ def students_for_promotion(request):
 @login_required(login_url='login')
 def assign_classroom_bulk(request, grade):
     if request.method == 'POST':
+        # List to store student IDs for updating status
+        student_ids = []
+
         for key, value in request.POST.items():
             if key.startswith('classroom_'):
                 student_id = key.split('_')[1]
@@ -771,7 +798,12 @@ def assign_classroom_bulk(request, grade):
                 student = Student.objects.get(id=student_id)
                 classroom = Classroom.objects.get(id=classroom_id)
                 student.classroom = classroom
+                student.status = 'Processing'  # Update status to "Processing"
                 student.save()
+                student_ids.append(student_id)
+
+        # Update status for all selected students
+        Student.objects.filter(id__in=student_ids).update(status='Processing')
 
         return redirect('students_for_promotion')  # Redirect back to the promotion page
 
@@ -786,47 +818,45 @@ def bulk_promote_students(request):
             messages.error(request, 'User is not associated with a classroom.')
             return redirect('students')  # Replace 'students' with the actual URL name of your students page
 
+        # Determine the next grade level based on the teacher's current grade level
         current_grade = user_classroom.gradelevel.grade
+        next_grade = get_next_grade(current_grade)
 
-        if current_grade == 'Grade 12':
-            students_for_graduation = Student.objects.filter(
-                classroom=user_classroom,
-                # Add other conditions based on your model structure
-                # For example, grade = 'Grade 12'
-            )
+        if next_grade is None:
+            messages.error(request, 'Unable to determine the next grade level.')
+            return redirect('students')  # Replace 'students' with the actual URL name of your students page
 
-            for student in students_for_graduation:
-                student.status = 'For Graduation'
-                student.save()
+        next_grade_instance = Gradelevel.objects.get(grade=next_grade)
 
-            messages.success(request, 'Bulk graduation successful!')
+        students_to_promote = Student.objects.filter(
+            classroom=user_classroom,
+            # Add other conditions based on your model structure
+            # For example, grade = 'Grade 7', 'Grade 8', 'Grade 10', 'Grade 11'
+        )
+
+        # Update each student's grade and status
+        for student in students_to_promote:
+            student.gradelevel = next_grade_instance
+            student.status = 'For Promotion'
+            student.classroom = Classroom.objects.get(classroom='FOR PROMOTION')  # Change to the actual name of the 'FOR PROMOTION' classroom
+            student.save()
+
+        messages.success(request, f'Bulk promotion to {next_grade} successful!')
+
+    return redirect('user_page')  # Replace 'students' with the actual URL name of your students page
+
+
+def get_next_grade(current_grade):
+    # Define the grade progression logic here
+    grade_sequence = ['Grade 7', 'Grade 8', 'Grade 9', 'Grade 10', 'Grade 11', 'Grade 12']
+
+    try:
+        current_index = grade_sequence.index(current_grade)
+        next_index = current_index + 1
+
+        if next_index < len(grade_sequence):
+            return grade_sequence[next_index]
         else:
-            next_grade = None
-            if current_grade == 'Grade 7':
-                next_grade = 'Grade 8'
-            elif current_grade == 'Grade 8':
-                next_grade = 'Grade 9'
-            elif current_grade == 'Grade 9':
-                next_grade = 'Grade 10'
-            elif current_grade == 'Grade 10':
-                next_grade = 'Grade 11'
-            elif current_grade == 'Grade 11':
-                next_grade = 'Grade 12'
-
-            next_grade_instance = Gradelevel.objects.get(grade=next_grade)
-
-            students_to_promote = Student.objects.filter(
-                classroom=user_classroom,
-                # Add other conditions based on your model structure
-                # For example, grade = 'Grade 7', 'Grade 8', 'Grade 10', 'Grade 11'
-            )
-
-            for student in students_to_promote:
-                student.gradelevel = next_grade_instance
-                student.status = 'For Promotion'
-                student.classroom = 'FOR PROMOTION'
-                student.save()
-
-            messages.success(request, 'Bulk promotion successful!')
-
-    return redirect('students')  # Replace 'students' with the actual URL name of your students page
+            return None  # No next grade (end of sequence)
+    except ValueError:
+        return None  # Current grade not found in the sequence

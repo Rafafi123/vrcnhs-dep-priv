@@ -46,7 +46,7 @@
         
         <th>LRN</th>
         <th>Name</th>
-        <th>Religion</th>
+        <th>Status</th>
         <th>Age</th>
         <th>Grade & Section</th>
         <th>General Average</th>
@@ -59,7 +59,7 @@
         
         <td>{{ student.LRN }}</td>
         <td>{{ student.last_name }} {{ student.suffix_name }}, {{ student.first_name }} {{ student.middle_name }} </td>
-        <td>{{ student.religion }}</td>
+        <td>{{ student.status }}</td>
         <td>{{ student.age }}</td>
         <td>{{ student.gradelevel.grade }} {{ student.classroom }}</td>
         <td>{{ student.general_average }}</td>
@@ -223,8 +223,22 @@
   });
 
 </script>
+ <br>
+
+ <center>
+ <!-- Import button and form -->
+ <form action="{% url 'import_students' %}" method="post" enctype="multipart/form-data" style="display: inline-block;">
+  {% csrf_token %}
+  <label for="excel_file" class="btn btn-info" style="margin-left: 10px;">
+    Import Students
+    <input type="file" id="excel_file" name="excel_file" accept=".xlsx" style="display:none;">
+  </label>
+  <button type="submit" class="btn btn-success" style="margin-left: 10px;">SUBMIT FILE</button>
+</form>
 <br>
-<center><a href="{% url 'export_students' %}" class="btn btn-primary">Export Students</a></center>
+<!-- End of Import button and form -->
+<br>
+<a href="{% url 'export_students' %}" class="btn btn-primary">Export Students</a></center>
 <br>
 <br>
 
