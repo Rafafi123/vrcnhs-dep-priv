@@ -62,7 +62,7 @@ class Classroom(models.Model):
     def __str__(self):
         return self.classroom
 
-
+#Students Class ____________________________________________________________________________________
 class Student(models.Model):
     LRN = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
