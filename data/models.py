@@ -64,7 +64,7 @@ class Classroom(models.Model):
 
 #Students Class ____________________________________________________________________________________
 class Student(models.Model):
-    LRN = models.CharField(max_length=30)
+    LRN = models.CharField(primary_key=True, max_length=30)
     last_name = models.CharField(max_length=30)
     first_name = models.CharField(max_length=30)
     middle_name = models.CharField(max_length=30, blank=True)

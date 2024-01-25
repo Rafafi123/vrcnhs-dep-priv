@@ -64,9 +64,10 @@
         <td>{{ student.gradelevel.grade }} {{ student.classroom }}</td>
         <td>{{ student.general_average }}</td>
         <td>
-          <button type="button" class="btn btn-primary view-button" data-bs-toggle="modal" data-bs-target="#studentModal{{ student.id }}">
+          <button type="button" class="btn btn-primary view-button" data-bs-toggle="modal" data-bs-target="#studentModal{{ student.lrn }}{{ forloop.counter }}">
             View Profile
           </button> 
+        
         </td>
       </tr>
       {% endfor %}
@@ -84,11 +85,11 @@
 
 {% for student in students %}
 <!-- Modal - Student Profile -->
-<div class="modal fade" id="studentModal{{ student.id }}" tabindex="-1" aria-labelledby="studentModalLabel{{ student.id }}" aria-hidden="true">
+<div class="modal fade" id="studentModal{{ student.lrn }}{{ forloop.counter }}" tabindex="-1" aria-labelledby="studentModalLabel{{ student.lrn }}{{ forloop.counter }}" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="studentModalLabel{{ student.id }}">Student Profile</h5>
+        <h5 class="modal-title" id="studentModalLabel{{ student.lrn }}">Student Profile</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -124,8 +125,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <a href="{% url 'edit_student' student.id %}" class="btn btn-secondary">Edit</a>
-        <a href="{% url 'delete_student' student.id %}" class="btn btn-danger" title="Delete" onclick="return confirm('Are you sure you want to delete this item?');">
+        <a href="{% if student.LRN %}{% url 'edit_student' student.LRN %}{% endif %}" class="btn btn-secondary">Edit</a>
+        <a href="{% if student.LRN %}{% url 'delete_student' student.LRN %}{% endif %}" class="btn btn-danger" title="Delete">
           Delete
         </a>
       </div>

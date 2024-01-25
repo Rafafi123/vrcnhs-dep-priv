@@ -252,8 +252,8 @@ def destroy(request, id):
         return redirect("students")
 
 @login_required
-def edit(request, id):
-    student = Student.objects.get(id=id)
+def edit(request, lrn):
+    student = get_object_or_404(Student, LRN=lrn)
     initial_data = model_to_dict(student)  # Store initial data for comparison
     if request.method == 'POST':
         form = StudentForm(request.POST, instance=student)

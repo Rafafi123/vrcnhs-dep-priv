@@ -46,7 +46,7 @@ urlpatterns = [
     path('create/', views.add_student, name='add_student'),  # for adding a student in the records
     path('delete/<int:id>/', views.destroy, name='delete_student'),  # for deleting a student
     path('update/<int:id>/', views.update, name='update_student'),  # for updating the editing of a student
-    path('edit/<int:id>/', views.edit, name='edit_student'),  # for editing a student
+    path('edit/<int:lrn>/', views.edit, name='edit_student'),  # for editing a student
 
     
     path('add/', views.add_teacher, name='add_teacher'),
