@@ -20,7 +20,17 @@ admin.site.register(User, CustomizedUserAdmin)
 admin.site.register(Classroom)
 
 class StudentMultiAdmin(SimpleHistoryAdmin, ImportExportModelAdmin):
-    pass
+    list_display = (
+        'LRN', 'last_name', 'first_name', 'middle_name', 'suffix_name', 'status',
+        'birthday', 'religion', 'other_religion', 'age', 'sem', 'classroom_id',
+        'gradelevel_id', 'sex', 'birth_place', 'mother_tongue', 'address',
+        'father_name', 'father_contact', 'mother_name', 'mother_contact',
+        'guardian_name', 'guardian_contact', 'last_grade_level',
+        'last_school_attended', 'last_schoolyear_completed', 'strand',
+        'household_income', 'is_returnee', 'is_a_dropout', 'is_a_working_student',
+        'previous_adviser', 'adviser_contact', 'health_bmi', 'general_average',
+        'is_a_four_ps_scholar', 'edited_fields', 'notes',
+        )
 
 admin.site.register(Student, StudentMultiAdmin)
 admin.site.register(Gradelevel)

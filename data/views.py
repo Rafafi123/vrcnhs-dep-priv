@@ -4,6 +4,8 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from tablib import Dataset
+from data.resources import StudentResource
 from .forms import StudentForm
 from .forms import TeacherForm
 from .models import Student, Classroom, Teacher, Gradelevel
@@ -53,8 +55,8 @@ def home(request):
     count = User.objects.count()
 
     # Calculate male and female student counts
-    male_count = Student.objects.filter(sex='M').count()
-    female_count = Student.objects.filter(sex='F').count()
+    male_count = Student.objects.filter(Q(sex='M') | Q(sex='Male')).count()
+    female_count = Student.objects.filter(Q(sex='F') | Q(sex='Female')).count()
 
     # Calculate total student count
     total_students = male_count + female_count
@@ -700,33 +702,72 @@ def export_classrooms_to_excel(request):
 
 #IMPORT
 
-from django.contrib import messages
-
 def import_students_from_excel(request):
     if request.method == 'POST':
-        try:
-            excel_file = request.FILES['excel_file']
+        student_resource = StudentResource()
+        dataset = Dataset()
+        new_student = request.FILES['myfile']
 
-            # Read the Excel file
-            df = pd.read_excel(excel_file)
+        if not new_student.name.endswith('xlsx'):
+            messages.info(request, 'Please upload an excel file only (.xlsx)')
+            return render(request,'view_students.html')
+        
+        imported_data = dataset.load(new_student.read(),format='xlsx')
+        for data in imported_data:
+            classroom_identifier = data[12]
+            gradelevel_identifier = data[13]
 
-            for index, row in df.iterrows():
-                try:
-                    student, created = Student.objects.get_or_create(LRN=row['LRN'])
-                    student.last_name = row['last_name']
-                    student.first_name = row['first_name']
-                    # ... set other fields
-                    student.save()
-                except Exception as e:
-                    messages.error(request, f"Error importing student with LRN {row['LRN']}: {str(e)}")
-
-            messages.success(request, "Students imported successfully!")
-            return redirect('view_students')  # Replace with your desired redirect
-        except Exception as e:
-            messages.error(request, f"Error importing students: {str(e)}")
-
-    return render(request, 'students_page')
-
+            print("Classroom Identifier:", classroom_identifier)
+            try:
+                classroom_instance = Classroom.objects.get(classroom=classroom_identifier)
+            except Classroom.DoesNotExist:
+                messages.warning(request, f"Classroom with identifier {classroom_identifier} not found. Skipping.")
+                continue
+            gradelevel_instance = get_object_or_404(Gradelevel, grade=gradelevel_identifier)
+            
+            value = Student(
+                LRN=data[1],
+                last_name=data[2],
+                first_name=data[3],
+                middle_name=data[4],
+                suffix_name=data[5],
+                status=data[6],  
+                birthday=data[7],
+                religion=data[8],  
+                other_religion=data[9],  
+                age=data[10],  
+                sem=data[11],  
+                classroom=classroom_instance,  # Adjusted classroom index to match data[12]
+                gradelevel=gradelevel_instance,  
+                sex=data[14],  
+                birth_place=data[15],  
+                mother_tongue=data[16],  
+                address=data[17],  
+                father_name=data[18],  
+                father_contact=data[19],  
+                mother_name=data[20],  
+                mother_contact=data[21],  
+                guardian_name=data[22],  
+                guardian_contact=data[23],  
+                last_grade_level=data[24],  
+                last_school_attended=data[25],  
+                last_schoolyear_completed=data[26],  
+                strand=data[27],  
+                household_income=data[28],  
+                is_returnee=data[29],  
+                is_a_dropout=data[30],  
+                is_a_working_student=data[31],  
+                previous_adviser=data[32],  
+                adviser_contact=data[33],  
+                health_bmi=data[34],  
+                general_average=data[35],  
+                is_a_four_ps_scholar=data[36],  
+                notes=data[37]
+            )
+            value.save()
+            messages.success(request, 'Students imported successfully.')
+    return render(request, 'view_students.html')
+        
 
 #===============================================================#
 #BULKPROMOTE

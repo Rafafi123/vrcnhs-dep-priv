@@ -101,10 +101,10 @@ class Student(models.Model):
     classroom = models.ForeignKey(Classroom, null = True, verbose_name =  "Classrooms", on_delete=models.SET_NULL)
     gradelevel = models.ForeignKey(Gradelevel, on_delete=models.SET_NULL, null=True)
     sex_student = (
-    ('M', 'Male'),
-    ('F', 'Female'),
+    ('Male', 'Male'),
+    ('Female', 'Female'),
     )
-    sex = models.CharField(max_length=2, choices=sex_student)
+    sex = models.CharField(max_length=10, choices=sex_student)
     birth_place = models.CharField(max_length=20)
     mother_tongue = models.CharField(max_length=20)
     address = models.CharField(max_length=200)
@@ -115,7 +115,7 @@ class Student(models.Model):
     mother_contact = models.CharField(max_length=15)
     guardian_name = models.CharField(max_length=120) # this section is for the parents and guardian
     guardian_contact = models.CharField(max_length=15)
-    last_grade_level = models.IntegerField() # this is for the returning learner
+    last_grade_level = models.IntegerField(null=True) # this is for the returning learner
     last_school_attended = models.CharField(max_length=30)
     last_schoolyear_completed = models.CharField(max_length=12)
     academic_strand = (
@@ -154,9 +154,9 @@ class Student(models.Model):
     )
     is_a_working_student = models.CharField(max_length=5, choices=working_student)######
     previous_adviser = models.CharField(max_length=50)
-    adviser_contact = models.IntegerField()
-    health_bmi =  models.DecimalField(max_digits=10, decimal_places=2)
-    general_average = models.DecimalField(max_digits=10, decimal_places=2)
+    adviser_contact = models.IntegerField(null=True)
+    health_bmi =  models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    general_average = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     scholarship_program = (
         ('Yes', 'Yes'),
         ('No', 'No')

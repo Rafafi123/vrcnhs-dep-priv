@@ -66,7 +66,7 @@ urlpatterns = [
     path('export_students/', views.export_students_to_excel, name='export_students'),
     path('export/classrooms/', views.export_classrooms_to_excel, name='export_classrooms_to_excel'),
 
-    path('import_students/', views.import_students_from_excel, name='import_students'),
+    path('import/', views.import_students_from_excel, name='import_students'),
 
     #Bulk Promote
     path('students_for_promotion/', views.students_for_promotion, name='students_for_promotion'),

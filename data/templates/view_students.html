@@ -231,14 +231,19 @@
 
  <center>
  <!-- Import button and form -->
- <form action="{% url 'import_students' %}" method="post" enctype="multipart/form-data" style="display: inline-block;">
+ <form method="post" enctype="multipart/form-data" action="{% url 'import_students' %}">
   {% csrf_token %}
-  <label for="excel_file" class="btn btn-info" style="margin-left: 10px;">
-    Import Students
-    <input type="file" id="excel_file" name="excel_file" accept=".xlsx" style="display:none;">
-  </label>
-  <button type="submit" class="btn btn-success" style="margin-left: 10px;">SUBMIT FILE</button>
+  <input type="file" name="myfile"/>
+  <button type="submit">Upload</button>
 </form>
+
+{% if messages %}
+{% for messages in messages %}
+<div class="alert alert-{{ message.tags }}" role="alert">
+  <p{% if message.tags %} class="" {% endif %}>{{ message }}</p>
+</div>
+{% endfor %}
+{% endif %}
 <br>
 <!-- End of Import button and form -->
 <br>

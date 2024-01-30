@@ -3,7 +3,11 @@
 {% load static %}
 
 {% block head_block %}
+<!-- Link to Bootstrap CSS -->
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+<!-- Link to Bootstrap JavaScript -->
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 {% endblock %}
 
 
@@ -26,42 +30,42 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th></th>
           <th>LRN</th>
           <th>Name</th>
           <th>Religion</th>
           <th>Age</th>
           <th>Grade & Section</th>
           <th>Semester</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         {% for student in students %}
         <tr>
-          <td>
-            <button type="button" class="btn btn-primary view-button" data-bs-toggle="modal" data-bs-target="#studentModal{{ student.id }}">
-              View Profile
-            </button>
-          </td>
           <td>{{ student.LRN }}</td>
           <td>{{ student.last_name }}, {{ student.first_name }} {{ student.middle_name }} {{ student.suffix_name }}</td>
           <td>{{ student.religion }}</td>
           <td>{{ student.age }}</td>
           <td>{{ student.classroom }}</td>
           <td>{{ student.get_sem_display }}</td>
+          <td>
+            <button type="button" class="btn btn-primary view-button" data-bs-toggle="modal" data-bs-target="#studentModal{{ student.lrn }}{{ forloop.counter }}">
+              View Profile
+            </button> 
         </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
+  <script src="{% static 'js/script.js' %}"></script>
   
   {% for student in students %}
   <!-- Modal - Student Profile -->
-  <div class="modal fade" id="studentModal{{ student.id }}" tabindex="-1" aria-labelledby="studentModalLabel{{ student.id }}" aria-hidden="true">
+  <div class="modal fade" id="studentModal{{ student.lrn }}" tabindex="-1" aria-labelledby="studentModalLabel{{ student.lrn }}" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="studentModalLabel{{ student.id }}">Student Profile</h5>
+          <h5 class="modal-title" id="studentModalLabel{{ student.lrn }}">Student Profile</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -95,8 +99,8 @@
           </div>
         </div>
         <div class="modal-footer">
-          <a href="{% url 'edit_student' student.id %}" class="btn btn-secondary">Edit</a>
-          <a href="{% url 'delete_student' student.id %}" class="btn btn-danger" title="Delete" onclick="return confirm('Are you sure you want to delete this item?');">
+          <a href="{% if student.LRN %}{% url 'edit_student' student.LRN %}{% endif %}" class="btn btn-secondary">Edit</a>
+          <a href="{% if student.LRN %}{% url 'delete_student' student.LRN %}{% endif %}" class="btn btn-danger" title="Delete">
             Delete
           </a>
         </div>
