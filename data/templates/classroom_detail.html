@@ -51,7 +51,7 @@
           <td>
             <button type="button" class="btn btn-primary view-button" data-bs-toggle="modal" data-bs-target="#studentModal{{ student.lrn }}{{ forloop.counter }}">
               View Profile
-            </button> 
+            </button>
         </tr>
         {% endfor %}
       </tbody>
@@ -61,7 +61,7 @@
   
   {% for student in students %}
   <!-- Modal - Student Profile -->
-  <div class="modal fade" id="studentModal{{ student.lrn }}" tabindex="-1" aria-labelledby="studentModalLabel{{ student.lrn }}" aria-hidden="true">
+  <div class="modal fade" id="studentModal{{ student.lrn }}{{ forloop.counter }}" tabindex="-1" aria-labelledby="studentModalLabel{{ student.lrn }}" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">

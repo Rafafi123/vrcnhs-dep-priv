@@ -281,7 +281,11 @@ def edit(request, lrn):
             else:
                 return redirect("students")
     else:
+        # Create the form instance without providing initial values
         form = StudentForm(instance=student)
+
+        # Manually set the initial value for the 'sex' field
+        form.fields['sex'].initial = student.sex
     context = {'form': form, 'student': student}
     return render(request, 'edit.html', context)
 
@@ -670,11 +674,52 @@ def student_record(request):
     context = {'student_records': student_records}
     return render(request, 'student_record.html', context)
 
-#EXPORT 
 @allowed_users(allowed_roles=['ADMIN'])
 def export_students_to_excel(request):
-    students = Student.objects.all().values()
-    df = pd.DataFrame(list(students))
+    students = Student.objects.all()
+
+    # Create a DataFrame with fields from the Student model and related data
+    data = {
+        'LRN': [student.LRN for student in students],
+        'last_name': [student.last_name for student in students],
+        'first_name': [student.first_name for student in students],
+        'middle_name': [student.middle_name for student in students],
+        'suffix_name': [student.suffix_name for student in students],
+        'status': [student.status for student in students],
+        'birthday': [student.birthday.strftime('%d/%m/%Y') if student.birthday else None for student in students],
+        'religion': [student.religion for student in students],
+        'other_religion': [student.other_religion for student in students],
+        'age': [student.age for student in students],
+        'sem': [student.sem for student in students],
+        'classroom': [student.classroom.classroom if student.classroom else None for student in students],
+        'gradelevel': [student.gradelevel.grade if student.gradelevel else None for student in students],
+        'sex': [student.sex for student in students],
+        'birth_place': [student.birth_place for student in students],
+        'mother_tongue': [student.mother_tongue for student in students],
+        'address': [student.address for student in students],
+        'father_name': [student.father_name for student in students],
+        'father_contact': [student.father_contact for student in students],
+        'mother_name': [student.mother_name for student in students],
+        'mother_contact': [student.mother_contact for student in students],
+        'guardian_name': [student.guardian_name for student in students],
+        'guardian_contact': [student.guardian_contact for student in students],
+        'last_grade_level': [student.last_grade_level for student in students],
+        'last_school_attended': [student.last_school_attended for student in students],
+        'last_schoolyear_completed': [student.last_schoolyear_completed for student in students],
+        'strand': [student.strand for student in students],
+        'household_income': [student.household_income for student in students],
+        'is_returnee': [student.is_returnee for student in students],
+        'is_a_dropout': [student.is_a_dropout for student in students],
+        'is_a_working_student': [student.is_a_working_student for student in students],
+        'previous_adviser': [student.previous_adviser for student in students],
+        'adviser_contact': [student.adviser_contact for student in students],
+        'health_bmi': [student.health_bmi for student in students],
+        'general_average': [student.general_average for student in students],
+        'is_a_four_ps_scholar': [student.is_a_four_ps_scholar for student in students],
+        'notes': [student.notes for student in students],
+    }
+
+    df = pd.DataFrame(data)
 
     # Convert DataFrame to Excel
     response = HttpResponse(content_type='application/ms-excel')
