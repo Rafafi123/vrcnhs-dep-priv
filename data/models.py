@@ -67,8 +67,8 @@ class Student(models.Model):
     LRN = models.CharField(primary_key=True, max_length=30)
     last_name = models.CharField(max_length=30)
     first_name = models.CharField(max_length=30)
-    middle_name = models.CharField(max_length=30, blank=True)
-    suffix_name = models.CharField(max_length=10, blank=True) # "Jr., I, II, III, etc. 
+    middle_name = models.CharField(max_length=30, blank=True, null=True)
+    suffix_name = models.CharField(max_length=10, blank=True, null=True)  # "Jr., I, II, III, etc.
     STATUS_CHOICES = [
         ('Processing', 'Processing'),
         ('For Dropout', 'For Dropout'),
@@ -77,8 +77,8 @@ class Student(models.Model):
         ('For Graduation', 'For Graduation'),
     ]
     status = models.CharField(max_length=30, choices=STATUS_CHOICES, blank=True, null=True)
-    
-    birthday = models.DateField(default=date.today)
+
+    birthday = models.DateField(default=date.today, null=True)
     RELIGION_CHOICES = [
         ('Christianity', 'Christianity'),
         ('Roman catholic', 'Roman Catholic'),
@@ -89,81 +89,81 @@ class Student(models.Model):
         ('Sikhism', 'Sikhism'),
         ('Other', 'Other'),
     ]
-    religion = models.CharField(max_length=30, choices=RELIGION_CHOICES, default='other')
-    other_religion = models.CharField(max_length=30, blank=True)# This is finally working can now be added inside the information of the students
-    age = models.IntegerField()
-    semester =(
+    religion = models.CharField(max_length=30, choices=RELIGION_CHOICES, default='other', null=True)
+    other_religion = models.CharField(max_length=30, blank=True, null=True)  # This is finally working can now be added inside the information of the students
+    age = models.IntegerField(null=True)
+    semester = (
         ('Yearly', 'Yearly'),
         ('1st Semester', '1st Semester'),
         ('2nd Semester', '2nd Semester'),
     )
-    sem = models.CharField(max_length=30, choices=semester, null=True, default='None')####   
-    classroom = models.ForeignKey(Classroom, null = True, verbose_name =  "Classrooms", on_delete=models.SET_NULL)
-    gradelevel = models.ForeignKey(Gradelevel, on_delete=models.SET_NULL, null=True)
+    sem = models.CharField(max_length=30, choices=semester, null=True, default='None')  ####
+    classroom = models.ForeignKey('Classroom', null=True, verbose_name="Classrooms", on_delete=models.SET_NULL)
+    gradelevel = models.ForeignKey('Gradelevel', on_delete=models.SET_NULL, null=True)
     sex_student = (
-    ('Male', 'Male'),
-    ('Female', 'Female'),
+        ('Male', 'Male'),
+        ('Female', 'Female'),
     )
-    sex = models.CharField(max_length=10, choices=sex_student)
-    birth_place = models.CharField(max_length=20)
-    mother_tongue = models.CharField(max_length=20)
-    address = models.CharField(max_length=200)
+    sex = models.CharField(max_length=10, choices=sex_student, null=True)
+    birth_place = models.CharField(max_length=20, null=True)
+    mother_tongue = models.CharField(max_length=20, null=True)
+    address = models.CharField(max_length=200, null=True)
 
-    father_name = models.CharField(max_length=120) # this section is for the parents and guardian
-    father_contact = models.CharField(max_length=15)
-    mother_name = models.CharField(max_length=120) # this section is for the parents and guardian
-    mother_contact = models.CharField(max_length=15)
-    guardian_name = models.CharField(max_length=120) # this section is for the parents and guardian
-    guardian_contact = models.CharField(max_length=15)
-    last_grade_level = models.IntegerField(null=True) # this is for the returning learner
-    last_school_attended = models.CharField(max_length=30)
-    last_schoolyear_completed = models.CharField(max_length=12)
+    father_name = models.CharField(max_length=120, null=True)  # this section is for the parents and guardian
+    father_contact = models.CharField(max_length=15, null=True)
+    mother_name = models.CharField(max_length=120, null=True)  # this section is for the parents and guardian
+    mother_contact = models.CharField(max_length=15, null=True)
+    guardian_name = models.CharField(max_length=120, null=True)  # this section is for the parents and guardian
+    guardian_contact = models.CharField(max_length=15, null=True)
+    last_grade_level = models.IntegerField(null=True)  # this is for the returning learner
+    last_school_attended = models.CharField(max_length=30, null=True)
+    last_schoolyear_completed = models.CharField(max_length=12, null=True)
     academic_strand = (
-    ('STEM', 'STEM'),
-    ('BAM', 'BAM'),
-    ('HESS', 'HESS'),
-    ('SPORTS & ARTS', 'SPORTS & ARTS'),
-    ('TVL', 'TVL'),
-    ('GAS', 'GAS'),  # added for the strand
-    ('HE', 'HE'),
-    ('ICT', 'ICT'),
-    ('IA', 'IA'),
-    ('Not Applicable (JHS)', 'Not Applicable (JHS)'),
+        ('STEM', 'STEM'),
+        ('BAM', 'BAM'),
+        ('HESS', 'HESS'),
+        ('SPORTS & ARTS', 'SPORTS & ARTS'),
+        ('TVL', 'TVL'),
+        ('GAS', 'GAS'),  # added for the strand
+        ('HE', 'HE'),
+        ('ICT', 'ICT'),
+        ('IA', 'IA'),
+        ('Not Applicable (JHS)', 'Not Applicable (JHS)'),
     )
     strand = models.CharField(choices=academic_strand, max_length=50, null=True)
     household_income_choices = (
-    ('above Php 35,000', 'above Php 35,000'),
-    ('from Php 18,000 - Php 35,000', 'from Php 18,000 - Php 35,000'),
-    ('from Php 9,000 - Php 18,000', 'from Php 9,000 - Php 18,000'),
-    ('below Php 9,000', 'below Php 9,000'),
+        ('above Php 35,000', 'above Php 35,000'),
+        ('from Php 18,000 - Php 35,000', 'from Php 18,000 - Php 35,000'),
+        ('from Php 9,000 - Php 18,000', 'from Php 9,000 - Php 18,000'),
+        ('below Php 9,000', 'below Php 9,000'),
     )
-    household_income = models.CharField(max_length=30, choices=household_income_choices, null= True)
+    household_income = models.CharField(max_length=30, choices=household_income_choices, null=True)
     is_returnee_student = (
         ('Yes', 'Yes'),
         ('No', 'No')
     )
-    is_returnee = models.CharField(max_length=5, choices=is_returnee_student)####
+    is_returnee = models.CharField(max_length=5, choices=is_returnee_student, null=True)  ####
     drop_out = (
         ('Yes', 'Yes'),
         ('No', 'No')
     )
-    is_a_dropout = models.CharField(max_length=5, choices=drop_out)#####
+    is_a_dropout = models.CharField(max_length=5, choices=drop_out, null=True)  #####
     working_student = (
         ('Yes', 'Yes'),
         ('No', 'No')
     )
-    is_a_working_student = models.CharField(max_length=5, choices=working_student)######
-    previous_adviser = models.CharField(max_length=50)
+    is_a_working_student = models.CharField(max_length=5, choices=working_student, null=True)  ######
+    previous_adviser = models.CharField(max_length=50, null=True)
     adviser_contact = models.IntegerField(null=True)
-    health_bmi =  models.DecimalField(max_digits=10, decimal_places=2, null=True)
+    health_bmi = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     general_average = models.DecimalField(max_digits=10, decimal_places=2, null=True)
     scholarship_program = (
         ('Yes', 'Yes'),
         ('No', 'No')
     )
-    is_a_four_ps_scholar = models.CharField(max_length=5, choices=scholarship_program) #4ps scholarship program ##########
+    is_a_four_ps_scholar = models.CharField(max_length=5, choices=scholarship_program, null=True)  # 4ps scholarship program ##########
     history = HistoricalRecords()
-    edited_fields = models.CharField(max_length=255, blank=True)  # Field to store edited fields
+    edited_fields = models.CharField(max_length=255, blank=True, null=True)  # Field to store edited fields
     notes = models.CharField(max_length=300, blank=True, null=True)
 
   

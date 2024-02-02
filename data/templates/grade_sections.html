@@ -70,8 +70,15 @@
         {% endfor %}
     {% endif %}
 </div>
-
 <center>
+<!-- IMPORT -->
+<form method="post" enctype="multipart/form-data" action="{% url 'import_classrooms' %}">
+    {% csrf_token %}
+    <input type="file" name="myfile"/>
+    <button type="submit">Upload</button>
+  </form>
+
+
     <br>
     <a href="{% url 'export_classrooms_to_excel' %}" class="btn btn-success" style="margin-left: 10px;">
         Export Classrooms to Excel
