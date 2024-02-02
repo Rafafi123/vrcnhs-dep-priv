@@ -51,7 +51,7 @@
                     <td>{{ student.last_name }}, {{ student.first_name }} {{ student.middle_name }} {{ student.suffix_name }}</td>
                     <td>{{ student.status }}</td>
                     <td>{{ student.gradelevel.grade }} {{ student.classroom }}
-                        <select name="classroom_{{ student.id }}" class="form-select" required>
+                        <select name="classroom_{{ student.LRN_str }}" class="form-select" required>
                             {% for classroom in student.classroom_options %}
                                 <option value="{{ classroom.id }}" {% if classroom.id == student.classroom.id %} selected {% endif %}>
                                     {{ classroom }}
@@ -94,7 +94,7 @@
                     <td>{{ student.last_name }}, {{ student.first_name }} {{ student.middle_name }} {{ student.suffix_name }}</td>
                     <td>{{ student.status }}</td>
                     <td>{{ student.gradelevel.grade }} {{ student.classroom }}
-                        <select name="classroom_{{ student.id }}" class="form-select" required>
+                        <select name="classroom_{{ student.LRN_str }}" class="form-select" required>
                             {% for classroom in student.classroom_options %}
                                 <option value="{{ classroom.id }}" {% if classroom.id == student.classroom.id %} selected {% endif %}>
                                     {{ classroom }}
@@ -137,7 +137,7 @@
                     <td>{{ student.last_name }}, {{ student.first_name }} {{ student.middle_name }} {{ student.suffix_name }}</td>
                     <td>{{ student.status }}</td>
                     <td>{{ student.gradelevel.grade }} {{ student.classroom }}
-                        <select name="classroom_{{ student.id }}" class="form-select" required>
+                        <select name="classroom_{{ student.LRN_str }}" class="form-select" required>
                             {% for classroom in student.classroom_options %}
                                 <option value="{{ classroom.id }}" {% if classroom.id == student.classroom.id %} selected {% endif %}>
                                     {{ classroom }}
@@ -180,7 +180,7 @@
                     <td>{{ student.last_name }}, {{ student.first_name }} {{ student.middle_name }} {{ student.suffix_name }}</td>
                     <td>{{ student.status }}</td>
                     <td>{{ student.gradelevel.grade }} {{ student.classroom }}
-                        <select name="classroom_{{ student.id }}" class="form-select" required>
+                        <select name="classroom_{{ student.LRN_str }}" class="form-select" required>
                             {% for classroom in student.classroom_options %}
                                 <option value="{{ classroom.id }}" {% if classroom.id == student.classroom.id %} selected {% endif %}>
                                     {{ classroom }}

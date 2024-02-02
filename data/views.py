@@ -908,6 +908,7 @@ def students_for_promotion(request):
     for grade, students in [('Grade 8', students_grade_8), ('Grade 9', students_grade_9), ('Grade 10', students_grade_10), ('Grade 11', students_grade_11), ('Grade 12', students_grade_12)]:  # and so on for each grade
         for student in students:
             student.classroom_options = grade_level_classrooms[student.gradelevel_id]
+            student.LRN_str = str(student.LRN)  # Add LRN as a string to the context
 
 
     # Other necessary context data (if needed)
@@ -930,19 +931,19 @@ def assign_classroom_bulk(request, grade):
 
         for key, value in request.POST.items():
             if key.startswith('classroom_'):
-                student_lrn = key.split('_')[1]
+                student_lrn_str = key.split('_')[1] 
                 classroom_id = value
 
                 try:
-                    student = Student.objects.get(LRN=student_lrn)
+                    student = Student.objects.get(LRN=str(student_lrn_str))  # Convert LRN to string for comparison
                     classroom = Classroom.objects.get(id=classroom_id)
                     student.classroom = classroom
                     student.status = 'Processing'  # Update status to "Processing"
                     student.save()
-                    student_lrns.append(student_lrn)
+                    student_lrns.append(student_lrn_str)  # Use LRN_str here
 
                 except Student.DoesNotExist:
-                    messages.warning(request, f"Student with LRN {student_lrn} does not exist. Skipping.")
+                    messages.warning(request, f"Student with LRN {student_lrn_str} does not exist. Skipping.")
                     continue
 
                 except Classroom.DoesNotExist:
