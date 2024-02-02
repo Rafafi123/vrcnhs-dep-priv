@@ -823,6 +823,82 @@ def import_students_from_excel(request):
             messages.info(request, f"Error loading student/s from the file: {str(e)}")
 
     return render(request, 'view_students.html')  # Re-render the view_students.html page after processing
+
+def import_students_from_excel_USER(request):
+    # Processes the student import request.
+
+    if request.method == 'POST':  # Check if a POST request (file submission) was made
+        student_resource = StudentResource()  # Instantiate a StudentResource object (likely for data validation)
+        dataset = Dataset()  # Instantiate a Dataset object for loading the Excel data
+        new_student = request.FILES['myfile']  # Retrieve the uploaded file from the request
+
+        if not new_student.name.endswith('xlsx'):  # Validate file extension
+            messages.error(request, 'Please upload an Excel file only (.xlsx)')  # Display an error message
+            return render(request, 'user_page.html')  # Re-render the view_students.html page
+
+        try:
+            imported_data = dataset.load(new_student.read(), format='xlsx')  # Load Excel data into a dataset
+            successfully_imported = 0
+
+            for data in imported_data:  # Iterate through each student record in the dataset
+                classroom_identifier = data[12]  # Extract classroom identifier from the 13th column (index 12)
+                gradelevel_identifier = data[13]  # Extract grade level identifier from the 14th column (index 13)
+                print("Classroom Identifier:", classroom_identifier)  # Log classroom identifier
+                classroom_instance = Classroom.objects.get(classroom=classroom_identifier)  # Retrieve classroom object
+                gradelevel_instance = Gradelevel.objects.get(grade=gradelevel_identifier)
+
+                try:
+                    # Create a new Student object with data from the Excel row
+                    value = Student(
+                        LRN=data[1],
+                        last_name=data[2],
+                        first_name=data[3],
+                        middle_name=data[4],
+                        suffix_name=data[5],
+                        status=data[6],
+                        birthday=data[7],
+                        religion=data[8],
+                        other_religion=data[9],
+                        age=data[10],
+                        sem=data[11],
+                        classroom=classroom_instance,  # Assign retrieved classroom object
+                        gradelevel=gradelevel_instance,  # Assign retrieved grade level object
+                        sex=data[14],
+                        birth_place=data[15],
+                        mother_tongue=data[16],
+                        address=data[17],
+                        father_name=data[18],
+                        father_contact=data[19],
+                        mother_name=data[20],
+                        mother_contact=data[21],
+                        guardian_name=data[22],
+                        guardian_contact=data[23],
+                        last_grade_level=data[24],
+                        last_school_attended=data[25],
+                        last_schoolyear_completed=data[26],
+                        strand=data[27],
+                        household_income=data[28],
+                        is_returnee=data[29],
+                        is_a_dropout=data[30],
+                        is_a_working_student=data[31],
+                        previous_adviser=data[32],
+                        adviser_contact=data[33],
+                        health_bmi=data[34],
+                        general_average=data[35],
+                        is_a_four_ps_scholar=data[36],
+                        notes=data[37]
+                    )
+                    value.save()  # Save the student object to the database
+                except Exception as e:
+                    messages.error(request, f"Error saving student data: {str(e)}")
+
+            if successfully_imported > 0:
+                messages.success(request, f"Successfully imported {successfully_imported} student(s) into the database.")
+
+        except Exception as e:
+            messages.info(request, f"Error loading student/s from the file: {str(e)}")
+
+    return render(request, 'user_page.html')  # Re-render the view_students.html page after processing
 #===============================================================#
 
 def import_classrooms_from_excel(request):
