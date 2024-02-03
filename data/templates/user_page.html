@@ -3,6 +3,8 @@
 
 {% block head_block %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <!-- Link to Bootstrap JavaScript -->
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -94,39 +96,54 @@
 </form>
 <script src="{% static 'js/script.js' %}"></script>
 {% for student in students %}
-<!-- Modal - Student Profile -->
-<div class="modal fade" id="studentModal{{ student.id }}" tabindex="-1"
-    aria-labelledby="studentModalLabel{{ student.id }}" aria-hidden="true">
+  <!-- Modal - Student Profile -->
+  <div class="modal fade" id="studentModal{{ student.lrn }}{{ forloop.counter }}" tabindex="-1" aria-labelledby="studentModalLabel{{ student.lrn }}" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-      <div class="profile-section">
-        <h4>Student Information</h4>
-        <p><strong>Name:</strong> {{ student.first_name }} {{ student.last_name }}</p>
-        <p><strong>Age:</strong> {{ student.age }}</p>
-        <p><strong>Grade:</strong> {{ student.classroom }}</p>
-        <p><strong>Academic Strand:</strong> {{ student.get_strand_display }}</p>
-        <p><strong>Address:</strong> {{ student.address }}</p>
-        <p><strong>Gender:</strong> {{ student.sex }}</p>
-        <p><strong>Birthday:</strong> {{ student.birthday }}</p>
-        <p><strong>Religion:</strong> {{ student.religion }} (Other Religion: {{ student.other_religion }})</p>
-        <p><strong>Mother Tongue:</strong> {{ student.mother_tongue }}</p>
-        <!--<p><strong>Preferred Learning Modality:</strong> {{ student.modality_options }}</p> -->
-        <p><strong>Economic Range:</strong> {{ student.get_economic_range_display }}</p>
-        <p><strong>Returnee Student:</strong> {{ student.get_is_returnee_display }}</p>
-        <p><strong>Working Student:</strong> {{ student.get_is_a_working_student_display }}</p>
-        <p><strong>Drop Out:</strong> {{ student.get_is_a_dropout_display }}</p>
-        <p><strong>4Ps Scholar:</strong> {{ student.get_is_a_four_ps_scholar_display }}</p>
-        <!-- Add more student profile data as needed -->
-      </div>
-      
-      <div class="profile-section">
-        <h4>Parents Information</h4>
-        <p><strong>Father's Name & Contact:</strong> {{ student.father_name }} {{ student.father_contact }}</p>
-        <p><strong>Mother's Name & Contact:</strong> {{ student.mother_name }} {{ student.mother_contact }}</p>
-        <!-- Add more parent profile data as needed -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="studentModalLabel{{ student.lrn }}">Student Profile</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="profile-section">
+            <h4>Student Information</h4>
+            <p><strong>Name:</strong> {{ student.first_name }} {{ student.last_name }}</p>
+            <p><strong>Age:</strong> {{ student.age }}</p>
+            <p><strong>Grade:</strong> {{ student.classroom }}</p>
+            <p><strong>Academic Strand:</strong> {{ student.get_strand_display }}</p>
+            <p><strong>Address:</strong> {{ student.address }}</p>
+            <p><strong>Gender:</strong> {{ student.sex }}</p>
+            <p><strong>Birthday:</strong> {{ student.birthday }}</p>
+            <p><strong>Religion:</strong> {{ student.religion }} (Other Religion: {{ student.other_religion }})</p>
+            <p><strong>Mother Tongue:</strong> {{ student.mother_tongue }}</p>
+            <!--<p><strong>Preferred Learning Modality:</strong> {{ student.modality_options }}</p> -->
+            <p><strong>Economic Range:</strong> {{ student.get_economic_range_display }}</p>
+            <p><strong>Returnee Student:</strong> {{ student.get_is_returnee_display }}</p>
+            <p><strong>Working Student:</strong> {{ student.get_is_a_working_student_display }}</p>
+            <p><strong>Drop Out:</strong> {{ student.get_is_a_dropout_display }}</p>
+            <p><strong>4Ps Scholar:</strong> {{ student.get_is_a_four_ps_scholar_display }}</p>
+            <!-- Add more student profile data as needed -->
+          </div>
+          
+          <div class="profile-section">
+          <h4>Parents Information</h4>
+          <p><strong>Father's Name:</strong> {{ student.father_name }} {{ student.father_contact }}</p>
+          <p><strong>Father Contact #:</strong> {{ student.father_contact }}</p>
+          <p><strong>Mother's Name:</strong> {{ student.mother_name }}</p>
+          <p><strong>Mother Contact #:</strong> {{ student.mother_contact }}</p>
+            <!-- Add more parent profile data as needed -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a href="{% if student.LRN %}{% url 'edit_student' student.LRN %}{% endif %}" class="btn btn-secondary">Edit</a>
+          <a href="{% if student.LRN %}{% url 'delete_student' student.LRN %}{% endif %}" class="btn btn-danger" title="Delete">
+            Delete
+          </a>
+        </div>
       </div>
     </div>
-</div>
-{% endfor %}
+  </div>
+  {% endfor %}
 
 <center>
     <button id="promoteButton"
