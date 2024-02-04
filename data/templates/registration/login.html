@@ -12,10 +12,12 @@
 <div class="row justify-content-center">
     <div class="COL-6">
         <div class="card">
+            <h4>Student Information System</h4>
+            <br>
             <img src="{% static "images/logo.png" %}" alt="login" />
             <div class="card-body">
 
-                    <!-- Notuification for when a new account is made successfully --> 
+                    <!-- Notification for when a new account is made successfully --> 
                     
                     {% for message in messages %}
 
@@ -28,13 +30,12 @@
                     {% endfor %}
 
 
-            <h2>Log In</h2>
+           
+                
                 <form method = "post" novalidate>
                     {% csrf_token %}
                     {{ form|crispy }}
                     <button type = "submit" class="btn btn-primary">Log In</button>
-
-
                 </form>
             </div>
             <script src="{% static 'js/script.js' %}"></script>
