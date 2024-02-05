@@ -1,3 +1,4 @@
+from io import BytesIO
 from openpyxl.styles import NamedStyle
 from openpyxl.utils import get_column_letter
 from django.shortcuts import render, redirect, get_object_or_404
@@ -19,7 +20,7 @@ import plotly.io as pio
 from .forms import StudentSearchForm, StudentForm, TeacherSearchForm, TeacherSignupForm, AdminTeacherStudentForm  # this is for the search function
 import pandas as pd # this is for the data analysis
 from django.db.models import Count, Avg
-from django.http import JsonResponse
+from django.http import FileResponse, JsonResponse
 from django.views.decorators.cache import cache_page #
 from chartjs.views.lines import BaseLineChartView 
 from django.http import HttpResponse
@@ -676,7 +677,23 @@ def student_record(request):
     context = {'student_records': student_records}
     return render(request, 'student_record.html', context)
 
+#TEMPLATE
+def download_template(request):
+    # Logic to serve the download link for the template file
+    existing_wb = load_workbook('data/static/media/VRCNHS_STUDENT_TEMPLATE(CLEAR).xlsx')
+
+    # Save the workbook to a BytesIO buffer
+    buffer = BytesIO()
+    existing_wb.save(buffer)
+    buffer.seek(0)
+
+    response = FileResponse(buffer, as_attachment=True, filename='Students_Template.xlsx')
+    
+    return response
+
+
 #EXPORT student
+
 @allowed_users(allowed_roles=['ADMIN'])
 def export_students_to_excel(request):
     students = Student.objects.all()
@@ -1017,3 +1034,5 @@ def get_next_grade(current_grade):
             return None  # No next grade (end of sequence)
     except ValueError:
         return None  # Current grade not found in the sequence
+    
+

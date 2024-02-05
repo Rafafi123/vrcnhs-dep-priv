@@ -22,7 +22,7 @@
 </div>
 <br>
 
-<h6>IMPORT STUDENTS using Excel (.xlsx) files. Please use this template.</h6>
+<h6>IMPORT STUDENTS using Excel (.xlsx) files. Please use <a href="{% url 'download_template' %}" download>This Template.</a></h6>
 
 <!-- IMPORT -->
 <form method="post" enctype="multipart/form-data" action="{% url 'import_students' %}">
@@ -73,7 +73,11 @@
       <tr>
         
         <td>{{ student.LRN }}</td>
-        <td>{{ student.last_name }} {{ student.suffix_name }}, {{ student.first_name }} {{ student.middle_name }} </td>
+        <td>{{ student.last_name }} 
+          {% if student.suffix_name %}, {{ student.suffix_name }}{% endif %}
+          {% if student.first_name %}, {{ student.first_name }}{% endif %}
+          {% if student.middle_name %} {{ student.middle_name }}{% endif %}
+        </td>
         <td>{{ student.status }}</td>
         <td>{{ student.age }}</td>
         <td>{{ student.gradelevel.grade }} {{ student.classroom }}</td>
