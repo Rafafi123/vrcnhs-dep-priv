@@ -1,9 +1,11 @@
-
+from openpyxl.styles import NamedStyle
+from openpyxl.utils import get_column_letter
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from openpyxl import load_workbook
 from tablib import Dataset
 from data.resources import ClassroomResource, StudentResource
 from .forms import StudentForm
@@ -674,60 +676,67 @@ def student_record(request):
     context = {'student_records': student_records}
     return render(request, 'student_record.html', context)
 
+#EXPORT student
 @allowed_users(allowed_roles=['ADMIN'])
 def export_students_to_excel(request):
     students = Student.objects.all()
 
-    # Create a DataFrame with fields from the Student model and related data
-    data = {
-        'LRN': [student.LRN for student in students],
-        'last_name': [student.last_name for student in students],
-        'first_name': [student.first_name for student in students],
-        'middle_name': [student.middle_name for student in students],
-        'suffix_name': [student.suffix_name for student in students],
-        'status': [student.status for student in students],
-        'birthday': [student.birthday.strftime('%d/%m/%Y') if student.birthday else None for student in students],
-        'religion': [student.religion for student in students],
-        'other_religion': [student.other_religion for student in students],
-        'age': [student.age for student in students],
-        'sem': [student.sem for student in students],
-        'classroom': [student.classroom.classroom if student.classroom else None for student in students],
-        'gradelevel': [student.gradelevel.grade if student.gradelevel else None for student in students],
-        'sex': [student.sex for student in students],
-        'birth_place': [student.birth_place for student in students],
-        'mother_tongue': [student.mother_tongue for student in students],
-        'address': [student.address for student in students],
-        'father_name': [student.father_name for student in students],
-        'father_contact': [student.father_contact for student in students],
-        'mother_name': [student.mother_name for student in students],
-        'mother_contact': [student.mother_contact for student in students],
-        'guardian_name': [student.guardian_name for student in students],
-        'guardian_contact': [student.guardian_contact for student in students],
-        'last_grade_level': [student.last_grade_level for student in students],
-        'last_school_attended': [student.last_school_attended for student in students],
-        'last_schoolyear_completed': [student.last_schoolyear_completed for student in students],
-        'strand': [student.strand for student in students],
-        'household_income': [student.household_income for student in students],
-        'is_returnee': [student.is_returnee for student in students],
-        'is_a_dropout': [student.is_a_dropout for student in students],
-        'is_a_working_student': [student.is_a_working_student for student in students],
-        'previous_adviser': [student.previous_adviser for student in students],
-        'adviser_contact': [student.adviser_contact for student in students],
-        'health_bmi': [student.health_bmi for student in students],
-        'general_average': [student.general_average for student in students],
-        'is_a_four_ps_scholar': [student.is_a_four_ps_scholar for student in students],
-        'notes': [student.notes for student in students],
-    }
+    # Load the existing workbook
+    existing_wb = load_workbook('data/static/media/VRCNHS_STUDENT_TEMPLATE.xlsx')
+    sheet = existing_wb.active
 
-    df = pd.DataFrame(data)
+    # Clear data in the range from 2nd row and 2nd column onward
+    for row in sheet.iter_rows(min_row=2, min_col=2, max_row=sheet.max_row, max_col=sheet.max_column):
+        for cell in row:
+            cell.value = None
+    print("Data cleared from excel template")
 
-    # Convert DataFrame to Excel
-    response = HttpResponse(content_type='application/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename="students_data.xlsx"'
+    # Write data to the sheet starting from column 2
+    start_row = 2  # Set a fixed starting row number
+    start_column = 2  # Adjust the starting column number here
 
-    with pd.ExcelWriter(response) as writer:
-        df.to_excel(writer, index=False)
+    # Set a date style
+    date_style = NamedStyle(name='date_style', number_format='YYYY-MM-DD')
 
+    for row_num, student in enumerate(students, start_row):
+        for col_num, field in enumerate(Student._meta.fields, start_column):
+            col_letter = get_column_letter(col_num)
+
+            # Convert LRN, age, and other specific fields to integers
+            if field.name in ['LRN', 'age', 'father_contact', 'mother_contact', 'guardian_contact', 'last_grade_level', 'adviser_contact']:
+                field_value = getattr(student, field.name)
+                if field_value is not None:
+                    field_value = int(field_value)
+            elif field.name in ['health_bmi', 'general_average']:
+                field_value = getattr(student, field.name)
+                if field_value is not None:
+                    field_value = float(field_value)
+            elif field.name == 'birthday':
+                # Set the birthday as a date value
+                field_value = getattr(student, field.name)
+                if field_value is not None:
+                    sheet[f"{col_letter}{row_num}"] = field_value
+                    sheet[f"{col_letter}{row_num}"].style = date_style
+                else:
+                    sheet[f"{col_letter}{row_num}"] = None
+            else:
+                # Convert foreign key instances to a string representation
+                field_value = getattr(student, field.name)
+                if field_value is not None:
+                    field_value = str(field_value)
+                else:
+                    field_value = ""  # Set to an empty string if the value is None
+
+            sheet[f"{col_letter}{row_num}"] = field_value
+
+     # Save the changes to the existing workbook
+    response = HttpResponse(content_type='data/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=students_data_updated.xlsx'
+    existing_wb.save(response)
+
+    print("Data successfully exported to Excel!")
+
+    # Return a response or redirect to some page
     return response
 
 #EXPORT 
@@ -823,83 +832,6 @@ def import_students_from_excel(request):
             messages.info(request, f"Error loading student/s from the file: {str(e)}")
 
     return render(request, 'view_students.html')  # Re-render the view_students.html page after processing
-
-def import_students_from_excel_USER(request):
-    # Processes the student import request.
-
-    if request.method == 'POST':  # Check if a POST request (file submission) was made
-        student_resource = StudentResource()  # Instantiate a StudentResource object (likely for data validation)
-        dataset = Dataset()  # Instantiate a Dataset object for loading the Excel data
-        new_student = request.FILES['myfile']  # Retrieve the uploaded file from the request
-
-        if not new_student.name.endswith('xlsx'):  # Validate file extension
-            messages.error(request, 'Please upload an Excel file only (.xlsx)')  # Display an error message
-            return render(request, 'user_page.html')  # Re-render the view_students.html page
-
-        try:
-            imported_data = dataset.load(new_student.read(), format='xlsx')  # Load Excel data into a dataset
-            successfully_imported = 0
-
-            for data in imported_data:  # Iterate through each student record in the dataset
-                classroom_identifier = data[12]  # Extract classroom identifier from the 13th column (index 12)
-                gradelevel_identifier = data[13]  # Extract grade level identifier from the 14th column (index 13)
-                print("Classroom Identifier:", classroom_identifier)  # Log classroom identifier
-                classroom_instance = Classroom.objects.get(classroom=classroom_identifier)  # Retrieve classroom object
-                gradelevel_instance = Gradelevel.objects.get(grade=gradelevel_identifier)
-
-                try:
-                    # Create a new Student object with data from the Excel row
-                    value = Student(
-                        LRN=data[1],
-                        last_name=data[2],
-                        first_name=data[3],
-                        middle_name=data[4],
-                        suffix_name=data[5],
-                        status=data[6],
-                        birthday=data[7],
-                        religion=data[8],
-                        other_religion=data[9],
-                        age=data[10],
-                        sem=data[11],
-                        classroom=classroom_instance,  # Assign retrieved classroom object
-                        gradelevel=gradelevel_instance,  # Assign retrieved grade level object
-                        sex=data[14],
-                        birth_place=data[15],
-                        mother_tongue=data[16],
-                        address=data[17],
-                        father_name=data[18],
-                        father_contact=data[19],
-                        mother_name=data[20],
-                        mother_contact=data[21],
-                        guardian_name=data[22],
-                        guardian_contact=data[23],
-                        last_grade_level=data[24],
-                        last_school_attended=data[25],
-                        last_schoolyear_completed=data[26],
-                        strand=data[27],
-                        household_income=data[28],
-                        is_returnee=data[29],
-                        is_a_dropout=data[30],
-                        is_a_working_student=data[31],
-                        previous_adviser=data[32],
-                        adviser_contact=data[33],
-                        health_bmi=data[34],
-                        general_average=data[35],
-                        is_a_four_ps_scholar=data[36],
-                        notes=data[37]
-                    )
-                    value.save()  # Save the student object to the database
-                except Exception as e:
-                    messages.error(request, f"Error saving student data: {str(e)}")
-
-            if successfully_imported > 0:
-                messages.success(request, f"Successfully imported {successfully_imported} student(s) into the database.")
-
-        except Exception as e:
-            messages.info(request, f"Error loading student/s from the file: {str(e)}")
-
-    return render(request, 'user_page.html')  # Re-render the view_students.html page after processing
-#===============================================================#
 
 def import_classrooms_from_excel(request):
     # Processes the classroom import request.
