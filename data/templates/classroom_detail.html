@@ -43,7 +43,11 @@
         {% for student in students %}
         <tr>
           <td>{{ student.LRN }}</td>
-          <td>{{ student.last_name }}, {{ student.first_name }} {{ student.middle_name }} {{ student.suffix_name }}</td>
+          <td>{{ student.last_name }} 
+            {% if student.suffix_name %}, {{ student.suffix_name }}{% endif %}
+            {% if student.first_name %}, {{ student.first_name }}{% endif %}
+            {% if student.middle_name %} {{ student.middle_name }}{% endif %}
+          </td>
           <td>{{ student.religion }}</td>
           <td>{{ student.age }}</td>
           <td>{{ student.classroom }}</td>
