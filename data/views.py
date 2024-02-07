@@ -983,41 +983,45 @@ def assign_classroom_bulk(request, grade):
     
 @login_required(login_url='login')
 def bulk_promote_students(request):
+    response_data = {'success': False, 'message': 'Failed to promote students'}
     if request.method == 'POST':
-        try:
-            # Assuming there is a direct reference from Classroom to Teacher
-            user_classroom = Classroom.objects.get(teacher__user=request.user)
-        except Classroom.DoesNotExist:
-            # Handle the case where there is no associated Classroom for the teacher
-            messages.error(request, 'User is not associated with a classroom.')
-            return redirect('students')  # Replace 'students' with the actual URL name of your students page
+        try:    
+            try:
+                # Assuming there is a direct reference from Classroom to Teacher
+                user_classroom = Classroom.objects.get(teacher__user=request.user)
+            except Classroom.DoesNotExist:
+                # Handle the case where there is no associated Classroom for the teacher
+                messages.error(request, 'User is not associated with a classroom.')
+                return redirect('students')  # Replace 'students' with the actual URL name of your students page
 
-        # Determine the next grade level based on the teacher's current grade level
-        current_grade = user_classroom.gradelevel.grade
-        next_grade = get_next_grade(current_grade)
+            # Determine the next grade level based on the teacher's current grade level
+            current_grade = user_classroom.gradelevel.grade
+            next_grade = get_next_grade(current_grade)
 
-        if next_grade is None:
-            messages.error(request, 'Unable to determine the next grade level.')
-            return redirect('students')  # Replace 'students' with the actual URL name of your students page
+            if next_grade is None:
+                messages.error(request, 'Unable to determine the next grade level.')
+                return redirect('students')  # Replace 'students' with the actual URL name of your students page
 
-        next_grade_instance = Gradelevel.objects.get(grade=next_grade)
+            next_grade_instance = Gradelevel.objects.get(grade=next_grade)
 
-        students_to_promote = Student.objects.filter(
-            classroom=user_classroom,
-            # Add other conditions based on your model structure
-            # For example, grade = 'Grade 7', 'Grade 8', 'Grade 10', 'Grade 11'
-        )
+            students_to_promote = Student.objects.filter(
+                classroom=user_classroom,
+                # Add other conditions based on your model structure
+                # For example, grade = 'Grade 7', 'Grade 8', 'Grade 10', 'Grade 11'
+            )
 
-        # Update each student's grade and status
-        for student in students_to_promote:
-            student.gradelevel = next_grade_instance
-            student.status = 'For Promotion'
-            student.classroom = Classroom.objects.get(classroom='FOR PROMOTION')  # Change to the actual name of the 'FOR PROMOTION' classroom
-            student.save()
+            # Update each student's grade and status
+            for student in students_to_promote:
+                student.gradelevel = next_grade_instance
+                student.status = 'For Promotion'
+                student.classroom = Classroom.objects.get(classroom='FOR PROMOTION')  # Change to the actual name of the 'FOR PROMOTION' classroom
+                student.save()
+            response_data['success'] = True
+            response_data['message'] = f'Bulk promotion to {next_grade} successful!'
+        except Exception as e:
+            print(e)
 
-        messages.success(request, f'Bulk promotion to {next_grade} successful!')
-
-    return redirect('user_page')  # Replace 'students' with the actual URL name of your students page
+    return JsonResponse(response_data)  # Replace 'students' with the actual URL name of your students page
 
 
 def get_next_grade(current_grade):

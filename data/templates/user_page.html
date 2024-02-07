@@ -165,33 +165,31 @@ PROMOTE
     let currentPage = 1;
 
     promoteButton.addEventListener('click', function () {
-        if (confirm('Are you sure you want to promote these students?')) {
-            // Make an AJAX request to trigger the promotion
-            fetch("{% url 'bulk_promote_students' %}", {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': document.querySelector('input[name=csrfmiddlewaretoken]').value
-                }
-            })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();  // Assuming your view returns JSON response
-                } else {
-                    throw new Error('Failed to promote students');
-                }
-            })
-            .then(data => {
-                // Handle success
-                alert(data.message);  // You can customize this part based on your response
-            })
-            .catch(error => {
-                // Handle error
-                console.error(error);
-                alert('Failed to promote students');
-            });
-        }
-    });
-
+          if (confirm('Are you sure you want to promote these students?')) {
+              // Make an AJAX request to trigger the promotion
+              fetch("{% url 'bulk_promote_students' %}", {
+                  method: 'POST',
+                  headers: {
+                      'X-CSRFToken': document.querySelector('input[name=csrfmiddlewaretoken]').value
+                  }
+              })
+              .then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      // Handle success
+                      alert(data.message);
+                  } else {
+                      // Handle failure
+                      throw new Error(data.message);
+                  }
+              })
+              .catch(error => {
+                  // Handle error
+                  console.error(error);
+                  alert('Failed to promote students');
+              });
+          }
+      });
     function displayStudents() {
       const tableRows = document.querySelectorAll('#studentTable tbody tr');
       const totalPages = Math.ceil(tableRows.length / studentsPerPage);
