@@ -243,17 +243,17 @@ def add_student(request):
 
 
 @login_required
-def destroy(request, id):
-    student = Student.objects.get(id=id)
+def destroy(request, lrn):
+    student = Student.objects.get(LRN=lrn)
     student.delete()
     messages.error(request, "Student Deleted", extra_tags='danger')  # Set extra_tags to 'danger' for red color
     
-    # Check if user belongs to the "TEACHER" group
+    # Check if the user belongs to the "TEACHER" group
     if request.user.groups.filter(name='TEACHER').exists():
-        # Redirect to "user_page" if user is a teacher
+        # Redirect to "user_page" if the user is a teacher
         return redirect("user_page")
     else:
-        # Redirect to "students" if user is not a teacher
+        # Redirect to "students" if the user is not a teacher
         return redirect("students")
 
 @login_required
