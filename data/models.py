@@ -115,7 +115,16 @@ class Student(models.Model):
     mother_contact = models.CharField(max_length=15, null=True,blank=True)
     guardian_name = models.CharField(max_length=120, null=True,blank=True)  # this section is for the parents and guardian
     guardian_contact = models.CharField(max_length=15, null=True,blank=True)
-    last_grade_level = models.IntegerField(null=True,blank=True)  # this is for the returning learner
+    GRADE_CHOICES = [
+        ('Grade 7', 'Grade 7'),
+        ('Grade 8', 'Grade 8'),
+        ('Grade 9', 'Grade 9'),
+        ('Grade 10', 'Grade 10'),
+        ('Grade 11', 'Grade 11'),
+        ('Grade 12', 'Grade 12'),
+        ('Transitioning', 'Transitioning'),
+    ]
+    last_grade_level = models.CharField(max_length=15, choices=GRADE_CHOICES, null=True,blank=True)  # this is for the returning learner
     last_school_attended = models.CharField(max_length=30, null=True,blank=True)
     last_schoolyear_completed = models.CharField(max_length=12, null=True,blank=True)
     academic_strand = (

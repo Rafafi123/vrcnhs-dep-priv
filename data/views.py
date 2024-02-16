@@ -777,28 +777,39 @@ def export_classrooms_to_excel(request):
 def import_students_from_excel(request):
     # Processes the student import request.
 
-    if request.method == 'POST':  # Check if a POST request (file submission) was made
-        student_resource = StudentResource()  # Instantiate a StudentResource object (likely for data validation)
-        dataset = Dataset()  # Instantiate a Dataset object for loading the Excel data
-        new_student = request.FILES['myfile']  # Retrieve the uploaded file from the request
+    if request.method == 'POST':
+        student_resource = StudentResource()
+        dataset = Dataset()
+        new_student = request.FILES['myfile']
 
-        if not new_student.name.endswith('xlsx'):  # Validate file extension
-            messages.error(request, 'Please upload an Excel file only (.xlsx)')  # Display an error message
-            return render(request, 'view_students.html')  # Re-render the view_students.html page
+        if not new_student.name.endswith('xlsx'):
+            messages.error(request, 'Please upload an Excel file only (.xlsx)')
+            return render(request, 'view_students.html')
 
         try:
-            imported_data = dataset.load(new_student.read(), format='xlsx')  # Load Excel data into a dataset
+            imported_data = dataset.load(new_student.read(), format='xlsx')
             successfully_imported = 0
 
-            for data in imported_data:  # Iterate through each student record in the dataset
-                classroom_identifier = data[12]  # Extract classroom identifier from the 13th column (index 12)
-                gradelevel_identifier = data[13]  # Extract grade level identifier from the 14th column (index 13)
-                print("Classroom Identifier:", classroom_identifier)  # Log classroom identifier
-                classroom_instance = Classroom.objects.get(classroom=classroom_identifier)  # Retrieve classroom object
-                gradelevel_instance = Gradelevel.objects.get(grade=gradelevel_identifier)
+            for data in imported_data:
+                LRN_value = data[1]
+
+                # Check if LRN is empty or "None"
+                if LRN_value is None or not LRN_value.strip():
+                    print("LRN is empty or None. Stopping further processing.")
+                    messages.warning(request, "LRN is empty or None. Stopping further processing.")
+                    break  # Stop processing further students
+
+                classroom_identifier = data[12]
+                gradelevel_identifier = data[13]
+                print("Classroom Identifier:", classroom_identifier)
 
                 try:
-                    # Create a new Student object with data from the Excel row
+                    classroom_instance = Classroom.objects.get(classroom=classroom_identifier)
+                    gradelevel_instance = Gradelevel.objects.get(grade=gradelevel_identifier)
+
+                    print("Classroom Instance:", classroom_instance)
+                    print("Gradelevel Instance:", gradelevel_instance)
+
                     value = Student(
                         LRN=data[1],
                         last_name=data[2],
@@ -811,8 +822,8 @@ def import_students_from_excel(request):
                         other_religion=data[9],
                         age=data[10],
                         sem=data[11],
-                        classroom=classroom_instance,  # Assign retrieved classroom object
-                        gradelevel=gradelevel_instance,  # Assign retrieved grade level object
+                        classroom=classroom_instance,
+                        gradelevel=gradelevel_instance,
                         sex=data[14],
                         birth_place=data[15],
                         mother_tongue=data[16],
@@ -838,17 +849,28 @@ def import_students_from_excel(request):
                         is_a_four_ps_scholar=data[36],
                         notes=data[37]
                     )
-                    value.save()  # Save the student object to the database
+                    value.save()
+                    successfully_imported += 1
+                    print("Successfully imported student:", value)
+
+                except Classroom.DoesNotExist:
+                    print(f"Classroom {classroom_identifier} not found.")
+                    messages.error(request, f"Classroom {classroom_identifier} not found.")
+                except Gradelevel.DoesNotExist:
+                    print(f"Gradelevel {gradelevel_identifier} not found.")
+                    messages.error(request, f"Gradelevel {gradelevel_identifier} not found.")
                 except Exception as e:
+                    print(f"Error saving student data: {str(e)}")
                     messages.error(request, f"Error saving student data: {str(e)}")
 
             if successfully_imported > 0:
                 messages.success(request, f"Successfully imported {successfully_imported} student(s) into the database.")
 
         except Exception as e:
+            print(f"Error loading student/s from the file: {str(e)}")
             messages.info(request, f"Error loading student/s from the file: {str(e)}")
 
-    return render(request, 'view_students.html')  # Re-render the view_students.html page after processing
+    return render(request, 'view_students.html')
 
 def import_classrooms_from_excel(request):
     # Processes the classroom import request.
