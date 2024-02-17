@@ -242,8 +242,23 @@ def add_student(request):
     context = {'form': form}
     return render(request, 'add_student.html', context)
 
+#DELETE TEACHER/USER
+@login_required
+@allowed_users(allowed_roles=['ADMIN'])
+def destroy_teacher(request, teacher_id):
+    teacher = get_object_or_404(Teacher, id=teacher_id)
 
+    # Check if the user has permission to delete the teacher
+    if request.user.has_perm('delete_teacher', teacher):
+        teacher.delete()
+        messages.error(request, "Teacher Deleted", extra_tags='danger')
+        return redirect("teachers")
+    else:
+        # Handle unauthorized access (optional)
+        return HttpResponse("Unauthorized access")  # Create an unauthorized_access.html template
+    
 
+#DELETE STUDENT
 @login_required
 def destroy(request, lrn):
     student = Student.objects.get(LRN=lrn)
@@ -793,12 +808,11 @@ def import_students_from_excel(request):
             successfully_imported = 0
 
             for data in imported_data:
-                LRN_value = data[1]
+                LRN_value = str(data[1]).strip()  # Convert to string and then strip
 
                 # Check if LRN is empty or "None"
                 if LRN_value is None or not LRN_value.strip():
                     print("LRN is empty or None. Stopping further processing.")
-                    messages.warning(request, "LRN is empty or None. Stopping further processing.")
                     break  # Stop processing further students
 
                 classroom_identifier = data[12]
@@ -855,22 +869,15 @@ def import_students_from_excel(request):
                     successfully_imported += 1
                     print("Successfully imported student:", value)
 
-                except Classroom.DoesNotExist:
-                    print(f"Classroom {classroom_identifier} not found.")
-                    messages.error(request, f"Classroom {classroom_identifier} not found.")
-                except Gradelevel.DoesNotExist:
-                    print(f"Gradelevel {gradelevel_identifier} not found.")
-                    messages.error(request, f"Gradelevel {gradelevel_identifier} not found.")
                 except Exception as e:
                     print(f"Error saving student data: {str(e)}")
-                    messages.error(request, f"Error saving student data: {str(e)}")
 
             if successfully_imported > 0:
                 messages.success(request, f"Successfully imported {successfully_imported} student(s) into the database.")
 
         except Exception as e:
             print(f"Error loading student/s from the file: {str(e)}")
-            messages.info(request, f"Error loading student/s from the file: {str(e)}")
+
 
     return render(request, 'view_students.html')
 

@@ -12,12 +12,29 @@
 
 {% block content %}
 
+
+
 <div class="search-container">
   <form action="{% url 'teachers' %}" method="get" class="search-form">
     <input type="text" name="query" placeholder="Teacher Name" required class="search-input">
     <button type="submit" class="search-button">Search</button>
   </form>
 </div>
+
+</center>
+<br>
+
+<!-- MESSAGES -->
+
+{% for message in messages %}
+
+  {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS or message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+
+    <p id="message-timer" class="alert {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}alert-success{% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}alert-danger{% endif %} float-center text-center message-text">{{ message }}</p>
+
+  {% endif %}
+
+{% endfor %}
 
 
 <div class="table-container">  
