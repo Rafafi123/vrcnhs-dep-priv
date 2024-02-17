@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from django.urls.conf import include
 from data import views  
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -76,4 +77,13 @@ urlpatterns = [
 
     path('assign_classroom_bulk/<str:grade>/', views.assign_classroom_bulk, name='assign_classroom_bulk'),
     path('bulk_promote_students/', views.bulk_promote_students, name='bulk_promote_students'),
+
+    # Password reset links (ref: https://github.com/django/django/blob/master/django/contrib/auth/views.py)
+
+
+    path('password_change/', auth_views.PasswordChangeView.as_view(template_name='registration/password_change.html'), 
+        name='password_change'),
+    
+    path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(template_name='registration/password_changed.html'), 
+        name='password_change_done'),
 ]

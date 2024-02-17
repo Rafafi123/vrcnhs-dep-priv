@@ -1,3 +1,5 @@
+from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
+from django.urls import reverse_lazy
 from io import BytesIO
 from openpyxl.styles import NamedStyle
 from openpyxl.utils import get_column_letter
