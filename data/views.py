@@ -715,29 +715,23 @@ def download_template(request):
 def export_students_to_excel(request):
     students = Student.objects.all()
 
-    # Load the existing workbook
     existing_wb = load_workbook('data/static/media/VRCNHS_STUDENT_TEMPLATE.xlsx')
     sheet = existing_wb.active
 
-    # Clear data in the range from 2nd row and 2nd column onward
     for row in sheet.iter_rows(min_row=2, min_col=2, max_row=sheet.max_row, max_col=sheet.max_column):
         for cell in row:
             cell.value = None
-    print("Data cleared from excel template")
 
-    # Write data to the sheet starting from column 2
-    start_row = 2  # Set a fixed starting row number
-    start_column = 2  # Adjust the starting column number here
+    start_row = 2
+    start_column = 2
 
-    # Set a date style
     date_style = NamedStyle(name='date_style', number_format='YYYY-MM-DD')
 
     for row_num, student in enumerate(students, start_row):
         for col_num, field in enumerate(Student._meta.fields, start_column):
             col_letter = get_column_letter(col_num)
 
-            # Convert LRN, age, and other specific fields to integers
-            if field.name in ['LRN', 'age', 'father_contact', 'mother_contact', 'guardian_contact', 'last_grade_level', 'adviser_contact']:
+            if field.name in ['LRN', 'age', 'father_contact', 'mother_contact', 'guardian_contact', 'adviser_contact']:
                 field_value = getattr(student, field.name)
                 if field_value is not None:
                     field_value = int(field_value)
@@ -746,31 +740,40 @@ def export_students_to_excel(request):
                 if field_value is not None:
                     field_value = float(field_value)
             elif field.name == 'birthday':
-                # Set the birthday as a date value
                 field_value = getattr(student, field.name)
                 if field_value is not None:
                     sheet[f"{col_letter}{row_num}"] = field_value
                     sheet[f"{col_letter}{row_num}"].style = date_style
                 else:
                     sheet[f"{col_letter}{row_num}"] = None
+            elif field.name == 'last_grade_level':
+                # Check if last_grade_level is a string with non-numeric characters
+                field_value = getattr(student, field.name)
+                if field_value is not None and any(c.isalpha() for c in field_value):
+                    # If it contains non-numeric characters, export as a string
+                    field_value = str(field_value)
+                else:
+                    # Otherwise, try converting to integer
+                    try:
+                        field_value = int(field_value)
+                    except ValueError:
+                        print(f"Error converting last_grade_level to int: {field_value}")
+                        field_value = None
             else:
-                # Convert foreign key instances to a string representation
                 field_value = getattr(student, field.name)
                 if field_value is not None:
                     field_value = str(field_value)
                 else:
-                    field_value = ""  # Set to an empty string if the value is None
+                    field_value = ""
 
             sheet[f"{col_letter}{row_num}"] = field_value
 
-     # Save the changes to the existing workbook
-    response = HttpResponse(content_type='data/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = 'attachment; filename=students_data_updated.xlsx'
     existing_wb.save(response)
 
     print("Data successfully exported to Excel!")
 
-    # Return a response or redirect to some page
     return response
 
 #EXPORT 
@@ -817,7 +820,7 @@ def import_students_from_excel(request):
 
                 classroom_identifier = data[12]
                 gradelevel_identifier = data[13]
-                print("Classroom Identifier:", classroom_identifier)
+                
 
                 try:
                     classroom_instance = Classroom.objects.get(classroom=classroom_identifier)
@@ -871,12 +874,22 @@ def import_students_from_excel(request):
 
                 except Exception as e:
                     print(f"Error saving student data: {str(e)}")
+                    break
 
             if successfully_imported > 0:
                 messages.success(request, f"Successfully imported {successfully_imported} student(s) into the database.")
 
         except Exception as e:
             print(f"Error loading student/s from the file: {str(e)}")
+        
+        # Check user group and redirect accordingly
+        user = request.user
+        if Group.objects.get(name='TEACHER') in user.groups.all():
+            # Redirect to teacher's user_page.html
+            return redirect('user_page')  # Replace 'teacher_user_page' with your actual URL or view name
+        else:
+            # Redirect to view_students page after successful import
+            return redirect('students')
 
 
     return render(request, 'view_students.html')
