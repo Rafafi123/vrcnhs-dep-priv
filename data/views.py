@@ -105,7 +105,7 @@ def home(request):
     returnee_chart_div = pio.to_html(returnee_fig, full_html=False)
 
     # Get the current date and time
-    current_datetime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     
     # Retrieve total teachers and classrooms
     total_teachers = Teacher.objects.count()
@@ -311,7 +311,13 @@ def edit(request, lrn):
     context = {'form': form, 'student': student}
     return render(request, 'edit.html', context)
 
+#VIEW STUDENTS DETAIL
 
+@login_required
+def view_student_detail(request, lrn):
+    student = get_object_or_404(Student, LRN=lrn)
+    context = {'student': student}
+    return render(request, 'view_student_detail.html', context)
 
 
 @login_required(login_url='login')

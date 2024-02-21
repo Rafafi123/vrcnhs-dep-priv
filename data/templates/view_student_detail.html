@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head_block %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+  <center><a href="{% url 'students' %}" class="btn btn-primary">Back to View Students</a></center>
+
+  <div class="container mt-3">
+    <div class="row jumbotron box8">
+      <div class="col-sm-12 mx-t3 mb-4">
+        <h2 class="text-center">Student Details</h2>
+      </div>
+
+      <!-- PERSONAL DETAILS -->
+      <div class="col-sm-12 mx-t5 mb-2">
+        <h4>Personal Details</h4>
+      </div>
+
+      <!-- Display all personal details similar to the edit page -->
+      <div class="col-sm-4 form-group">
+        <label for="first_name">First Name:</label>
+        {{ student.first_name }}
+      </div>
+
+      <div class="col-sm-3 form-group">
+        <label for="last_name">Last Name:</label>
+        {{ student.last_name }}
+      </div>
+
+      <div class="col-sm-4 form-group">
+        <label for="middle_name">Middle Name:</label>
+        {{ student.middle_name }}
+      </div>
+
+      <div class="col-sm-1 form-group">
+        <label for="suffix_name">Suffix:</label>
+        {{ student.suffix_name }}
+      </div>
+
+      <div class="col-sm-3 form-group">
+        <label for="status">Status:</label>
+        {{ student.status }}
+      </div>
+
+      <div class="col-sm-3 form-group">
+        <label for="LRN">LRN:</label>
+        {{ student.LRN }}
+      </div>
+
+      <div class="col-sm-3 form-group">
+        <label for="birthday">Birthday:</label>
+        {{ student.birthday }}
+      </div>
+
+      <div class="col-sm-3 form-group">
+        <label for="religion">Religion:</label>
+        {{ student.religion }}
+      </div>
+
+      <div class="col-sm-3 form-group">
+        <label for="other_religion">Other Religion:</label>
+        {{ student.other_religion }}
+      </div>
+
+      <div class="col-sm-3 form-group">
+        <label for="gradelevel">Grade Level:</label>
+        {{ student.gradelevel }}
+      </div>
+
+      <div class="col-sm-3 form-group">
+        <label for="sem">Semester:</label>
+        {{ student.sem }}
+      </div>
+
+      <div class="col-sm-3 form-group">
+        <label for="classroom">Classroom:</label>
+        {{ student.classroom }}
+      </div>
+
+      <div class="col-sm-3 form-group">
+        <label for="sex">Sex:</label>
+        {{ student.sex }}
+      </div>
+
+      <div class="col-sm-3 form-group">
+        <label for="birth_place">Birth Place:</label>
+        {{ student.birth_place }}
+      </div>
+
+      <div class="col-sm-3 form-group">
+        <label for="mother_tongue">Mother Tongue:</label>
+        {{ student.mother_tongue }}
+      </div>
+
+      <div class="col-sm-3 form-group">
+        <label for="father_name">Father Name:</label>
+        {{ student.father_name }}
+      </div>
+
+      <div class="col-sm-3 form-group">
+        <label for="father_contact">Father Contact Information:</label>
+        {{ student.father_contact }}
+      </div>
+
+      <div class="col-sm-3 form-group">
+        <label for="mother_name">Mother Name:</label>
+        {{ student.mother_name }}
+      </div>
+
+      <div class="col-sm-3 form-group">
+        <label for="mother_contact">Mother Contact Information:</label>
+        {{ student.mother_contact }}
+      </div>
+
+      <div class="col-sm-3 form-group">
+        <label for="guardian_name">Guardian Name:</label>
+        {{ student.guardian_name }}
+      </div>
+
+      <div class="col-sm-3 form-group">
+        <label for="guardian_contact">Guardian Contact Information:</label>
+        {{ student.guardian_contact }}
+      </div>
+
+      <div class="col-sm-12 form-group">
+        <label for="address">Address:</label>
+        {{ student.address }}
+      </div>
+
+      <!-- ACADEMIC BACKGROUND -->
+      <div class="col-sm-12 mx-t5 mb-2">
+        <h4>Academic Background</h4>
+      </div>
+
+      <!-- Display all academic details similar to the edit page -->
+      <div class="col-sm-3 form-group">
+        <label for="last_grade_level">Last Grade Level:</label>
+        {{ student.last_grade_level }}
+      </div>
+
+      <div class="col-sm-3 form-group">
+        <label for="last_school_attended">Last School Attended:</label>
+        {{ student.last_school_attended }}
+      </div>
+
+      <div class="col-sm-3 form-group">
+        <label for="last_schoolyear_completed">Last School Year Completed:</label>
+        {{ student.last_schoolyear_completed }}
+      </div>
+
+      <div class="col-sm-3 form-group">
+        <label for="strand">Strand:</label>
+        {{ student.strand }}
+      </div>
+
+      <!-- OTHER DETAILS -->
+      <div class="col-sm-12 mx-t5 mb-2">
+        <h4>Other Details</h4>
+      </div>
+
+      <!-- Display all other details similar to the edit page -->
+      <div class="col-sm-3 form-group">
+        <label for="household_income">Household Income:</label>
+        {{ student.household_income }}
+      </div>
+
+      <div class="col-sm-3 form-group">
+        <label for="is_returnee">Is Returnee:</label>
+        {{ student.is_returnee }}
+      </div>
+
+      <div class="col-sm-3 form-group">
+        <label for="is_a_dropout">Is a Dropout:</label>
+        {{ student.is_a_dropout }}
+      </div>
+
+      <div class="col-sm-3 form-group">
+        <label for="is_a_working_student">Is a Working Student:</label>
+        {{ student.is_a_working_student }}
+      </div>
+
+      <div class="col-sm-3 form-group">
+        <label for="previous_adviser">Previous Adviser:</label>
+        {{ student.previous_adviser }}
+      </div>
+
+      <div class="col-sm-3 form-group">
+        <label for="adviser_contact">Adviser Contact Information:</label>
+        {{ student.adviser_contact }}
+      </div>
+
+      <div class="col-sm-3 form-group">
+        <label for="health_bmi">Health BMI:</label>
+        {{ student.health_bmi }}
+      </div>
+
+      <div class="col-sm-3 form-group">
+        <label for="general_average">General Average:</label>
+        {{ student.general_average }}
+      </div>
+
+      <div class="col-sm-3 form-group">
+        <label for="is_a_four_ps_scholar">Is a 4Ps Scholar:</label>
+        {{ student.is_a_four_ps_scholar }}
+      </div>
+
+      <!-- New Notes Field -->
+      <div class="col-sm-12 form-group">
+        <label for="notes">Notes (Other scholarships, conduct, PWD, etc.):</label>
+        {{ student.notes }}
+      </div>
+
+      <div class="col-sm-12 form-group">
+        <label for="edited_fields">Edited Fields:</label>
+        {{ student.edited_fields }}
+      </div>
+
+    </div>
+  </div>
+{% endblock %}
