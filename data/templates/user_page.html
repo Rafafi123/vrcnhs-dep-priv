@@ -1,9 +1,13 @@
 {% extends 'base.html' %}
 {% load static %}
 
+
 {% block head_block %}
-    <!-- Link to Bootstrap CSS -->
+
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <!-- Link to Bootstrap CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+ 
 
     <!-- Link to Bootstrap JavaScript -->
     <script src="{% static 'js/script.js' %}"></script>
@@ -11,6 +15,12 @@
 {% endblock %}
 
 {% block content %}
+
+<div class="text-center">
+  <h1>{{ classroom.gradelevel }} "{{ classroom.classroom }}"</h1>
+
+  <h3>TEACHER: {{ classroom.teacher.first_name }} {{ classroom.teacher.last_name }}</h3>
+</div>
 
 <div class="search-container">
     <form action="{% url 'students' %}" method="get" class="search-form">
@@ -20,26 +30,61 @@
 </div>
 
 <center>
-    <h1>{{ classroom.gradelevel }} "{{ classroom.classroom }}"</h1>
+  <h6>IMPORT STUDENTS using Excel (.xlsx) files. Please use <a href="{% url 'download_template' %}" download>This Template.</a></h6>
 
-    <h3>TEACHER: {{ classroom.teacher.first_name }} {{ classroom.teacher.last_name }}</h3>
-    <br>
-    <a href="{% url 'add_student' %}"
-        style="background-color: #4CAF50; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);">
-        Add New Student
-    </a>
-
-    <br>
-    <br>
-
-    <h6>IMPORT STUDENTS using Excel (.xlsx) files. Please use <a href="{% url 'download_template' %}" download>This Template.</a></h6>
-
+  <div class="form-container">
     <!-- IMPORT -->
     <form method="post" enctype="multipart/form-data" action="{% url 'import_students' %}">
         {% csrf_token %}
-        <input type="file" name="myfile"/>
-        <button type="submit">Upload</button>
+        <div class="mb-3">
+            <label for="formFile" class="form-label">Upload Excel File of Students:</label>
+            <div class="file-upload-wrapper">
+              <input class="form-control" type="file" name="myfile" id="formFile" required>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Upload</button>
     </form>
+  </div>
+    <br>
+  <!-- TABLE DATA -->
+    <div class="table-container">
+        <table id="studentTable" class="table table-striped">
+            <thead style="background-color: #026223; color: white;">
+            <tr>
+                <th>LRN</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Age</th>
+                <th>Grade & Section</th>
+                <th>General Average</th>
+                <th>Detail</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for student in students %}
+                <tr>
+                    <td>{{ student.LRN }}</td>
+                    <td>{{ student.last_name }}
+                        {% if student.suffix_name %}, {{ student.suffix_name }}{% endif %}
+                        {% if student.first_name %}, {{ student.first_name }}{% endif %}
+                        {% if student.middle_name %} {{ student.middle_name }}{% endif %}
+                    </td>
+                    <td>{{ student.status }}</td>
+                    <td>{{ student.age }}</td>
+                    <td>{{ student.gradelevel.grade }} {{ student.classroom }}</td>
+                    <td>{{ student.general_average }}</td>
+                    <td>
+                        <a href="{% url 'view_student_detail' lrn=student.LRN %}" class="btn btn-primary view-button">
+                            View Profile
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    
 </center>
 <br>
 
@@ -53,106 +98,24 @@
     {% endif %}
 {% endfor %}
 
+
 <br>
-<form action="{% url 'bulk_promote_students' %}" method="post" id="bulkPromoteForm">
-    {% csrf_token %}
-    <div class="table-container">
-        <table class="table table-striped" id="studentTable">
-            <thead>
-                <tr>
-                    <th>LRN</th>
-                    <th>Name</th>
-                    <th>Status</th>
-                    <th>Age</th>
-                    <th>Grade & Section</th>
-                    <th>General Average</th>
-                    <th>Detail</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for student in students %}
-                <tr>
-                    <td>{{ student.LRN }}</td>
-                    <td>{{ student.last_name }} 
-                        {% if student.suffix_name %}, {{ student.suffix_name }}{% endif %}
-                        {% if student.first_name %}, {{ student.first_name }}{% endif %}
-                        {% if student.middle_name %} {{ student.middle_name }}{% endif %}
-                    </td>
-                    <td>{{ student.status }}</td>
-                    <td>{{ student.age }}</td>
-                    <td>{{ student.gradelevel.grade }} {{ student.classroom }}</td>
-                    <td>{{ student.general_average }}</td>
-                    <td>
-                        <button type="button" class="btn btn-primary view-button" data-bs-toggle="modal" data-bs-target="#studentModal{{ student.lrn }}{{ forloop.counter }}">
-                            View Profile
-                        </button>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</form>
-
-{% for student in students %}
-  <!-- Modal - Student Profile -->
-  <div class="modal fade" id="studentModal{{ student.lrn }}{{ forloop.counter }}" tabindex="-1" aria-labelledby="studentModalLabel{{ student.lrn }}" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="studentModalLabel{{ student.lrn }}">Student Profile</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="profile-section">
-            <h4>Student Information</h4>
-            <p><strong>Name:</strong> {{ student.first_name }} {{ student.last_name }}</p>
-            <p><strong>Age:</strong> {{ student.age }}</p>
-            <p><strong>Grade:</strong> {{ student.classroom }}</p>
-            <p><strong>Academic Strand:</strong> {{ student.get_strand_display }}</p>
-            <p><strong>Address:</strong> {{ student.address }}</p>
-            <p><strong>Gender:</strong> {{ student.sex }}</p>
-            <p><strong>Birthday:</strong> {{ student.birthday }}</p>
-            <p><strong>Religion:</strong> {{ student.religion }} (Other Religion: {{ student.other_religion }})</p>
-            <p><strong>Mother Tongue:</strong> {{ student.mother_tongue }}</p>
-            <!--<p><strong>Preferred Learning Modality:</strong> {{ student.modality_options }}</p> -->
-            <p><strong>Economic Range:</strong> {{ student.get_economic_range_display }}</p>
-            <p><strong>Returnee Student:</strong> {{ student.get_is_returnee_display }}</p>
-            <p><strong>Working Student:</strong> {{ student.get_is_a_working_student_display }}</p>
-            <p><strong>Drop Out:</strong> {{ student.get_is_a_dropout_display }}</p>
-            <p><strong>4Ps Scholar:</strong> {{ student.get_is_a_four_ps_scholar_display }}</p>
-            <!-- Add more student profile data as needed -->
-          </div>
-          
-          <div class="profile-section">
-            <h4>Parents Information</h4>
-            <p><strong>Father's Name:</strong> {{ student.father_name }} {{ student.father_contact }}</p>
-            <p><strong>Father Contact #:</strong> {{ student.father_contact }}</p>
-            <p><strong>Mother's Name:</strong> {{ student.mother_name }}</p>
-            <p><strong>Mother Contact #:</strong> {{ student.mother_contact }}</p>
-            <!-- Add more parent profile data as needed -->
-          </div>
-        </div>
-        <div class="modal-footer">
-          <a href="{% if student.LRN %}{% url 'edit_student' student.LRN %}{% endif %}" class="btn btn-secondary">Edit</a>
-          <a href="{% if student.LRN %}{% url 'delete_student' student.LRN %}{% endif %}" class="btn btn-danger" title="Delete">
-            Delete
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-{% endfor %}
-
 
 <center>
   <span id="pageNumber"></span>
   <button id="prevButton" class="btn btn-secondary" style="margin-right: 5px;">Previous</button>
   <button id="nextButton" class="btn btn-secondary">Next</button>
 
-</center>
+
 <br>
-<center>
+<br>
+
+
+  <a href="{% url 'add_student' %}" style="background-color: #4CAF50; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);">
+      Manually Add A Student
+  </a>
+<br>
+<br>
 <button id="promoteButton"
 style="background-color: #4CAF50; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);">
 PROMOTE

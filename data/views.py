@@ -534,7 +534,7 @@ def report_page(request):
     strand_fig = create_bar_chart(strand_labels, strand_sizes, strand_title, colorscale='bright')
     economic_fig = create_bar_chart(economic_labels, economic_sizes, economic_title, colorscale='bright')
     # Get the current date and time
-    current_datetime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     return render(request, 'report_page.html', {
         'current_datetime': current_datetime,
@@ -817,7 +817,14 @@ def import_students_from_excel(request):
 
         if not new_student.name.endswith('xlsx'):
             messages.error(request, 'Please upload an Excel file only (.xlsx)')
-            return render(request, 'view_students.html')
+            # Check user group and redirect accordingly
+            user = request.user
+            if Group.objects.get(name='TEACHER') in user.groups.all():
+                # Redirect to teacher's user_page.html
+                return redirect('user_page')  # Replace 'teacher_user_page' with your actual URL or view name
+            else:
+                # Redirect to view_students page after successful import
+                return redirect('students')
 
         try:
             imported_data = dataset.load(new_student.read(), format='xlsx')

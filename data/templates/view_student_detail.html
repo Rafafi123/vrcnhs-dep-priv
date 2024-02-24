@@ -6,218 +6,228 @@
 {% endblock %}
 
 {% block content %}
-  <center><a href="{% url 'students' %}" class="btn btn-primary">Back to View Students</a></center>
 
   <div class="container mt-3">
-    <div class="row jumbotron box8">
-      <div class="col-sm-12 mx-t3 mb-4">
-        <h2 class="text-center">Student Details</h2>
+    <form>
+
+      <div class="container mt-3">
+    
+          <div class="row jumbotron box8">
+            <div class="col-sm-12 mx-t3 mb-4">
+              <h2 class="text-center">Student Profile</h2>
+            </div>
+            
+            <!-- PERSONAL DETAILS -->
+            <div class="col-sm-12 mx-t5 mb-2">
+              <h4>Personal Details</h4>
+            </div>
+            
+            <div class="col-sm-4 form-group">
+                <label for="{{ form.first_name.id_for_label }}">First Name:</label>
+                <input class="form-control" type="text" value="{{ student.first_name }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+    
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.last_name.id_for_label }}">Last Name:</label>
+              <input class="form-control" type="text" value="{{ student.last_name }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+    
+            <div class="col-sm-4 form-group">
+              <label for="{{ form.middle_name.id_for_label }}">Middle Name:</label>
+              <input class="form-control" type="text" value="{{ student.middle_name }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+    
+            <div class="col-sm-1 form-group">
+              <label for="{{ form.suffix_name.id_for_label }}">Suffix:</label>
+              <input class="form-control" type="text" value="{{ student.suffix_name }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.status.id_for_label }}">Status:</label>
+              <input class="form-control" type="text" value="{{ student.status }}" aria-label="Disabled input example" disabled readonly>
+           </div>
+    
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.LRN.id_for_label }}">LRN:</label>
+              <input class="form-control" type="text" value="{{ student.LRN }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.birthday.id_for_label }}">Birthday:</label>
+              <div class="birthday-input">
+                <input class="form-control" type="text" value="{{ student.birthday }}" aria-label="Disabled input example" disabled readonly>
+              </div>
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.religion.id_for_label }}">Religion:</label>
+              <input class="form-control" type="text" value="{{ student.religion }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.other_religion.id_for_label }}">Other Religion:</label>
+              <input class="form-control" type="text" value="{{ student.other_religion }}" aria-label="Disabled input example" disabled readonly>
+
+            </div>
+    
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.gradelevel.id_for_label }}">Grade Level:</label>
+              <input class="form-control" type="text" value="{{ student.gradelevel }}" aria-label="Disabled input example" disabled readonly>
+
+            </div>
+          
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.sem.id_for_label }}">Semester:</label>
+              <input class="form-control" type="text" value="{{ student.sem }}" aria-label="Disabled input example" disabled readonly>
+
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.classroom.id_for_label }}">Classroom:</label>
+              <input class="form-control" type="text" value="{{ student.classroom }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+    
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.sex.id_for_label }}">Sex:</label>
+              <input class="form-control" type="text" value="{{ student.sex }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.birth_place.id_for_label }}">Birth Place:</label>
+              <input class="form-control" type="text" value="{{ student.birth_place }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.mother_tongue.id_for_label }}">Mother Tongue:</label>
+              <input class="form-control" type="text" value="{{ student.mother_tongue }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+    
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.father_name.id_for_label }}">Father Name:</label>
+              <input class="form-control" type="text" value="{{ student.father_name }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+          
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.father_contact.id_for_label }}">Father Contact Information:</label>
+              <input class="form-control" type="text" value="{{ student.father_contact }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+          
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.mother_name.id_for_label }}">Mother Name:</label>
+              <input class="form-control" type="text" value="{{ student.mother_name }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+          
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.mother_contact.id_for_label }}">Mother Contact Information:</label>
+              <input class="form-control" type="text" value="{{ student.mother_contact }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+          
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.guardian_name.id_for_label }}">Guardian Name:</label>
+              <input class="form-control" type="text" value="{{ student.guardian_name }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+          
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.guardian_contact.id_for_label }}">Guardian Contact Information:</label>
+              <input class="form-control" type="text" value="{{ student.guardian_contact }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+    
+            <div class="col-sm-12 form-group">
+              <label for="{{ form.address.id_for_label }}">Address:</label>
+              <input class="form-control" type="text" value="{{ student.address }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+          
+    
+            <!-- ACADEMIC BACKGROUND -->
+            <div class="col-sm-12 mx-t5 mb-2">
+              <h4>Academic Background</h4>
+            </div>
+    
+    
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.last_grade_level.id_for_label }}">Last Grade Level:</label>
+              <input class="form-control" type="text" value="{{ student.last_grade_level }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.last_school_attended.id_for_label }}">Last School Attended:</label>
+              <input class="form-control" type="text" value="{{ student.last_school_attended }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.last_schoolyear_completed.id_for_label }}">Last School Year Completed:</label>
+              <input class="form-control" type="text" value="{{ student.last_schoolyear_completed }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+          
+    
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.strand.id_for_label }}">Strand:</label>
+              <input class="form-control" type="text" value="{{ student.strand }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+    
+            <!-- OTHER DETAILS -->
+            <div class="col-sm-12 mx-t5 mb-2">
+              <h4>Other Details</h4>
+            </div>
+    
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.household_income.id_for_label }}">Household Income:</label>
+              <input class="form-control" type="text" value="{{ student.household_income }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.is_returnee.id_for_label }}">Is Returnee:</label>
+              <input class="form-control" type="text" value="{{ student.is_returnee }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.is_a_dropout.id_for_label }}">Is a Dropout:</label>
+              <input class="form-control" type="text" value="{{ student.is_a_dropout }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.is_a_working_student.id_for_label }}">Is a Working Student:</label>
+              <input class="form-control" type="text" value="{{ student.is_a_working_student }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.previous_adviser.id_for_label }}">Previous Adviser:</label>
+              <input class="form-control" type="text" value="{{ student.previous_adviser }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.adviser_contact.id_for_label }}">Adviser Contact Information:</label>
+              <input class="form-control" type="text" value="{{ student.adviser_contact }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.health_bmi.id_for_label }}">Health BMI:</label>
+              <input class="form-control" type="text" value="{{ student.health_bmi }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.general_average.id_for_label }}">General Average:</label>
+              <input class="form-control" type="text" value="{{ student.general_average }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+            
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.is_a_four_ps_scholar.id_for_label }}">Is a 4Ps Scholar:</label>
+              <input class="form-control" type="text" value="{{ student.is_a_four_ps_scholar }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+    
+                  <!-- New Notes Field -->
+            <div class="col-sm-12 form-group">
+              <label for="{{ form.notes.id_for_label }}">Notes (Other scholarships, conduct, PWD, etc.):</label>
+              <input class="form-control" type="text" value="{{ student.notes }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+    
+            <div class="col-sm-12 form-group mb-0">
+              <center><a href="{% url 'students' %}" class="btn btn-primary">Back</a></center>
+              <button type="button" class="btn btn-primary float-left">Edit</button>
+              <button type="button" class="btn btn-danger float-right">Delete</button>
+            </div>
+          </div>
+        </form>
       </div>
 
-      <!-- PERSONAL DETAILS -->
-      <div class="col-sm-12 mx-t5 mb-2">
-        <h4>Personal Details</h4>
-      </div>
-
-      <!-- Display all personal details similar to the edit page -->
-      <div class="col-sm-4 form-group">
-        <label for="first_name">First Name:</label>
-        {{ student.first_name }}
-      </div>
-
-      <div class="col-sm-3 form-group">
-        <label for="last_name">Last Name:</label>
-        {{ student.last_name }}
-      </div>
-
-      <div class="col-sm-4 form-group">
-        <label for="middle_name">Middle Name:</label>
-        {{ student.middle_name }}
-      </div>
-
-      <div class="col-sm-1 form-group">
-        <label for="suffix_name">Suffix:</label>
-        {{ student.suffix_name }}
-      </div>
-
-      <div class="col-sm-3 form-group">
-        <label for="status">Status:</label>
-        {{ student.status }}
-      </div>
-
-      <div class="col-sm-3 form-group">
-        <label for="LRN">LRN:</label>
-        {{ student.LRN }}
-      </div>
-
-      <div class="col-sm-3 form-group">
-        <label for="birthday">Birthday:</label>
-        {{ student.birthday }}
-      </div>
-
-      <div class="col-sm-3 form-group">
-        <label for="religion">Religion:</label>
-        {{ student.religion }}
-      </div>
-
-      <div class="col-sm-3 form-group">
-        <label for="other_religion">Other Religion:</label>
-        {{ student.other_religion }}
-      </div>
-
-      <div class="col-sm-3 form-group">
-        <label for="gradelevel">Grade Level:</label>
-        {{ student.gradelevel }}
-      </div>
-
-      <div class="col-sm-3 form-group">
-        <label for="sem">Semester:</label>
-        {{ student.sem }}
-      </div>
-
-      <div class="col-sm-3 form-group">
-        <label for="classroom">Classroom:</label>
-        {{ student.classroom }}
-      </div>
-
-      <div class="col-sm-3 form-group">
-        <label for="sex">Sex:</label>
-        {{ student.sex }}
-      </div>
-
-      <div class="col-sm-3 form-group">
-        <label for="birth_place">Birth Place:</label>
-        {{ student.birth_place }}
-      </div>
-
-      <div class="col-sm-3 form-group">
-        <label for="mother_tongue">Mother Tongue:</label>
-        {{ student.mother_tongue }}
-      </div>
-
-      <div class="col-sm-3 form-group">
-        <label for="father_name">Father Name:</label>
-        {{ student.father_name }}
-      </div>
-
-      <div class="col-sm-3 form-group">
-        <label for="father_contact">Father Contact Information:</label>
-        {{ student.father_contact }}
-      </div>
-
-      <div class="col-sm-3 form-group">
-        <label for="mother_name">Mother Name:</label>
-        {{ student.mother_name }}
-      </div>
-
-      <div class="col-sm-3 form-group">
-        <label for="mother_contact">Mother Contact Information:</label>
-        {{ student.mother_contact }}
-      </div>
-
-      <div class="col-sm-3 form-group">
-        <label for="guardian_name">Guardian Name:</label>
-        {{ student.guardian_name }}
-      </div>
-
-      <div class="col-sm-3 form-group">
-        <label for="guardian_contact">Guardian Contact Information:</label>
-        {{ student.guardian_contact }}
-      </div>
-
-      <div class="col-sm-12 form-group">
-        <label for="address">Address:</label>
-        {{ student.address }}
-      </div>
-
-      <!-- ACADEMIC BACKGROUND -->
-      <div class="col-sm-12 mx-t5 mb-2">
-        <h4>Academic Background</h4>
-      </div>
-
-      <!-- Display all academic details similar to the edit page -->
-      <div class="col-sm-3 form-group">
-        <label for="last_grade_level">Last Grade Level:</label>
-        {{ student.last_grade_level }}
-      </div>
-
-      <div class="col-sm-3 form-group">
-        <label for="last_school_attended">Last School Attended:</label>
-        {{ student.last_school_attended }}
-      </div>
-
-      <div class="col-sm-3 form-group">
-        <label for="last_schoolyear_completed">Last School Year Completed:</label>
-        {{ student.last_schoolyear_completed }}
-      </div>
-
-      <div class="col-sm-3 form-group">
-        <label for="strand">Strand:</label>
-        {{ student.strand }}
-      </div>
-
-      <!-- OTHER DETAILS -->
-      <div class="col-sm-12 mx-t5 mb-2">
-        <h4>Other Details</h4>
-      </div>
-
-      <!-- Display all other details similar to the edit page -->
-      <div class="col-sm-3 form-group">
-        <label for="household_income">Household Income:</label>
-        {{ student.household_income }}
-      </div>
-
-      <div class="col-sm-3 form-group">
-        <label for="is_returnee">Is Returnee:</label>
-        {{ student.is_returnee }}
-      </div>
-
-      <div class="col-sm-3 form-group">
-        <label for="is_a_dropout">Is a Dropout:</label>
-        {{ student.is_a_dropout }}
-      </div>
-
-      <div class="col-sm-3 form-group">
-        <label for="is_a_working_student">Is a Working Student:</label>
-        {{ student.is_a_working_student }}
-      </div>
-
-      <div class="col-sm-3 form-group">
-        <label for="previous_adviser">Previous Adviser:</label>
-        {{ student.previous_adviser }}
-      </div>
-
-      <div class="col-sm-3 form-group">
-        <label for="adviser_contact">Adviser Contact Information:</label>
-        {{ student.adviser_contact }}
-      </div>
-
-      <div class="col-sm-3 form-group">
-        <label for="health_bmi">Health BMI:</label>
-        {{ student.health_bmi }}
-      </div>
-
-      <div class="col-sm-3 form-group">
-        <label for="general_average">General Average:</label>
-        {{ student.general_average }}
-      </div>
-
-      <div class="col-sm-3 form-group">
-        <label for="is_a_four_ps_scholar">Is a 4Ps Scholar:</label>
-        {{ student.is_a_four_ps_scholar }}
-      </div>
-
-      <!-- New Notes Field -->
-      <div class="col-sm-12 form-group">
-        <label for="notes">Notes (Other scholarships, conduct, PWD, etc.):</label>
-        {{ student.notes }}
-      </div>
-
-      <div class="col-sm-12 form-group">
-        <label for="edited_fields">Edited Fields:</label>
-        {{ student.edited_fields }}
-      </div>
-
-    </div>
-  </div>
 {% endblock %}
