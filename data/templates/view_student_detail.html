@@ -11,15 +11,17 @@
     <form>
 
       <div class="container mt-3">
-    
           <div class="row jumbotron box8">
-            <div class="col-sm-12 mx-t3 mb-4">
+            <div class="col-sm-12 mx-t3 mb-4 card-header">
+              <a href="{% url 'back_student_detail' %}" class="btn btn-primary">Back</a>
               <h2 class="text-center">Student Profile</h2>
+              <br>
             </div>
             
             <!-- PERSONAL DETAILS -->
             <div class="col-sm-12 mx-t5 mb-2">
               <h4>Personal Details</h4>
+              <hr>
             </div>
             
             <div class="col-sm-4 form-group">
@@ -140,7 +142,9 @@
     
             <!-- ACADEMIC BACKGROUND -->
             <div class="col-sm-12 mx-t5 mb-2">
+              <br>
               <h4>Academic Background</h4>
+              <hr>
             </div>
     
     
@@ -222,8 +226,8 @@
             </div>
     
             <div class="col-sm-12 form-group mb-0">
-              <center><a href="{% url 'students' %}" class="btn btn-primary">Back</a></center>
-              <button type="button" class="btn btn-primary float-left">Edit</button>
+              <hr>
+              <a href="{% url 'edit_student' lrn=student.LRN %}" class="btn btn-primary float-left">Edit</a>
               <button type="button" class="btn btn-danger float-right">Delete</button>
             </div>
           </div>

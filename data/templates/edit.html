@@ -6,8 +6,6 @@
 {% endblock %}
 
 {% block content %}
-  <center><a href="{% url 'students' %}" class="btn btn-primary">Back to View Students</a></center>
-
   <div class="container mt-3">
     <form method="POST">
       {% csrf_token %}
@@ -19,13 +17,17 @@
           {{ form.non_field_errors }}
     
           <div class="row jumbotron box8">
-            <div class="col-sm-12 mx-t3 mb-4">
-              <h2 class="text-center">Register Student</h2>
+            <div class="col-sm-12 mx-t3 mb-4 card-header">
+              <a href="{% url 'view_student_detail' lrn=student.LRN %}" class="btn btn-primary">Back</a>
+              <h2 class="text-center">Edit Student Information</h2>
+              <br>
             </div>
             
             <!-- PERSONAL DETAILS -->
+
             <div class="col-sm-12 mx-t5 mb-2">
               <h4>Personal Details</h4>
+              <hr>
             </div>
             
             <div class="col-sm-4 form-group">
@@ -173,7 +175,9 @@
     
             <!-- ACADEMIC BACKGROUND -->
             <div class="col-sm-12 mx-t5 mb-2">
+              <br>
               <h4>Academic Background</h4>
+              <hr>
             </div>
     
     
@@ -204,7 +208,9 @@
     
             <!-- OTHER DETAILS -->
             <div class="col-sm-12 mx-t5 mb-2">
+              <br>
               <h4>Other Details</h4>
+              <hr>
             </div>
     
             <div class="col-sm-3 form-group">
@@ -269,6 +275,7 @@
             </div>
     
             <div class="col-sm-12 form-group mb-0">
+              <hr>
               <button type="submit" class="btn btn-primary float-right">Submit</button>
             </div>
           </div>

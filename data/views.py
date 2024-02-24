@@ -319,6 +319,13 @@ def view_student_detail(request, lrn):
     context = {'student': student}
     return render(request, 'view_student_detail.html', context)
 
+def back_student_detail(request):
+    user = request.user
+    if Group.objects.get(name='TEACHER') in user.groups.all():
+        # Redirect to teacher's user_page.html
+        return redirect('user_page')  
+    else:
+        return redirect('students')
 
 @login_required(login_url='login')
 def update(request, id):

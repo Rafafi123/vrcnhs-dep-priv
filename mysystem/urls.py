@@ -44,6 +44,8 @@ urlpatterns = [
     #DELETE TEACHER
     path('delete_teacher/<int:teacher_id>/', views.destroy_teacher, name='delete_teacher'),
 
+    path('returning', views.back_student_detail, name='back_student_detail'),
+
     path('edit_teacher/<int:teacher_id>/', views.edit_teacher, name='edit_teacher'),
 
     path('<int:id>', views.students_page, name='view_student'), #view specific details of student
