@@ -299,9 +299,9 @@ def edit(request, lrn):
             messages.success(request, "Student Updated Successfully")
 
             if request.user.groups.filter(name='TEACHER').exists():
-                return redirect("user_page")
+                return redirect("view_student_detail", lrn=lrn)
             else:
-                return redirect("students")
+                return redirect("view_student_detail", lrn=lrn)
     else:
         # Create the form instance without providing initial values
         form = StudentForm(instance=student)

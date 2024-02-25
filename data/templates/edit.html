@@ -13,19 +13,22 @@
 {% endblock %}
 
 {% block content %}
-  <div class="container mt-3">
+
+  <div class="container mt-5">
     <form method="POST">
       {% csrf_token %}
       {{ form.non_field_errors }}
 
-      <div class="container mt-3">
+      <div class="container space">
         <form method="POST">
           {% csrf_token %}
           {{ form.non_field_errors }}
     
           <div class="row jumbotron box8">
-            <div class="col-sm-12 mx-t3 mb-4 card-header">
+            <div class="col-sm-12 mt-3 mb-4 card-header">
+              <div class ='margin'>
               <a href="{% url 'view_student_detail' lrn=student.LRN %}" class="btn btn-primary">Back</a>
+              </div>
               <h2 class="text-center">Edit Student Information</h2>
               <br>
             </div>
@@ -49,13 +52,13 @@
               {{ form.last_name.errors }}
             </div>
     
-            <div class="col-sm-4 form-group">
+            <div class="col-sm-3 form-group">
               <label for="{{ form.middle_name.id_for_label }}">Middle Name:</label>
               {{ form.middle_name }}
               {{ form.middle_name.errors }}
             </div>
     
-            <div class="col-sm-1 form-group">
+            <div class="col-sm-2 form-group">
               <label for="{{ form.suffix_name.id_for_label }}">Suffix:</label>
               {{ form.suffix_name }}
               {{ form.suffix_name.errors }}
@@ -283,7 +286,7 @@
     
             <div class="col-sm-12 form-group mb-0">
               <hr>
-              <button type="submit" class="btn btn-primary float-right">Submit</button>
+              <button type="submit" class="btn btn-primary right">Save Changes</button>
             </div>
           </div>
         </form>

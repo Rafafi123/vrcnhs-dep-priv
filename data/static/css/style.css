@@ -14,6 +14,11 @@
   padding-right: 1rem;
 }
 
+.login-bar {
+ margin-left: auto;
+ padding-right: 1rem;
+}
+
 
 
 
@@ -322,3 +327,30 @@ margin-top: -3rem;
   color: white;
 }
 
+/* VIEW STUDENT DETAIL*/
+
+.margin {
+  margin-left: 1rem;
+}
+
+.edit-stud-button {
+  margin:1rem;
+}
+
+.right {
+  float: right;
+  margin: 1rem;
+}
+
+.space {
+  margin: 1rem;
+}
+
+/*Add student manually*/
+
+.gitna {
+  margin: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
