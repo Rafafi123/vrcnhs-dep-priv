@@ -2,9 +2,14 @@
 {% load static %}
 
 {% block head_block %}
+    <!--CSS-->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-     <!-- Add DataTables CSS -->
-     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+
+
+    <!-- Link to Bootstrap JavaScript -->
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -70,8 +75,13 @@
     <button type="submit" class="btn btn-primary" onclick="submitForm('form-grade-8')">Assign Classrooms for Grade 8</button>
 </center>
 
+<br>
+<hr>
+<hr>
+<br>
+
 <center>
-    <h1>Grade 9 "FOR PROMOTION" Students</h1>
+    <h1>Grade 9 "SECTIONING" Students</h1>
 </center>
 <br>
 <form action="{% url 'assign_classroom_bulk' 'Grade 9' %}" method="post" id="form-grade-9">
@@ -112,6 +122,12 @@
 <center>
     <button type="submit" class="btn btn-primary" onclick="submitForm('form-grade-9')">Assign Classrooms for Grade 9</button>
 </center>
+
+<br>
+<hr>
+<hr>
+<br>
+
 
 <center>
     <h1>Grade 10 "SECTIONING" Students</h1>
@@ -155,6 +171,11 @@
 <center>
     <button type="submit" class="btn btn-primary" onclick="submitForm('form-grade-10')">Assign Classrooms for Grade 10</button>
 </center>
+
+<br>
+<hr>
+<hr>
+<br>
 
 <center>
     <h1>Grade 11 "SECTIONING" Students</h1>

@@ -30,10 +30,11 @@
 </div>
 
 <center>
-  <h6>IMPORT STUDENTS using Excel (.xlsx) files. Please use <a href="{% url 'download_template' %}" download>This Template.</a></h6>
+  
 
-  <div class="form-container">
+  <div class="card">
     <!-- IMPORT -->
+    <h6>IMPORT STUDENTS using Excel (.xlsx) files. Please use <a href="{% url 'download_template' %}" download>This Template.</a></h6>
     <form method="post" enctype="multipart/form-data" action="{% url 'import_students' %}">
         {% csrf_token %}
         <div class="mb-3">
