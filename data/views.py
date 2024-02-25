@@ -1,3 +1,4 @@
+from django.core.exceptions import PermissionDenied
 from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
 from dateutil import parser as date_parser
 from django.urls import reverse_lazy
@@ -24,7 +25,7 @@ import plotly.io as pio
 from .forms import StudentSearchForm, StudentForm, TeacherSearchForm, TeacherSignupForm, AdminTeacherStudentForm  # this is for the search function
 import pandas as pd # this is for the data analysis
 from django.db.models import Count, Avg
-from django.http import FileResponse, JsonResponse
+from django.http import FileResponse, HttpResponseForbidden, JsonResponse
 from django.views.decorators.cache import cache_page #
 from chartjs.views.lines import BaseLineChartView 
 from django.http import HttpResponse
@@ -315,9 +316,65 @@ def edit(request, lrn):
 
 @login_required
 def view_student_detail(request, lrn):
-    student = get_object_or_404(Student, LRN=lrn)
-    context = {'student': student}
+    user = request.user
+    has_authorization = False
+
+    try:
+        # Check if the user is in the ADMIN group
+        if Group.objects.get(name='ADMIN') in user.groups.all():
+            # If the user is in the ADMIN group, allow access to all student details
+            student = Student.objects.get(LRN=lrn)
+            has_authorization = True
+        else:
+            # If the user is not in the ADMIN group, assume they are a teacher
+            teacher = Teacher.objects.get(user=user)
+            classroom = Classroom.objects.get(teacher=teacher)
+
+            # Try to get the student only if they belong to the same classroom as the teacher
+            student = Student.objects.get(LRN=lrn, classroom=classroom)
+            has_authorization = True
+
+    except (Group.DoesNotExist, Teacher.DoesNotExist, Classroom.DoesNotExist, Student.DoesNotExist):
+        # Handle the case where the user is not a teacher, is not associated with a classroom,
+        # or the student is not found. Redirect to the "students" page with an error message.
+        messages.error(request, "You are not authorized to view this student's profile.")
+        return redirect("students")
+
+    context = {'student': student, 'has_authorization': has_authorization}
     return render(request, 'view_student_detail.html', context)
+
+def has_authorization(user, lrn):
+    # Check if the user is in the ADMIN group
+    if Group.objects.get(name='ADMIN') in user.groups.all():
+        return True
+    else:
+        # If the user is not in the ADMIN group, assume they are a teacher
+        try:
+            teacher = Teacher.objects.get(user=user)
+            classroom = Classroom.objects.get(teacher=teacher)
+
+            # Try to get the student only if they belong to the same classroom as the teacher
+            student = get_object_or_404(Student, LRN=lrn, classroom=classroom)
+            return True
+        except (Teacher.DoesNotExist, Classroom.DoesNotExist, Student.DoesNotExist):
+            # Handle the case where the user is not a teacher, is not associated with a classroom,
+            # or the student is not found
+            return False
+
+@login_required
+def students_page(request):
+    student_list = Student.objects.all()
+    
+    # Check for authorization logic
+    user = request.user
+    has_authorization_status = has_authorization(user)
+
+    context = {
+        'students': student_list,
+        'has_authorization': has_authorization_status,
+    }
+
+    return render(request, 'view_students.html', context)
 
 def back_student_detail(request):
     user = request.user

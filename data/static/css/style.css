@@ -354,3 +354,8 @@ margin-top: -3rem;
   justify-content: center;
   align-items: center;
 }
+
+.disabled-link {
+  pointer-events: none; /* Disable clicks */
+  opacity: 0.5; /* Add transparency to visually indicate disabled state */
+}
