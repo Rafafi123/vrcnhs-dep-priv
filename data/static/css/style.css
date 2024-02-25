@@ -7,6 +7,12 @@
   transform: scale(1.1);
 }
 
+.user {
+  position: absolute;
+  right: 0;
+  top: 10%;
+  padding-right: 1rem;
+}
 
 
 
@@ -315,3 +321,4 @@ margin-top: -3rem;
   background-color: #026223;
   color: white;
 }
+
