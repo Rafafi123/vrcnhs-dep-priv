@@ -30,7 +30,7 @@
                 <h2>{{ tag.gradelevel }}</h2>
                 <div class="table-responsive">
                     <!--This table is to help specify the css file to format the classroom tables to align -->
-                    <table class="table" style="width: 70rem;" id="classroom-table-{{ tag.gradelevel }}"">
+                    <table class="table-striped" style="width: 70rem;" id="classroom-table-{{ tag.gradelevel }}">
                         <thead>
                             <tr>
                                 <th>Classroom</th>
@@ -105,12 +105,26 @@
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 
 <script>
-    $(document).ready(function() {
-        $('#classroom-table-{{ tag.gradelevel }}').DataTable();
-    });
+    
+    // Check if there is a stored scroll position
+    var storedScrollPos = sessionStorage.getItem('scrollPos');
+    if (storedScrollPos !== null) {
+        // Scroll to the stored position after the page has loaded
+        window.onload = function () {
+            window.scrollTo(0, storedScrollPos);
+        };
+
+        // Clear the stored scroll position
+        sessionStorage.removeItem('scrollPos');
+    }
+
+    // Store the scroll position when leaving the page
+    window.onbeforeunload = function () {
+        sessionStorage.setItem('scrollPos', window.scrollY);
+    };
 </script>
   
-  
+
   
 
 {% endblock content %}

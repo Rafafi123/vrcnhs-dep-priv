@@ -1,7 +1,7 @@
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
 from dateutil import parser as date_parser
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from io import BytesIO
 from datetime import datetime
 from openpyxl.styles import NamedStyle
@@ -716,7 +716,13 @@ def edit_classroom(request, classroom_id):
         classroom.teacher = teacher
         classroom.save()
         
-        messages.success(request, 'Classroom was successfully edited.')
+        # Build the URL for the current view (edit_classroom) without the success message
+        redirect_url = reverse(grade_sections)
+        
+        # Add the success message to the messages framework
+        success_message = f'Classroom was successfully edited! You may go back and press refresh to see the changes.'
+        messages.success(request, success_message)
+
         # Redirect to the appropriate page after saving
         return redirect('edit_classroom', classroom_id=classroom_id)
 
