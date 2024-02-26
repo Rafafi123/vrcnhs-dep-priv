@@ -11,6 +11,10 @@
 
   <!-- Link to Bootstrap JavaScript -->
   <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+
+  <link href="{% static "images/logo.ico" %}" rel="shortcut icon">
+
+  <link href="{% static "images/logo.ico" %}" rel="logo icon">
 {% endblock %}
 
 {% block content %}
@@ -30,12 +34,12 @@
 <!-- Signup buttons -->
     
 <center>
-<div class="justify-content-center">
-    <div class="col-6">
-        <div class="card">
+<div class="justify-content-center margin">
+    <div class="col-6 margin">
+        <div class="card margin">
             <h4>Student Information System</h4>
             <br>
-            <img src="{% static "images/logo.png" %}" alt="login" />
+                <img src="{% static 'images/logo.png' %}" class="logo" alt="login" />
             <div class="card-body">
 
                     <!-- Notification for when a new account is made successfully --> 
