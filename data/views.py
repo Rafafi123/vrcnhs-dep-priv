@@ -715,9 +715,10 @@ def edit_classroom(request, classroom_id):
         classroom.gradelevel = gradelevel
         classroom.teacher = teacher
         classroom.save()
-
+        
+        messages.success(request, 'Classroom was successfully edited.')
         # Redirect to the appropriate page after saving
-        return redirect('grade_sections')
+        return redirect('edit_classroom', classroom_id=classroom_id)
 
     # Retrieve all gradelevels and teachers for rendering the form
     gradelevels = Gradelevel.objects.all()
