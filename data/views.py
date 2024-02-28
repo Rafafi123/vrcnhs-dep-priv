@@ -125,8 +125,8 @@ def home(request):
     }
     # Debug statement to print total students
     print("Debug Statement: Total Students -", total_students)
-    print("Debug Statement: Total Students -", total_teachers)
-    print("Debug Statement: Total Students -", total_classrooms)
+    print("Debug Statement: Total Teachers -", total_teachers)
+    print("Debug Statement: Total Classrooms -", total_classrooms)
     
     # Render the home.html template with the context data
     return render(request, 'home.html', context)
@@ -618,15 +618,15 @@ def report_page(request):
 
     })
 
-def create_pie_chart(labels, sizes, title):
+def create_pie_chart(labels, sizes, title, chart_width=None, chart_height=None):
     fig = go.Figure(data=[go.Pie(labels=labels, values=sizes)])
-    fig.update_layout(title=title)
+    fig.update_layout(title=title, autosize=False, width=chart_width, height=chart_height)
     return fig
 
-def create_bar_chart(labels, sizes, title, colorscale='bright'):
+def create_bar_chart(labels, sizes, title, chart_width=None, chart_height=None, colorscale='bright'):
     colors = px.colors.qualitative.Plotly
     fig = go.Figure(data=[go.Bar(x=labels, y=sizes, marker_color=colors)])
-    fig.update_layout(title=title)
+    fig.update_layout(title=title, autosize=False, width=chart_width, height=chart_height)
     return fig
 
 ############################### this is for adding classrooms and assigning a teacher to those classrooms
