@@ -805,18 +805,18 @@ def export_students_to_excel(request):
         start_row = 2
         start_column = 2
 
-        date_style = NamedStyle(name='date_style', number_format='YYYY-MM-DD')
+        date_style = NamedStyle(name='date_style', number_format='MM-DD-YYYY')
 
         for row_num, student in enumerate(students, start_row):
             for col_num, field in enumerate(Student._meta.fields, start_column):
                 col_letter = get_column_letter(col_num)
 
+                field_value = getattr(student, field.name)
+
                 if field.name in ['LRN', 'age', 'father_contact', 'mother_contact', 'guardian_contact', 'adviser_contact']:
-                    field_value = getattr(student, field.name)
                     if field_value is not None:
                         field_value = int(field_value)
                 elif field.name in ['health_bmi', 'general_average']:
-                    field_value = getattr(student, field.name)
                     if field_value is not None:
                         field_value = float(field_value)
                 elif field.name == 'birthday':
@@ -826,7 +826,6 @@ def export_students_to_excel(request):
                     sheet[f"{col_letter}{row_num}"].style = date_style
                 elif field.name == 'last_grade_level':
                     # Check if last_grade_level is a string with non-numeric characters
-                    field_value = getattr(student, field.name)
                     if field_value is not None and any(c.isalpha() for c in field_value):
                         # If it contains non-numeric characters, export as a string
                         field_value = str(field_value)
@@ -834,11 +833,10 @@ def export_students_to_excel(request):
                         # Otherwise, try converting to integer
                         try:
                             field_value = int(field_value)
-                        except ValueError:
+                        except (ValueError, TypeError):
                             print(f"Error converting last_grade_level to int: {field_value}")
                             field_value = None
                 else:
-                    field_value = getattr(student, field.name)
                     if field_value is not None:
                         field_value = str(field_value)
                     else:
@@ -859,6 +857,7 @@ def export_students_to_excel(request):
         messages.error(request, "An error occurred while exporting data to Excel. Please try again.")
 
     return render(request, 'view_students.html')  # Redirect to the desired page after export
+
 
 #EXPORT 
 @allowed_users(allowed_roles=['ADMIN'])
@@ -923,15 +922,20 @@ def import_students_from_excel(request):
 
                 try:
                     classroom_instance = Classroom.objects.get(classroom=classroom_identifier)
-                
                     gradelevel_instance = Gradelevel.objects.get(grade=gradelevel_identifier)
 
-                    # Check if the birthday is already a datetime object
-                    if not isinstance(data[7], datetime):
-                        # Convert mm-dd-yyyy to YYYY-MM-DD
-                        converted_bday = datetime.strptime(data[7], '%m-%d-%Y').strftime('%Y-%m-%d')
-                    else:
+                    # Check if the birthday is already a datetime object or a string
+                    if isinstance(data[7], datetime):
                         converted_bday = data[7]
+                    elif data[7] and isinstance(data[7], str):
+                        try:
+                            converted_bday = date_parser.parse(data[7])
+                        except ValueError:
+                            # If parsing fails, handle it as needed
+                            converted_bday = None
+                    else:
+                        converted_bday = None
+
 
                     print(f"Row {i}: Classroom Instance:", classroom_instance)
                     print(f"Row {i}: Gradelevel Instance:", gradelevel_instance)

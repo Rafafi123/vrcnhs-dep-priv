@@ -180,8 +180,11 @@ class Student(models.Model):
         verbose_name_plural = "Students"   
 
     def save(self, *args, **kwargs):
-        # Calculate the age by subtracting the birth year from the current year
-        self.age = date.today().year - self.birthday.year
+        # Calculate the age only if the birthday is not None
+        if self.birthday:
+            self.age = date.today().year - self.birthday.year
+        else:
+            self.age = None
 
         # Call the save method of the parent class to save the object
         super().save(*args, **kwargs)
