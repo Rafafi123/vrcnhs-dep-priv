@@ -33,50 +33,52 @@
       </div>-->
 
       <div class="card-container">
-        <!-- Card 1 -->
-        <div class="card">
-          <div class="card card-success">
-            <h1><b>Total students:</b></h1>
-            <h2>{{ total_students }}</h2>
+          <!-- Card 1 -->
+          <div class="card">
+            <div class="card-success">
+              <h1 class="dynamic-text"><b>Total Students:</b></h1>
+              <h2 class="dynamic-text">{{ total_students }}</h2>
+            </div>
+          </div>
+        
+          <!-- Card 2 -->
+          <div class="card">
+            <div class="card-success">
+              <h1 class="dynamic-text"><b>Total Teachers:</b></h1>
+              <h2 class="dynamic-text">{{ total_teachers }}</h2>
+            </div>
+          </div>
+        
+          <!-- Card 3 -->
+          <div class="card">
+            <div class="card-success">
+              <h1 class="dynamic-text-classroom"><b>Total Classrooms:</b></h1>
+              <h2 class="dynamic-text">{{ total_classrooms }}</h2>
+            </div>
           </div>
         </div>
-      
-        <!-- Card 2 -->
-        <div class="card">
-          <div class="card card-success">
-            <h1><b>Total Teachers:</b></h1>
-            <h2>{{ total_teachers }}</h2>
-          </div>
-        </div>
-      
-        <!-- Card 3 -->
-        <div class="card">
-          <div class="card card-success">
-            <h1><b>Total Classrooms:</b></h1>
-            <h2>{{ total_classrooms }}</h2>
-          </div>
-        </div>
-      </div>
-      
-      
+        
+        
 
-      <!--<h1>Student Gender Distribution</h1>-->
-    
-      <div class="chart-box">
-        <!-- Insert the first Plotly chart -->
-        <p>Generated on: {{ current_datetime }}</p>
-        {{ gender_chart_div|safe }}
+        <div class="chart-container">
+          <!--<h1>Student Gender Distribution</h1>-->
+          <div class="chart-box">
+            <!-- Insert the first Plotly chart -->
+            <p>Generated on: {{ current_datetime }}</p>
+            {{ gender_chart_div|safe }}
+          </div>
+          <div class="chart-box">
+            <h2>4P's Scholars</h2>
+            <p>Generated on: {{ current_datetime }}</p>
+            {% autoescape off %}
+            <div id="scholarship_chart">{{ scholarship_chart|safe }}</div>
+            {% endautoescape %}
+          </div>
+          <div class="chart-box">
+            <p>Generated on: {{ current_datetime }}</p>
+            {{ returnee_chart_div|safe }}
+          </div>
       </div>
-      <div class="chart-box">
-        <!-- Insert the second Plotly chart -->
-        <p>Generated on: {{ current_datetime }}</p>
-        {{ scholarship_chart_div|safe }}
-      </div>
-      <div class="chart-box">
-        <p>Generated on: {{ current_datetime }}</p>
-        {{ returnee_chart_div|safe }}
-      </div>
-       
        <!-- <h1>Total students: {{ total_students }}</h1> -->
 
        {% endblock %}

@@ -559,7 +559,6 @@ def report_page(request):
     # Prepare data for scholarship program pie chart
         scholarship_labels = [scholarship[1] for scholarship in Student.scholarship_program]
         scholarship_sizes = [scholarship_counts.get(scholarship[0], 0) for scholarship in Student.scholarship_program]
-        scholarship_title = 'Distribution of Scholarship Programs'
 
     # Calculate sex distribution
     sex_counts = dict()
@@ -570,7 +569,7 @@ def report_page(request):
     # Prepare data for sex pie chart
     sex_labels = [sex[1] for sex in Student.sex_student]
     sex_sizes = [sex_counts.get(sex[0], 0) for sex in Student.sex_student]
-    sex_title = 'Distribution of Sex'
+    sex_title = 'Males and Females'
 
     # Calculate returnee student distribution
     returnee_counts = dict()
@@ -620,13 +619,27 @@ def report_page(request):
 
 def create_pie_chart(labels, sizes, title, chart_width=None, chart_height=None):
     fig = go.Figure(data=[go.Pie(labels=labels, values=sizes)])
-    fig.update_layout(title=title, autosize=False, width=chart_width, height=chart_height)
+    fig.update_layout(title=title, autosize=True, width=chart_width, height=chart_height)
     return fig
 
 def create_bar_chart(labels, sizes, title, chart_width=None, chart_height=None, colorscale='bright'):
     colors = px.colors.qualitative.Plotly
     fig = go.Figure(data=[go.Bar(x=labels, y=sizes, marker_color=colors)])
-    fig.update_layout(title=title, autosize=False, width=chart_width, height=chart_height)
+    
+    # Disable zoom and panning
+    fig.update_xaxes(fixedrange=True)
+    fig.update_yaxes(fixedrange=True)
+    
+    # Hide the mode bar (zoom/pan controls)
+    fig.update_layout(title=title, autosize=True, width=chart_width, height=chart_height)
+
+    # Make the chart responsive
+    fig.update_layout(
+        autosize=True,
+        margin=dict(l=0, r=0, b=0, t=30),  # Adjust margin as needed
+        template="plotly",  # Choose a responsive template
+    )
+
     return fig
 
 ############################### this is for adding classrooms and assigning a teacher to those classrooms

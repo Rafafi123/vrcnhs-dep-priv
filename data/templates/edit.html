@@ -14,12 +14,12 @@
 
 {% block content %}
 
-  <div class="container mt-5">
+  <div class="container">
     <form method="POST">
       {% csrf_token %}
       {{ form.non_field_errors }}
 
-      <div class="container space">
+      <div class="container">
         <form method="POST">
           {% csrf_token %}
           {{ form.non_field_errors }}

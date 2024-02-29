@@ -25,7 +25,13 @@
 /*-------------------------------Home page-----------------------------------------------------------------*/
 .card-container {
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  justify-content: center; /* Center the cards horizontally */
+  align-items: flex-start; /* Align the cards to the top of the container */
+  gap: 20px; /* Add gap between cards */
+  margin: 0 auto; /* Center the entire container */
+  width: 100%; /* Make the container 100% width of the viewport */
+  padding: 20px; /* Optional: Add padding for better visual appearance */
 }
 
 .card {
@@ -33,11 +39,20 @@
   padding: 1rem;
   margin-bottom: 1rem;
   flex: 1;
-  max-width: 75%;
+  width: 30%; /* Adjust the width as needed for larger screens */
+  margin-bottom: 20px; /* Add margin between cards */
+  box-sizing: border-box;
+}
+
+.dynamic-text {
+  font-size: 2rem; /* Set a base font size using relative units */
+}
+.dynamic-text-classroom {
+  font-size: 2rem; /* Adjust font size for smaller screens */
 }
 
 .card-title {
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: bold;
   margin-bottom: 1rem;
 }
@@ -50,21 +65,44 @@
 .card-success {
   background-color: #d9ead3;
   color: #6b8e23;
-}
-
-.container {
-  padding: 0;
+  text-align: center; /* Center the text inside the card */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
 }
 
 .chart-box {
-  width: 30%;
+  flex: 0 1 100%; /* Set initial size to 100% to make charts stack on top of each other */
   margin: 20px;
   padding: 10px;
   border: 1px solid black;
-  display: inline-block;
-  vertical-align: top;
+  box-sizing: border-box; /* Include padding and border in the box's total width and height */
 }
 
+.chart-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around; /* Center the charts horizontally with space around them */
+}
+
+/* Media query for desktop screens */
+@media (min-width: 768px) {
+  .chart-box {
+    flex: 0 1 calc(33.33% - 40px); /* Set initial size to approximately 33.33%, considering margin */
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    width: 100%; /* Make cards full-width on screens smaller than 768px */
+  }
+
+  .dynamic-text {
+    font-size: 1rem; /* Adjust font size for smaller screens */
+  }
+
+  .dynamic-text-classroom {
+    font-size: 0.85rem; /* Adjust font size for smaller screens */
+  }
+}
 
 /*------------------------------------------------------------------------------------------------*/
 
@@ -261,9 +299,20 @@ label {
 body {
 background: #f1f1f1;
 }
+
+
 .box8{
 box-shadow: 0px 0px 5px 1px #999;
 }
+
+@media (min-width: 768px) {
+  .box8 {
+    max-width: 1200px; /* Limit the width for larger screens */
+    margin: auto; /* Center the form on larger screens */
+  }
+}
+
+
 .mx-t3{
 margin-top: -3rem;
 }
@@ -316,10 +365,18 @@ margin-top: -3rem;
 
 .file-upload-wrapper {
   display: inline-block; /* Makes it behave like a button */
-  width: 500px; /* Adjust width as needed */
+  width: 80%; /* Adjust width as a percentage for responsiveness */
+  max-width: 500px; /* Set a maximum width if needed */
   height: 40px; /* Adjust height as needed */
   padding: 5px; /* Add padding for spacing */
   cursor: pointer; /* Display pointer cursor on hover */
+}
+
+/* Adjustments for smaller screens */
+@media (max-width: 768px) {
+  .file-upload-wrapper {
+    width: 100%; /* Make it full width on smaller screens */
+  }
 }
 
 .table-container #studentTable thead {
