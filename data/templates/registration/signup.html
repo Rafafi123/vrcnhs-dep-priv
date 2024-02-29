@@ -16,21 +16,21 @@
 <body>
     <!-- Navbar! -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-success mb-3">
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="login-bar">
             <ul class="navbar-nav mr-auto">
                 <!-- Log in  button -->
-                <form class="form-inline my-2 my-lg-0">
-                <h6 style="color: white;">Back</h6>
+                <form class="form-inline my-2 my-lg-0 nav-item">
+                <h9 style="color: white;">Back</h9>
                 <a href="{% url 'login' %}" class="btn btn-primary ml-3">Log in</a>
                 </form>
             </ul>
         </div>
     </nav>
 
-    </nav>
-    <div class="row justify-content-center">
-        <div class="COL-6">
-            <div class="card">
+    
+    <div>
+        <div class="card col-8 card-login mx-auto mt-5">
+            <div>
                 <div class="card-body">
                 <h2>Teacher Sign up</h2>
                     <form method="post">
@@ -43,5 +43,38 @@
             </div>
         </div>
     </div>    
+
+    <style>
+        /* Base styles */
+        .card-login {
+            background-color: #f8f9fa; /* Set a background color */
+            padding: 0px; /* Add padding to the card body */
+            margin: 0; /* Center the card horizontally */
+        }
+    
+        /* Responsive styles */
+        @media (max-width: 576px) {
+            /* Adjust styles for screens smaller than 576px (e.g., mobile devices) */
+            .card-login {
+                width: 100%; /* Make the card take the full width */
+            }
+    
+            /* Additional styles for better responsiveness on small screens */
+            .card-login form {
+                margin-top: 15px; /* Add some spacing between form and top of the card */
+            }
+    
+            .card-login button {
+                margin-top: 15px; /* Add some spacing above the button */
+            }
+        }
+    
+        @media (min-width: 577px) {
+            /* Adjust styles for screens larger than 576px (e.g., tablets and larger) */
+            .card-login {
+                width: 100%; /* Set a percentage width for larger screens */
+            }
+        }
+    </style>
 </body>
 

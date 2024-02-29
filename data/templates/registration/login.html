@@ -2,11 +2,12 @@
 {% load crispy_forms_tags %}
 
 
-{% block head_block %}
-  <!-- Link to Bootstrap CSS -->
-  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
-  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-  
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 
 
   <!-- Link to Bootstrap JavaScript -->
@@ -15,9 +16,8 @@
   <link href="{% static "images/logo.ico" %}" rel="shortcut icon">
 
   <link href="{% static "images/logo.ico" %}" rel="logo icon">
-{% endblock %}
+</head>
 
-{% block content %}
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-success mb-3">
     <div class="login-bar">
@@ -32,16 +32,16 @@
 </nav>
 
 <!-- Signup buttons -->
-    
-<center>
-<div class="justify-content-center margin">
-    <div class="col-6 margin">
-        <div class="card margin">
-            <h4>Student Information System</h4>
-            <br>
-                <img src="{% static 'images/logo.png' %}" class="logo" alt="login" />
-            <div class="card-body">
 
+<center>
+<div>
+    <div class="card col-8 card-login mx-auto mt-5">
+        <div>
+            <div class="card-body">
+                <img src="{% static 'images/logo.png' %}" class="logo" alt="login" />
+                <br>
+                <br>
+                <h5>Student Information System</h5>
                     <!-- Notification for when a new account is made successfully --> 
                     
                     {% for message in messages %}
@@ -53,10 +53,7 @@
                         {% endif %}
 
                     {% endfor %}
-
-
-           
-                
+                    <br>
                 <form method = "post" novalidate>
                     {% csrf_token %}
                     {{ form|crispy }}
@@ -64,9 +61,42 @@
                     <button type = "submit" class="btn btn-primary">Log In</button>
                 </form>
             </div>
-            <script src="{% static 'js/script.js' %}"></script>
         </div>
     </div>
 </div>
 </center>
-{% endblock %}
+<style>
+    /* Base styles */
+    .card-login {
+        background-color: #f8f9fa; /* Set a background color */
+        padding: 0px; /* Add padding to the card body */
+        margin: 0; /* Center the card horizontally */
+    }
+
+    /* Responsive styles */
+    @media (max-width: 576px) {
+        /* Adjust styles for screens smaller than 576px (e.g., mobile devices) */
+        .card-login {
+            width: 100%; /* Make the card take the full width */
+        }
+
+        /* Additional styles for better responsiveness on small screens */
+        .card-login form {
+            margin-top: 15px; /* Add some spacing between form and top of the card */
+        }
+
+        .card-login button {
+            margin-top: 15px; /* Add some spacing above the button */
+        }
+    }
+
+    @media (min-width: 577px) {
+        /* Adjust styles for screens larger than 576px (e.g., tablets and larger) */
+        .card-login {
+            width: 100%; /* Set a percentage width for larger screens */
+        }
+    }
+</style>
+<script src="{% static 'js/script.js' %}"></script>
+
+</html>

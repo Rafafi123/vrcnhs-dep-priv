@@ -34,7 +34,7 @@
 
       <div class="card-container">
           <!-- Card 1 -->
-          <div class="card">
+          <div class="card card-success">
             <div class="card-success">
               <h1 class="dynamic-text"><b>Total Students:</b></h1>
               <h2 class="dynamic-text">{{ total_students }}</h2>
@@ -42,7 +42,7 @@
           </div>
         
           <!-- Card 2 -->
-          <div class="card">
+          <div class="card card-success">
             <div class="card-success">
               <h1 class="dynamic-text"><b>Total Teachers:</b></h1>
               <h2 class="dynamic-text">{{ total_teachers }}</h2>
@@ -50,7 +50,7 @@
           </div>
         
           <!-- Card 3 -->
-          <div class="card">
+          <div class="card card-success">
             <div class="card-success">
               <h1 class="dynamic-text-classroom"><b>Total Classrooms:</b></h1>
               <h2 class="dynamic-text">{{ total_classrooms }}</h2>
@@ -63,6 +63,7 @@
         <div class="chart-container">
           <!--<h1>Student Gender Distribution</h1>-->
           <div class="chart-box">
+            <h2>Gender</h2>
             <!-- Insert the first Plotly chart -->
             <p>Generated on: {{ current_datetime }}</p>
             {{ gender_chart_div|safe }}
@@ -75,6 +76,7 @@
             {% endautoescape %}
           </div>
           <div class="chart-box">
+            <h2>Returnees</h2>
             <p>Generated on: {{ current_datetime }}</p>
             {{ returnee_chart_div|safe }}
           </div>
