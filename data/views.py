@@ -79,19 +79,20 @@ def home(request):
     gender_fig = go.Figure(data=[gender_trace], layout=gender_layout)
     gender_chart_div = pio.to_html(gender_fig, full_html=False)
 
-    # Create bar chart data for scholarship program
-    scholarship_labels = ['Yes', 'No']
-    scholarship_counts = [
-        Student.objects.filter(is_a_four_ps_scholar='1').count(),
-        Student.objects.filter(is_a_four_ps_scholar='0').count()
-    ]
-    scholarship_colors = ['#2ca02c', '#d62728'] # green and red colors for Yes and No respectively
-    scholarship_trace = go.Bar(x=scholarship_labels, y=scholarship_counts,
-                               marker=dict(color=scholarship_colors))
-    scholarship_layout = go.Layout(title='Student Scholarship Program')
-    scholarship_fig = go.Figure(data=[scholarship_trace], layout=scholarship_layout)
-    scholarship_chart_div = pio.to_html(scholarship_fig, full_html=False)
+    students = Student.objects.all()
+    # Calculate religion distribution
+    religion_counts = dict()
+    for student in students:
+        religion = student.religion
+        religion_counts[religion] = religion_counts.get(religion, 0) + 1
+        
+    # Prepare data for religion bar chart
+    religion_labels = [religion[1] for religion in Student.RELIGION_CHOICES]
+    religion_sizes = [religion_counts.get(religion[0], 0) for religion in Student.RELIGION_CHOICES]
+    religion_title = 'Distribution of Religions'
 
+    religion_fig = create_bar_chart(religion_labels, religion_sizes, religion_title, colorscale='bright')
+    
     # Create pie chart data for returnee status
     returnee_labels = ['Yes', 'No']
     returnee_values = [
@@ -116,7 +117,7 @@ def home(request):
     context = {
         'total_students': total_students,
         'gender_chart_div': gender_chart_div,
-        'scholarship_chart_div': scholarship_chart_div,
+        'religion_chart': religion_fig.to_html(full_html=False, include_plotlyjs='cdn'),
         'returnee_chart_div': returnee_chart_div,
         'current_datetime': current_datetime,
         'count': count,
@@ -468,6 +469,7 @@ def add_teacher(request):
 
 @login_required
 def report_page(request):
+    
     #selected_classroom = request.GET.get('classroom') # to show which classroom was selected
     # Use the selected_classroom value to filter or display the appropriate data in your report
     scholarship_labels = []  # Initialize the variable with an empty list

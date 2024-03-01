@@ -68,13 +68,16 @@
             <p>Generated on: {{ current_datetime }}</p>
             {{ gender_chart_div|safe }}
           </div>
+
           <div class="chart-box">
-            <h2>4P's Scholars</h2>
+            <h2>Religion</h2>
             <p>Generated on: {{ current_datetime }}</p>
             {% autoescape off %}
-            <div id="scholarship_chart">{{ scholarship_chart|safe }}</div>
+            <div id="religion_chart">{{ religion_chart|safe }}</div>
             {% endautoescape %}
           </div>
+
+
           <div class="chart-box">
             <h2>Returnees</h2>
             <p>Generated on: {{ current_datetime }}</p>
