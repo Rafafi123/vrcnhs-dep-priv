@@ -137,18 +137,21 @@ def home(request):
 @login_required
 @allowed_users(allowed_roles=['ADMIN', 'TEACHER'])
 def grade_sections(request):
-    classrooms = Classroom.objects.order_by('gradelevel')
-    tags = [
-        {'gradelevel': 'Grade 7', 'classroom': classrooms.filter(gradelevel__grade='Grade 7')},
-        {'gradelevel': 'Grade 8', 'classroom': classrooms.filter(gradelevel__grade='Grade 8')},
-        {'gradelevel': 'Grade 9', 'classroom': classrooms.filter(gradelevel__grade='Grade 9')},
-        {'gradelevel': 'Grade 10', 'classroom': classrooms.filter(gradelevel__grade='Grade 10')},
-        {'gradelevel': 'Grade 11', 'classroom': classrooms.filter(gradelevel__grade='Grade 11')},
-        {'gradelevel': 'Grade 12', 'classroom': classrooms.filter(gradelevel__grade='Grade 12')},
-    ]
+    classrooms_grade_7= Classroom.objects.filter(gradelevel__grade='Grade 7')
+    classrooms_grade_8= Classroom.objects.filter(gradelevel__grade='Grade 8')
+    classrooms_grade_9= Classroom.objects.filter(gradelevel__grade='Grade 9')
+    classrooms_grade_10= Classroom.objects.filter(gradelevel__grade='Grade 10')
+    classrooms_grade_11= Classroom.objects.filter(gradelevel__grade='Grade 11')
+    classrooms_grade_12= Classroom.objects.filter(gradelevel__grade='Grade 12')
+
     context = {
-         'tags':tags
-         }
+        'classrooms_grade_7': classrooms_grade_7,
+        'classrooms_grade_8': classrooms_grade_8,
+        'classrooms_grade_9': classrooms_grade_9,
+        'classrooms_grade_10': classrooms_grade_10,	
+        'classrooms_grade_11': classrooms_grade_11,
+        'classrooms_grade_12': classrooms_grade_12,
+        }
 
     return render(request, 'grade_sections.html', context)
 

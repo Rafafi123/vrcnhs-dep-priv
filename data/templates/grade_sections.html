@@ -15,22 +15,23 @@
 
 {% block content %}
 <center>
-<h1>LIST OF SECTIONS</h1>
+<h1>LIST OF SECTIONS BY GRADE</h1>
+<h6><a href="#grade7">Grade 7</a> |   <a href="#grade8">Grade 8</a> |   <a href="#grade9">Grade 9</a>   |   <a href="#grade10">Grade 10</a>   |   <a href="#grade11">Grade 11</a>   |   <a href="#grade12">Grade 12</a></h6>
 <br>
 <a href="{% url 'add_classroom' %}" style="background-color: #4CAF50; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);">
     Add New Classroom
   </a>
 
+
+<!-- GRADE 7 TABLE -->
 </center>
 <br>
-<div class="table-container">
-    {% if tags %}
-        {% for tag in tags %}
+<div id="grade7" class="table-container">
             <center>
-                <h2>{{ tag.gradelevel }}</h2>
+                <h2>Grade 7 Classrooms</h2>
                 <div class="table-responsive">
                     <!--This table is to help specify the css file to format the classroom tables to align -->
-                    <table class="table-striped" style="width: 70rem;" id="classroom-table">
+                    <table class="table-striped" style="width: 70rem;" id="classroom-table-7">
                         <thead>
                             <tr>
                                 <th>Classroom</th>
@@ -42,7 +43,7 @@
                             <hr style="border-top: 2px solid black; margin-top: 20px; margin-bottom: 20px;">
 
 
-                            {% for classroom in tag.classroom %}
+                            {% for classroom in classrooms_grade_7 %}
                                 <tr>
                                     <td>
                                         
@@ -72,11 +73,277 @@
 
                 </div>
             </center>
-
-        {% endfor %}
-    {% endif %}
 </div>
 <center>
+
+<!-- GRADE 8 TABLE -->
+</center>
+<br>
+<div id="grade8" class="table-container">
+            <center>
+                <h2>Grade 8 Classrooms</h2>
+                <div class="table-responsive">
+                    <!--This table is to help specify the css file to format the classroom tables to align -->
+                    <table class="table-striped" style="width: 70rem;" id="classroom-table-8">
+                        <thead>
+                            <tr>
+                                <th>Classroom</th>
+                                <th>Teacher</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <hr style="border-top: 2px solid black; margin-top: 20px; margin-bottom: 20px;">
+
+
+                            {% for classroom in classrooms_grade_8 %}
+                                <tr>
+                                    <td>
+                                        
+                                        <a href="{% url 'classroom_detail' classroom.id %}">{{ classroom.classroom }}</a>
+                                    </td>
+                                    <td>
+                                        {% if classroom.teacher %}
+                                            {{ classroom.teacher.user.first_name }} {{ classroom.teacher.user.last_name }}
+                                        {% else %}
+                                            Not assigned
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'edit_classroom' classroom.id %}" class="btn btn-primary margin">Edit</a>
+                                        <form action="{% url 'delete_classroom' classroom.id %}" method="POST" style="display: inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-danger margin">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            
+                        </tbody>
+                        
+                    </table>
+                    <hr style="border-top: 2px solid black; margin-top: 20px; margin-bottom: 20px;">
+
+                </div>
+            </center>
+</div>
+<center>
+
+
+<!-- GRADE 9 TABLE -->
+</center>
+<br>
+<div id="grade9" class="table-container">
+            <center>
+                <h2>Grade 9 Classrooms</h2>
+                <div class="table-responsive">
+                    <!--This table is to help specify the css file to format the classroom tables to align -->
+                    <table class="table-striped" style="width: 70rem;" id="classroom-table-8">
+                        <thead>
+                            <tr>
+                                <th>Classroom</th>
+                                <th>Teacher</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <hr style="border-top: 2px solid black; margin-top: 20px; margin-bottom: 20px;">
+
+
+                            {% for classroom in classrooms_grade_9 %}
+                                <tr>
+                                    <td>
+                                        
+                                        <a href="{% url 'classroom_detail' classroom.id %}">{{ classroom.classroom }}</a>
+                                    </td>
+                                    <td>
+                                        {% if classroom.teacher %}
+                                            {{ classroom.teacher.user.first_name }} {{ classroom.teacher.user.last_name }}
+                                        {% else %}
+                                            Not assigned
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'edit_classroom' classroom.id %}" class="btn btn-primary margin">Edit</a>
+                                        <form action="{% url 'delete_classroom' classroom.id %}" method="POST" style="display: inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-danger margin">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            
+                        </tbody>
+                        
+                    </table>
+                    <hr style="border-top: 2px solid black; margin-top: 20px; margin-bottom: 20px;">
+
+                </div>
+            </center>
+</div>
+<center>
+
+<!-- GRADE 10 TABLE -->
+</center>
+<br>
+<div id="grade10" class="table-container">
+            <center>
+                <h2>Grade 10 Classrooms</h2>
+                <div class="table-responsive">
+                    <!--This table is to help specify the css file to format the classroom tables to align -->
+                    <table class="table-striped" style="width: 70rem;" id="classroom-table-10">
+                        <thead>
+                            <tr>
+                                <th>Classroom</th>
+                                <th>Teacher</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <hr style="border-top: 2px solid black; margin-top: 20px; margin-bottom: 20px;">
+
+
+                            {% for classroom in classrooms_grade_10 %}
+                                <tr>
+                                    <td>
+                                        
+                                        <a href="{% url 'classroom_detail' classroom.id %}">{{ classroom.classroom }}</a>
+                                    </td>
+                                    <td>
+                                        {% if classroom.teacher %}
+                                            {{ classroom.teacher.user.first_name }} {{ classroom.teacher.user.last_name }}
+                                        {% else %}
+                                            Not assigned
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'edit_classroom' classroom.id %}" class="btn btn-primary margin">Edit</a>
+                                        <form action="{% url 'delete_classroom' classroom.id %}" method="POST" style="display: inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-danger margin">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            
+                        </tbody>
+                        
+                    </table>
+                    <hr style="border-top: 2px solid black; margin-top: 20px; margin-bottom: 20px;">
+
+                </div>
+            </center>
+</div>
+<center>
+
+
+<!-- GRADE 11 TABLE -->
+</center>
+<br>
+<div id="grade11" class="table-container">
+            <center>
+                <h2>Grade 11 Classrooms</h2>
+                <div class="table-responsive">
+                    <!--This table is to help specify the css file to format the classroom tables to align -->
+                    <table class="table-striped" style="width: 70rem;" id="classroom-table-11">
+                        <thead>
+                            <tr>
+                                <th>Classroom</th>
+                                <th>Teacher</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <hr style="border-top: 2px solid black; margin-top: 20px; margin-bottom: 20px;">
+
+
+                            {% for classroom in classrooms_grade_11 %}
+                                <tr>
+                                    <td>
+                                        
+                                        <a href="{% url 'classroom_detail' classroom.id %}">{{ classroom.classroom }}</a>
+                                    </td>
+                                    <td>
+                                        {% if classroom.teacher %}
+                                            {{ classroom.teacher.user.first_name }} {{ classroom.teacher.user.last_name }}
+                                        {% else %}
+                                            Not assigned
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'edit_classroom' classroom.id %}" class="btn btn-primary margin">Edit</a>
+                                        <form action="{% url 'delete_classroom' classroom.id %}" method="POST" style="display: inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-danger margin">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            
+                        </tbody>
+                        
+                    </table>
+                    <hr style="border-top: 2px solid black; margin-top: 20px; margin-bottom: 20px;">
+
+                </div>
+            </center>
+</div>
+<center>
+
+<!-- GRADE 12 TABLE -->
+</center>
+<br>
+<div id="grade12" class="table-container">
+            <center>
+                <h2>Grade 12 Classrooms</h2>
+                <div class="table-responsive">
+                    <!--This table is to help specify the css file to format the classroom tables to align -->
+                    <table class="table-striped" style="width: 70rem;" id="classroom-table-12">
+                        <thead>
+                            <tr>
+                                <th>Classroom</th>
+                                <th>Teacher</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <hr style="border-top: 2px solid black; margin-top: 20px; margin-bottom: 20px;">
+
+
+                            {% for classroom in classrooms_grade_12 %}
+                                <tr>
+                                    <td>
+                                        
+                                        <a href="{% url 'classroom_detail' classroom.id %}">{{ classroom.classroom }}</a>
+                                    </td>
+                                    <td>
+                                        {% if classroom.teacher %}
+                                            {{ classroom.teacher.user.first_name }} {{ classroom.teacher.user.last_name }}
+                                        {% else %}
+                                            Not assigned
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'edit_classroom' classroom.id %}" class="btn btn-primary margin">Edit</a>
+                                        <form action="{% url 'delete_classroom' classroom.id %}" method="POST" style="display: inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-danger margin">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            
+                        </tbody>
+                        
+                    </table>
+                    <hr style="border-top: 2px solid black; margin-top: 20px; margin-bottom: 20px;">
+
+                </div>
+            </center>
+</div>
+<center>
+
+
 <!-- IMPORT -->
 <form method="post" enctype="multipart/form-data" action="{% url 'import_classrooms' %}">
     {% csrf_token %}
@@ -125,7 +392,12 @@
 
     //<!-- DataTables Initialization -->
     $(document).ready(function () {
-        $('#classroom-table').DataTable();
+        $('#classroom-table-7').DataTable();
+        $('#classroom-table-8').DataTable();
+        $('#classroom-table-9').DataTable();
+        $('#classroom-table-10').DataTable();
+        $('#classroom-table-11').DataTable();
+        $('#classroom-table-12').DataTable();
     });
 </script>
   
