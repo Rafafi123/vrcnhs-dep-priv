@@ -21,41 +21,32 @@
     <br>
 
     <form method="GET" action="{% url 'report_page' %}" class="card">
-      <p>Selected Grade Level: {{ selected_gradelevel_name }}</p>  
-      <select name="gradelevel">
-        <option value="all" {% if selected_gradelevel == "all" %}selected{% endif %}>All Grade Levels</option>
-        {% for gradelevel in gradelevels %}
-          <option value="{{ gradelevel.id }}" {% if selected_gradelevel == gradelevel.id %}selected{% endif %}>
-            {{ gradelevel.grade }}
-          </option>
-        {% endfor %}
-      </select>
-      <button type="submit">Filter</button>
+        <h3>Selected Grade Level: {{ selected_gradelevel_name }}</h3>  
+        
+        <select name="gradelevel">
+            <option value="all" {% if selected_gradelevel == "all" %}selected{% endif %}>All Grade Levels</option>
+            {% for gradelevel in gradelevels %}
+                <option value="{{ gradelevel.id }}" {% if selected_gradelevel == gradelevel.id %}selected{% endif %}>
+                    {{ gradelevel.grade }}
+                </option>
+            {% endfor %}
+            
+            {% if user_is_teacher %}
+                {% if selected_classroom %}
+                    <option value="{{ selected_classroom.id }}" selected>
+                      My Classroom: {{ selected_classroom.classroom }}
+                    </option>
+                {% endif %}
+            {% endif %}
+        </select>
+        <button type="submit">Filter</button>
     </form>
 
   </center>
   
   <!--<h1>Report Page</h1> -->
 
-  <div class="card-container">
-      <!-- Card 1 -->
-      <div class="card card-success">
-        <div class="card-success">
-          <h1 class="dynamic-text"><b>Total Students:</b></h1>
-          <h2 class="dynamic-text">{{ total_students }}</h2>
-        </div>
-      </div>
-    
-
-      <!-- Card 3 -->
-      <div class="card card-success">
-        <div class="card-success">
-          <h1 class="dynamic-text-classroom"><b>Total Classrooms:</b></h1>
-          <h2 class="dynamic-text">{{ total_classrooms }}</h2>
-        </div>
-      </div>
-  </div>
-  
+ 
   <div class="chart-container">
     <div class="chart-box">
       <h2>Academic Strand Distribution</h2>

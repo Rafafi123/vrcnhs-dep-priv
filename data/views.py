@@ -469,142 +469,127 @@ def add_teacher(request):
 
 @login_required
 def report_page(request):
-    
-    #selected_classroom = request.GET.get('classroom') # to show which classroom was selected
-    # Use the selected_classroom value to filter or display the appropriate data in your report
-    scholarship_labels = []  # Initialize the variable with an empty list
-    scholarship_sizes = []  #Initialize scholarship_sizes with an empty list
-    scholarship_title = ''  # Initialize scholarship_title with an empty string or an appropriate default value
-    # Retrieve the list of classrooms
-    #classrooms = Classroom.objects.all()
+    scholarship_labels = []  
+    scholarship_sizes = []  
+    scholarship_title = ''  
 
-    # Retrieve selected classroom ID from the request
-# Retrieve selected classroom ID from the request
+    selected_gradelevel = request.GET.get('gradelevel')
+    print("Debug Statement: Selected Grade Level -", selected_gradelevel)
 
-    selected_gradelevel = request.GET.get('gradelevel')  # to show which grade level was selected
-    print("Debug Statement: Selected Grade Level -", selected_gradelevel)  # Debug statement
-    # Use the selected_gradelevel value to filter or display the appropriate data in your report
-    
-    # Retrieve the list of grade levels
     gradelevels = Gradelevel.objects.all()
-    
-    gradelevel_id = request.GET.get('gradelevel')
 
-    # Retrieve selected grade level from the request
-    if selected_gradelevel == "all":
-        # Retrieve all students since "all" grade levels were selected
-        students = Student.objects.all()
-    elif selected_gradelevel:
-        # Retrieve data from the database based on the selected grade level
-        students = Student.objects.filter(gradelevel_id=selected_gradelevel)
+    user_is_teacher = request.user.groups.filter(name='TEACHER').exists()
+
+    if request.user.is_authenticated:
+        if user_is_teacher:
+            teacher_classrooms = request.user.teacher.classroom_set.all()
+
+            if teacher_classrooms.exists():
+                selected_classroom = teacher_classrooms[0]
+                students = Student.objects.filter(classroom=selected_classroom)
+            else:
+                selected_classroom = None
+                students = []
+        elif request.user.groups.filter(name='ADMIN').exists():
+            if selected_gradelevel == "all":
+                students = Student.objects.all()
+            elif selected_gradelevel:
+                students = Student.objects.filter(gradelevel_id=selected_gradelevel)
+            else:
+                students = Student.objects.all()
+
+            selected_classroom = None
+        else:
+            selected_classroom = None
+            students = Student.objects.all()
     else:
-        # If no grade level is provided, retrieve all students
+        selected_classroom = None
         students = Student.objects.all()
 
-    # Calculate strand distribution
+
     strand_counts = dict()
     for student in students:
         strand = student.strand
         strand_counts[strand] = strand_counts.get(strand, 0) + 1
 
-    # Prepare data for strand bar chart
     strand_labels = [strand[1] for strand in Student.academic_strand]
     strand_sizes = [strand_counts.get(strand[0], 0) for strand in Student.academic_strand]
     strand_title = 'Distribution of Academic Strands'
 
-    # Calculate economic status distribution
     economic_counts = dict()
     for student in students:
         economic = student.household_income
         economic_counts[economic] = economic_counts.get(economic, 0) + 1
 
-    # Prepare data for economic status bar chart
     economic_labels = [choice[1] for choice in Student.household_income_choices]
     economic_sizes = [economic_counts.get(choice[0], 0) for choice in Student.household_income_choices]
     economic_title = 'Distribution of household income'
-    # Calculate religion distribution
+
     religion_counts = dict()
     for student in students:
         religion = student.religion
         religion_counts[religion] = religion_counts.get(religion, 0) + 1
 
-    # Prepare data for religion bar chart
     religion_labels = [religion[1] for religion in Student.RELIGION_CHOICES]
     religion_sizes = [religion_counts.get(religion[0], 0) for religion in Student.RELIGION_CHOICES]
     religion_title = 'Distribution of Religions'
 
-    # Calculate dropout distribution
     dropout_counts = dict()
     for student in students:
         dropout = student.is_a_dropout
         dropout_counts[dropout] = dropout_counts.get(dropout, 0) + 1
 
-    # Prepare data for dropout pie chart
     dropout_labels = [dropout[1] for dropout in Student.drop_out]
     dropout_sizes = [dropout_counts.get(dropout[0], 0) for dropout in Student.drop_out]
     dropout_title = 'Distribution of Dropout Status'
 
-    # Calculate working student distribution
     working_student_counts = dict()
     for student in students:
         working_student = student.is_a_working_student
         working_student_counts[working_student] = working_student_counts.get(working_student, 0) + 1
 
-    # Prepare data for working student pie chart
     working_student_labels = [working_student[1] for working_student in Student.working_student]
     working_student_sizes = [working_student_counts.get(working_student[0], 0) for working_student in Student.working_student]
     working_student_title = 'Distribution of Working Students'
 
-    # Calculate scholarship program distribution
     scholarship_counts = dict()
     for student in students:
         scholarship = student.is_a_four_ps_scholar
         scholarship_counts[scholarship] = scholarship_counts.get(scholarship, 0) + 1
 
-    # Prepare data for scholarship program pie chart
-        scholarship_labels = [scholarship[1] for scholarship in Student.scholarship_program]
-        scholarship_sizes = [scholarship_counts.get(scholarship[0], 0) for scholarship in Student.scholarship_program]
+    scholarship_labels = [scholarship[1] for scholarship in Student.scholarship_program]
+    scholarship_sizes = [scholarship_counts.get(scholarship[0], 0) for scholarship in Student.scholarship_program]
 
-    # Calculate sex distribution
     sex_counts = dict()
     for student in students:
         sex = student.sex
         sex_counts[sex] = sex_counts.get(sex, 0) + 1
 
-    # Prepare data for sex pie chart
     sex_labels = [sex[1] for sex in Student.sex_student]
     sex_sizes = [sex_counts.get(sex[0], 0) for sex in Student.sex_student]
     sex_title = 'Males and Females'
 
-    # Calculate returnee student distribution
     returnee_counts = dict()
     for student in students:
         returnee = student.is_returnee
         returnee_counts[returnee] = returnee_counts.get(returnee, 0) + 1
 
-    # Prepare data for returnee student pie chart
     returnee_labels = [returnee[1] for returnee in Student.is_returnee_student]
     returnee_sizes = [returnee_counts.get(returnee[0], 0) for returnee in Student.is_returnee_student]
     returnee_title = 'Distribution of Returnee Students'
 
-    # Create and save pie chart figures
-    #strand_fig = create_pie_chart(strand_labels, strand_sizes, strand_title)
-    #economic_fig = create_pie_chart(economic_labels, economic_sizes, economic_title)
     dropout_fig = create_pie_chart(dropout_labels, dropout_sizes, dropout_title)
     working_student_fig = create_pie_chart(working_student_labels, working_student_sizes, working_student_title)
-    scholarship_fig = create_pie_chart(scholarship_labels, scholarship_sizes, scholarship_title)
+    scholarship_fig = create_bar_chart(scholarship_labels, scholarship_sizes, scholarship_title, colorscale='bright')
     sex_fig = create_pie_chart(sex_labels, sex_sizes, sex_title)
     returnee_fig = create_pie_chart(returnee_labels, returnee_sizes, returnee_title)
 
-    # Create and save bar chart figures with bright colors
-    #modality_fig = create_bar_chart(modality_labels, modality_sizes, modality_title, colorscale='bright')
     religion_fig = create_bar_chart(religion_labels, religion_sizes, religion_title, colorscale='bright')
     strand_fig = create_bar_chart(strand_labels, strand_sizes, strand_title, colorscale='bright')
     economic_fig = create_bar_chart(economic_labels, economic_sizes, economic_title, colorscale='bright')
-    # Get the current date and time
+
     current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    
-    
+
     selected_gradelevel_name = "All Grade Levels"
 
     if selected_gradelevel != "all":
@@ -617,7 +602,6 @@ def report_page(request):
     return render(request, 'report_page.html', {
         'current_datetime': current_datetime,
         'strand_chart': strand_fig.to_html(full_html=False, include_plotlyjs='cdn'),
-        #'modality_chart': modality_fig.to_html(full_html=False, include_plotlyjs='cdn'),
         'economic_chart': economic_fig.to_html(full_html=False, include_plotlyjs='cdn'),
         'religion_chart': religion_fig.to_html(full_html=False, include_plotlyjs='cdn'),
         'dropout_chart': dropout_fig.to_html(full_html=False, include_plotlyjs='cdn'),
@@ -625,10 +609,10 @@ def report_page(request):
         'scholarship_chart': scholarship_fig.to_html(full_html=False, include_plotlyjs='cdn'),
         'sex_chart': sex_fig.to_html(full_html=False, include_plotlyjs='cdn'),
         'returnee_chart': returnee_fig.to_html(full_html=False, include_plotlyjs='cdn'),
-        #'classrooms': classrooms,  # Pass the classrooms variable
-        #'selected_classroom': selected_classroom, #passed the selected classroom variable
-        'gradelevels': gradelevels,  # Pass the gradelevels variable
-        'selected_gradelevel_name': selected_gradelevel_name,  # Passed the selected grade level variable
+        'gradelevels': gradelevels,
+        'selected_gradelevel_name': selected_gradelevel_name,
+        'selected_classroom': selected_classroom,
+        'user_is_teacher': user_is_teacher,
     })
 
 def create_pie_chart(labels, sizes, title, chart_width=None, chart_height=None):
