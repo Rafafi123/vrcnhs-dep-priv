@@ -603,6 +603,16 @@ def report_page(request):
     economic_fig = create_bar_chart(economic_labels, economic_sizes, economic_title, colorscale='bright')
     # Get the current date and time
     current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    
+    
+    selected_gradelevel_name = "All Grade Levels"
+
+    if selected_gradelevel != "all":
+        try:
+            selected_gradelevel_object = Gradelevel.objects.get(id=selected_gradelevel)
+            selected_gradelevel_name = selected_gradelevel_object.grade
+        except Gradelevel.DoesNotExist:
+            pass
 
     return render(request, 'report_page.html', {
         'current_datetime': current_datetime,
@@ -618,8 +628,7 @@ def report_page(request):
         #'classrooms': classrooms,  # Pass the classrooms variable
         #'selected_classroom': selected_classroom, #passed the selected classroom variable
         'gradelevels': gradelevels,  # Pass the gradelevels variable
-        'selected_gradelevel': selected_gradelevel,  # Passed the selected grade level variable
-
+        'selected_gradelevel_name': selected_gradelevel_name,  # Passed the selected grade level variable
     })
 
 def create_pie_chart(labels, sizes, title, chart_width=None, chart_height=None):

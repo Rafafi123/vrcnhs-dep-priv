@@ -13,39 +13,23 @@
 {% endblock %}
 
 {% block content %}
-<style>
-    .chart-box {
-      width: 30%;
-      margin: 20px;
-      padding: 10px;
-      border: 1px solid black;
-      display: inline-block;
-      vertical-align: top;
-    }
-  
-    .chart-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-    }
-  </style>
   
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   
   <!--<h1>Report Page</h1> -->
   <form method="GET" action="{% url 'report_page' %}">
-    <select name="gradelevel">
-      <option value="all">All Grade Levels</option>
-      {% for gradelevel in gradelevels %}
-      <option value="{{ gradelevel.id }}" {% if selected_gradelevel == gradelevel.id %}selected{% endif %}>
-        {{ gradelevel.gradelevel }} {{ gradelevel.grade }}
-      </option>
-      {% endfor %}
-    </select>
-    <button type="submit">Filter</button>
+      <select name="gradelevel">
+          <option value="all" {% if selected_gradelevel == "all" %}selected{% endif %}>All Grade Levels</option>
+          {% for gradelevel in gradelevels %}
+              <option value="{{ gradelevel.id }}" {% if selected_gradelevel == gradelevel.id %}selected{% endif %}>
+                  {{ gradelevel.grade }}
+              </option>
+          {% endfor %}
+      </select>
+      <button type="submit">Filter</button>
   </form>
-  
-  <p>Selected: {{ selected_gradelevel }}</p>
+
+  <p>Selected Grade Level: {{ selected_gradelevel_name }}</p>
   
   <div class="chart-container">
     <div class="chart-box">
