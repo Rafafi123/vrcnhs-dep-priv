@@ -32,12 +32,13 @@
         <div class="card col-8 card-login mx-auto mt-5">
             <div>
                 <div class="card-body">
-                <h2>Teacher Sign up</h2>
+                <h2 style="text-align: center;">Teacher Sign up</h2>
+                <br>
                     <form method="post">
                         {% csrf_token %}
                         {{ user_form.as_p }}
                         {{ teacher_form.as_p }}
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="submit" class="btn btn-primary d-block mx-auto">Save</button>
                     </form>
                 </div>
             </div>

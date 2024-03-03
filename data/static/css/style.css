@@ -423,6 +423,37 @@ margin-top: -3rem;
 }
 
 .card-login {
-  width: 40%; /* Set the desired percentage width */
-  height: auto; /* Maintain the aspect ratio by setting height to auto */
+  background-color: #f8f9fa; /* Set a background color */
+  padding: 0px; /* Add padding to the card body */
+  margin: 0 auto; /* Center the card horizontally */
+}
+
+/* Set max-width for the form */
+.card-login form {
+  max-width: 400px; /* Adjust the max-width according to your preference */
+  margin: 0 auto; /* Center the form horizontally within the card */
+}
+
+/* Responsive styles */
+@media (max-width: 576px) {
+  /* Adjust styles for screens smaller than 576px (e.g., mobile devices) */
+  .card-login {
+      width: 100%; /* Make the card take the full width */
+  }
+
+  /* Additional styles for better responsiveness on small screens */
+  .card-login form {
+      margin-top: 15px; /* Add some spacing between form and top of the card */
+  }
+
+  .card-login button {
+      margin-top: 15px; /* Add some spacing above the button */
+  }
+}
+
+@media (min-width: 577px) {
+  /* Adjust styles for screens larger than 576px (e.g., tablets and larger) */
+  .card-login {
+      width: 100%; /* Set a percentage width for larger screens */
+  }
 }
