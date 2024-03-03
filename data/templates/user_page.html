@@ -6,6 +6,7 @@
 
     <!-- Link to Bootstrap CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
     
 
@@ -21,32 +22,45 @@
 
   <h3>TEACHER: {{ classroom.teacher.first_name }} {{ classroom.teacher.last_name }}</h3>
 </div>
+<br>
+<center>
+    <!-- IMPORT -->
+    <div class="card">
+      <h6>IMPORT STUDENTS using Excel (.xlsx) files. Please use <a href="{% url 'download_template' %}" download>This Template.</a></h6>
+      <form method="post" enctype="multipart/form-data" action="{% url 'import_students' %}">
+          {% csrf_token %}
+          <div class="mb-3">
+              <label for="formFile" class="form-label">Upload Excel File of Students:</label>
+              <div class="file-upload-wrapper">
+                <input class="form-control" type="file" name="myfile" id="formFile" required>
+              </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Upload</button>
+      </form>
+    </div>
+  
+    <br>
 
-<div class="search-container">
+    {% for message in messages %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+            <p id="message-timer"
+                class="alert alert-success float-center text-center message-text">{{message}}</p>
+        {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+            <p id="message-timer"
+                class="alert alert-danger float-center text-center message-text">{{ message }}</p>
+        {% endif %}
+    {% endfor %}
+
+  <!-- SEARCH -->
+  <a>Use this to search students throughout VRCNHS</a>
+  <div class="search-container">
     <form action="{% url 'students' %}" method="get" class="search-form">
         <input type="text" name="query" placeholder="Student Name/LRN" required class="search-input">
         <button type="submit" class="search-button">Search</button>
     </form>
-</div>
-
-<center>
-  
-
-  <div class="card">
-    <!-- IMPORT -->
-    <h6>IMPORT STUDENTS using Excel (.xlsx) files. Please use <a href="{% url 'download_template' %}" download>This Template.</a></h6>
-    <form method="post" enctype="multipart/form-data" action="{% url 'import_students' %}">
-        {% csrf_token %}
-        <div class="mb-3">
-            <label for="formFile" class="form-label">Upload Excel File of Students:</label>
-            <div class="file-upload-wrapper">
-              <input class="form-control" type="file" name="myfile" id="formFile" required>
-            </div>
-        </div>
-        <button type="submit" class="btn btn-primary">Upload</button>
-    </form>
   </div>
-    <br>
+
+
   <!-- TABLE DATA -->
     <div class="table-container">
         <table id="studentTable" class="table table-striped">
@@ -85,49 +99,57 @@
             </tbody>
         </table>
     </div>
+  
 
-    
+  <a href="{% url 'add_student' %}" style="background-color: #4CAF50; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);">
+      Manually Add A Student
+  </a>
+
+  <br>
+  <br>
+
 </center>
 <br>
 
-{% for message in messages %}
-    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-        <p id="message-timer"
-            class="alert alert-success float-center text-center message-text">{{message}}</p>
-    {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-        <p id="message-timer"
-            class="alert alert-danger float-center text-center message-text">{{ message }}</p>
-    {% endif %}
-{% endfor %}
+
 
 
 <br>
 
 <center>
-  <span id="pageNumber"></span>
-  <button id="prevButton" class="btn btn-secondary" style="margin-right: 5px;">Previous</button>
-  <button id="nextButton" class="btn btn-secondary">Next</button>
-
 
 <br>
+
+ <!-- Add DataTables JS -->
+ <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+ <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
 <br>
 
+<div class="card">
+  <div style="text-align: left;">
+    <a>
+        <strong style="display: block; text-align: center;">Please only use this button once you have:</strong>
+        <span style="margin-left: 10px; display: inline-block;margin: 10px;">
+            - Finished grading all of your students.<br>
+            - It is the end of the school year.
+        </span>
+    </a>
+  </div>
+  <button id="promoteButton"
+  style="background-color: #1392c0; color: white; padding: 10px 20px; text-decoration: none; font-weight: bold; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);margin: 10px;">
+  BULK PROMOTE
+  </button>
+</div>
 
-  <a href="{% url 'add_student' %}" style="background-color: #4CAF50; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);">
-      Manually Add A Student
-  </a>
-<br>
-<br>
-<button id="promoteButton"
-style="background-color: #4CAF50; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);">
-PROMOTE
-</button>
 </center>
+
+
 <script>
 
-  document.addEventListener('DOMContentLoaded', function() {
-    const studentsPerPage = 6;
-    let currentPage = 1;
+    $(document).ready(function () {
+      $('#studentTable').DataTable({
+      });
 
     promoteButton.addEventListener('click', function () {
           if (confirm('Are you sure you want to promote these students?')) {
@@ -155,50 +177,8 @@ PROMOTE
               });
           }
       });
-    function displayStudents() {
-      const tableRows = document.querySelectorAll('#studentTable tbody tr');
-      const totalPages = Math.ceil(tableRows.length / studentsPerPage);
-      const startIndex = (currentPage - 1) * studentsPerPage;
-      const endIndex = startIndex + studentsPerPage;
-      const pageNumberElement = document.getElementById('pageNumber');
-      pageNumberElement.textContent = `Page ${currentPage} of ${totalPages}`;
-    
-      tableRows.forEach((row, index) => {
-        if (index >= startIndex && index < endIndex) {
-          row.style.display = 'table-row';
-        } else {
-          row.style.display = 'none';
-        }
-      });
 
-      const prevButton = document.getElementById('prevButton');
-      const nextButton = document.getElementById('nextButton');
 
-      prevButton.disabled = currentPage === 1;
-      nextButton.disabled = currentPage === totalPages;
-    }
-
-    const prevButton = document.getElementById('prevButton');
-    prevButton.addEventListener('click', () => {
-      if (currentPage > 1) {
-        currentPage--;
-        displayStudents();
-      }
-    });
-
-    const nextButton = document.getElementById('nextButton');
-    nextButton.addEventListener('click', () => {
-      const tableRows = document.querySelectorAll('#studentTable tbody tr');
-      const totalPages = Math.ceil(tableRows.length / studentsPerPage);
-
-      if (currentPage < totalPages) {
-        currentPage++;
-        displayStudents();
-      }
-    });
-
-    // Initial display on page load
-    displayStudents();
   });
 </script>
 
