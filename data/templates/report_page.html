@@ -15,21 +15,46 @@
 {% block content %}
   
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  
-  <!--<h1>Report Page</h1> -->
-  <form method="GET" action="{% url 'report_page' %}">
+
+  <center>
+    <h1>REPORT PAGE</h1>
+    <br>
+
+    <form method="GET" action="{% url 'report_page' %}" class="card">
+      <p>Selected Grade Level: {{ selected_gradelevel_name }}</p>  
       <select name="gradelevel">
-          <option value="all" {% if selected_gradelevel == "all" %}selected{% endif %}>All Grade Levels</option>
-          {% for gradelevel in gradelevels %}
-              <option value="{{ gradelevel.id }}" {% if selected_gradelevel == gradelevel.id %}selected{% endif %}>
-                  {{ gradelevel.grade }}
-              </option>
-          {% endfor %}
+        <option value="all" {% if selected_gradelevel == "all" %}selected{% endif %}>All Grade Levels</option>
+        {% for gradelevel in gradelevels %}
+          <option value="{{ gradelevel.id }}" {% if selected_gradelevel == gradelevel.id %}selected{% endif %}>
+            {{ gradelevel.grade }}
+          </option>
+        {% endfor %}
       </select>
       <button type="submit">Filter</button>
-  </form>
+    </form>
 
-  <p>Selected Grade Level: {{ selected_gradelevel_name }}</p>
+  </center>
+  
+  <!--<h1>Report Page</h1> -->
+
+  <div class="card-container">
+      <!-- Card 1 -->
+      <div class="card card-success">
+        <div class="card-success">
+          <h1 class="dynamic-text"><b>Total Students:</b></h1>
+          <h2 class="dynamic-text">{{ total_students }}</h2>
+        </div>
+      </div>
+    
+
+      <!-- Card 3 -->
+      <div class="card card-success">
+        <div class="card-success">
+          <h1 class="dynamic-text-classroom"><b>Total Classrooms:</b></h1>
+          <h2 class="dynamic-text">{{ total_classrooms }}</h2>
+        </div>
+      </div>
+  </div>
   
   <div class="chart-container">
     <div class="chart-box">
