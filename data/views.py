@@ -480,31 +480,55 @@ def report_page(request):
 
     user_is_teacher = request.user.groups.filter(name='TEACHER').exists()
 
+    selected_classroom = None
+    selected_gradelevel_name = "All Grade Levels"
+
     if request.user.is_authenticated:
         if user_is_teacher:
             teacher_classrooms = request.user.teacher.classroom_set.all()
 
             if teacher_classrooms.exists():
-                selected_classroom = teacher_classrooms[0]
-                students = Student.objects.filter(classroom=selected_classroom)
-            else:
                 selected_classroom = None
-                students = []
+
+                if 'gradelevel' in request.GET:
+                    selected_gradelevel_id = request.GET.get('gradelevel')
+
+                    if selected_gradelevel_id == 'all':
+                        students = Student.objects.all()  # Show all students in the school
+                    else:
+                        students = Student.objects.filter(gradelevel_id=selected_gradelevel_id, classroom__in=teacher_classrooms)
+                else:
+                    students = Student.objects.filter(classroom__in=teacher_classrooms)
+
+                print("Debug Statement: Number of Students for Teacher -", students.count())
+
+                if 'classroom' in request.GET:
+                    selected_classroom_id = request.GET.get('classroom')
+                    selected_classroom = get_object_or_404(teacher_classrooms, id=selected_classroom_id)
+
+                if not selected_classroom:
+                    selected_classroom = teacher_classrooms.first()
+
+                if selected_gradelevel != "all":
+                    selected_gradelevel_name = f"My Classroom: {selected_classroom.classroom} - Grade Level: {selected_gradelevel}"
+                else:
+                    selected_gradelevel_name = f"All Grade Levels - Classroom: {selected_classroom.classroom}"
+            else:
+                students = Student.objects.none()  # No classrooms assigned to the teacher
         elif request.user.groups.filter(name='ADMIN').exists():
             if selected_gradelevel == "all":
                 students = Student.objects.all()
             elif selected_gradelevel:
-                students = Student.objects.filter(gradelevel_id=selected_gradelevel)
+                selected_gradelevel_id = int(selected_gradelevel)
+                students = Student.objects.filter(gradelevel_id=selected_gradelevel_id)
             else:
                 students = Student.objects.all()
-
-            selected_classroom = None
         else:
-            selected_classroom = None
             students = Student.objects.all()
     else:
-        selected_classroom = None
         students = Student.objects.all()
+
+    print("Debug Statement: Total Number of Students -", students.count())
 
 
     strand_counts = dict()
@@ -590,14 +614,25 @@ def report_page(request):
 
     current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-    selected_gradelevel_name = "All Grade Levels"
 
-    if selected_gradelevel != "all":
-        try:
-            selected_gradelevel_object = Gradelevel.objects.get(id=selected_gradelevel)
-            selected_gradelevel_name = selected_gradelevel_object.grade
-        except Gradelevel.DoesNotExist:
-            pass
+    selected_filter_name = request.session.get('selected_filter_name', None)
+
+    if selected_filter_name is None:
+        # If not in session, use your existing logic to determine it
+        if selected_classroom:
+            selected_filter_name = f"My Classroom: {selected_classroom.classroom}"
+        elif selected_gradelevel == "all":
+            selected_filter_name = "All Grade Levels"
+        else:
+            try:
+                selected_grade_object = Gradelevel.objects.get(id=selected_gradelevel)
+                selected_filter_name = f"Grade Level: {selected_grade_object.grade}"
+            except Gradelevel.DoesNotExist:
+                pass
+
+    # Save the selected filter name to the session
+    request.session['selected_filter_name'] = selected_filter_name
+    request.session.save()
 
     return render(request, 'report_page.html', {
         'current_datetime': current_datetime,
@@ -610,11 +645,10 @@ def report_page(request):
         'sex_chart': sex_fig.to_html(full_html=False, include_plotlyjs='cdn'),
         'returnee_chart': returnee_fig.to_html(full_html=False, include_plotlyjs='cdn'),
         'gradelevels': gradelevels,
-        'selected_gradelevel_name': selected_gradelevel_name,
+        'selected_filter_name': selected_filter_name,  # Pass the new variable
         'selected_classroom': selected_classroom,
         'user_is_teacher': user_is_teacher,
     })
-
 def create_pie_chart(labels, sizes, title, chart_width=None, chart_height=None):
     fig = go.Figure(data=[go.Pie(labels=labels, values=sizes)])
     fig.update_layout(title=title, autosize=True, width=chart_width, height=chart_height)

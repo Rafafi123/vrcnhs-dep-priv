@@ -20,30 +20,27 @@
     <h1>REPORT PAGE</h1>
     <br>
 
-    <form method="GET" action="{% url 'report_page' %}" class="card">
-        <h3>Selected Grade Level: {{ selected_gradelevel_name }}</h3>  
-        
-        <select name="gradelevel">
+    <form method="GET" action="{% url 'report_page' %}" class="card" id="filterForm">
+      <h5 id="selectedFilter">Use this to filter the data accordingly</h5>
+      
+      <select name="gradelevel" id="gradelevelDropdown">
             <option value="all" {% if selected_gradelevel == "all" %}selected{% endif %}>All Grade Levels</option>
             {% for gradelevel in gradelevels %}
                 <option value="{{ gradelevel.id }}" {% if selected_gradelevel == gradelevel.id %}selected{% endif %}>
                     {{ gradelevel.grade }}
                 </option>
             {% endfor %}
-            
             {% if user_is_teacher %}
                 {% if selected_classroom %}
                     <option value="{{ selected_classroom.id }}" selected>
-                      My Classroom: {{ selected_classroom.classroom }}
+                        My Classroom: {{ selected_classroom.classroom }}
                     </option>
                 {% endif %}
             {% endif %}
         </select>
         <button type="submit">Filter</button>
     </form>
-
-  </center>
-  
+</center>
   <!--<h1>Report Page</h1> -->
 
  
