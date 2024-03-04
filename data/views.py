@@ -60,8 +60,10 @@ def signup(request):
 @login_required(login_url='login')
 @admin_only
 def home(request):
-    count = User.objects.count()
 
+    
+    count = User.objects.count()
+    
     # Calculate male and female student counts
     male_count = Student.objects.filter(Q(sex='M') | Q(sex='Male')).count()
     female_count = Student.objects.filter(Q(sex='F') | Q(sex='Female')).count()
@@ -93,19 +95,19 @@ def home(request):
 
     religion_fig = create_bar_chart(religion_labels, religion_sizes, religion_title, colorscale='bright')
     
-    # Create pie chart data for returnee status
-    returnee_labels = ['Yes', 'No']
-    returnee_values = [
-        Student.objects.filter(is_returnee='1').count(),
-        Student.objects.filter(is_returnee='0').count()
-    ]
-    returnee_colors = ['#9467bd', '#8c564b'] # purple and brown colors for Yes and No respectively
-    returnee_trace = go.Pie(labels=returnee_labels, values=returnee_values, 
-                             marker=dict(colors=returnee_colors))
-    returnee_layout = go.Layout(title='Student Returnee Status')
-    returnee_fig = go.Figure(data=[returnee_trace], layout=returnee_layout)
-    returnee_chart_div = pio.to_html(returnee_fig, full_html=False)
+    scholarship_labels = []  
+    scholarship_sizes = []  
+    scholarship_title = ''  
+    scholarship_counts = dict()
+    for student in students:
+        scholarship = student.is_a_four_ps_scholar
+        scholarship_counts[scholarship] = scholarship_counts.get(scholarship, 0) + 1
 
+    scholarship_labels = [scholarship[1] for scholarship in Student.scholarship_program]
+    scholarship_sizes = [scholarship_counts.get(scholarship[0], 0) for scholarship in Student.scholarship_program]
+
+
+    scholarship_fig = create_bar_chart(scholarship_labels, scholarship_sizes, scholarship_title, colorscale='bright')
     # Get the current date and time
     current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     
@@ -118,11 +120,11 @@ def home(request):
         'total_students': total_students,
         'gender_chart_div': gender_chart_div,
         'religion_chart': religion_fig.to_html(full_html=False, include_plotlyjs='cdn'),
-        'returnee_chart_div': returnee_chart_div,
         'current_datetime': current_datetime,
         'count': count,
         'total_teachers': total_teachers,
         'total_classrooms': total_classrooms,
+        'scholarship_chart': scholarship_fig.to_html(full_html=False, include_plotlyjs='cdn'),
     }
     # Debug statement to print total students
     print("Debug Statement: Total Students -", total_students)

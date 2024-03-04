@@ -79,9 +79,11 @@
 
 
           <div class="chart-box">
-            <h2>Returnees</h2>
+            <h2>4P's Scholars</h2>
             <p>Generated on: {{ current_datetime }}</p>
-            {{ returnee_chart_div|safe }}
+            {% autoescape off %}
+            <div id="scholarship_chart">{{ scholarship_chart|safe }}</div>
+            {% endautoescape %}
           </div>
       </div>
        <!-- <h1>Total students: {{ total_students }}</h1> -->
