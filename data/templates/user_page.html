@@ -13,6 +13,24 @@
 
     <!-- Link to Bootstrap JavaScript -->
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+
+    <!-- Your custom CSS styles -->
+  <style>
+    .card-container {
+      text-align: center; /* Center the content */
+    }
+
+    .card {
+      display: inline-block;
+      vertical-align: top; /* Align cards to the top of the container */
+      margin: 10px; /* Add margin between cards */
+    }
+
+    .card a {
+      text-align: left; /* Align text inside the card to the left */
+    }
+
+  </style>
 {% endblock %}
 
 {% block content %}
@@ -99,7 +117,7 @@
             </tbody>
         </table>
     </div>
-  
+  <br>
 
   <a href="{% url 'add_student' %}" style="background-color: #4CAF50; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);">
       Manually Add A Student
@@ -112,7 +130,7 @@
 <br>
 
 
-
+<hr>
 
 <br>
 
@@ -125,22 +143,45 @@
 <div class="card">
   <div style="text-align: left;">
     <a>
-        <strong style="display: block; text-align: center;">BULK PROMOTE: </strong>
+        <strong style="display: block; text-align: center;">EXPORT YOUR CLASSROOM </strong>
         <span style="display: inline-block; text-align: center; margin: 10px;">
-            Updates student records for the teacher's classroom, changing their grade, status, and classroom to signify promotion to the next grade level.
+            This button will export your current classroom to your own personal excel sheet (.xlsx):
         </span>
-        <strong style="display: block; text-align: center;">Please only use this button once you have:</strong>
         <span style="margin-left: 10px; display: inline-block;margin: 10px;">
-            - Finished grading all of your students.<br>
-            - It is the end of the school year.
+            - Once downloaded, you can edit the excel file and reupload it here for easier editing.<br>
+            - As long as you maintain the same LRN numbers the students will not duplicate, it will simply overwrite the existing data of the student.
         </span>
     </a>
   </div>
-  <button id="promoteButton"
-  style="background-color: #1392c0; color: white; padding: 10px 20px; text-decoration: none; font-weight: bold; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);margin: 10px;">
-  BULK PROMOTE
+  <a href="{% url 'export_classroom_students' %}">
+  <button
+  style="background-color: #f89900; color: white; padding: 10px 20px; text-decoration: none; font-weight: bold; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);margin: 10px;">
+  EXPORT
   </button>
+    </a>
 </div>
+
+
+
+<div class="card">
+    <div style="text-align: left;">
+      <a>
+          <strong style="display: block; text-align: center;">BULK PROMOTE: </strong>
+          <span style="display: inline-block; text-align: center; margin: 10px;">
+              Updates student records for the teacher's classroom, changing their grade, status, and classroom to signify promotion to the next grade level.
+          </span>
+          <strong style="display: block; text-align: center;">Please only use this button once you have:</strong>
+          <span style="margin-left: 10px; display: inline-block;margin: 10px;">
+              - Finished grading all of your students.<br>
+              - It is the end of the school year.
+          </span>
+      </a>
+    </div>
+    <button id="promoteButton"
+    style="background-color: #1392c0; color: white; padding: 10px 20px; text-decoration: none; font-weight: bold; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);margin: 10px;">
+    BULK PROMOTE
+    </button>
+  </div>
 
 </center>
 

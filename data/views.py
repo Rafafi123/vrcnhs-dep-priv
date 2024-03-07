@@ -906,7 +906,60 @@ def export_students_to_excel(request):
     return render(request, 'view_students.html')  # Redirect to the desired page after export
 
 
-#EXPORT 
+@allowed_users(allowed_roles=['TEACHER'])
+@allowed_users(allowed_roles=['TEACHER'])
+def export_classroom_students_to_excel(request):
+    try:
+        user = request.user
+        teacher = get_object_or_404(Teacher, user=user)
+        classroom = get_object_or_404(Classroom, teacher=teacher)
+
+        students = Student.objects.filter(classroom=classroom)
+
+        existing_wb = load_workbook('data/static/media/VRCNHS_STUDENT_TEMPLATE.xlsx')
+        sheet = existing_wb.active
+
+        for row in sheet.iter_rows(min_row=2, min_col=2, max_row=sheet.max_row, max_col=sheet.max_column):
+            for cell in row:
+                cell.value = None
+
+        start_row = 2
+        start_column = 2
+
+        date_style = NamedStyle(name='date_style', number_format='MM-DD-YYYY')
+
+        for row_num, student in enumerate(students, start_row):
+            for col_num, field in enumerate(Student._meta.fields, start_column):
+                col_letter = get_column_letter(col_num)
+
+                if field.name == 'classroom':
+                    # Extract the relevant information from the Classroom object
+                    field_value = getattr(student.classroom, 'classroom', '')
+                elif field.name == 'gradelevel':
+                    # Extract the relevant information from the Gradelevel object
+                    field_value = getattr(student.gradelevel, 'grade', '')
+                else:
+                    field_value = getattr(student, field.name)
+
+                # Your existing logic for handling different field types
+
+                sheet[f"{col_letter}{row_num}"] = field_value
+
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename=classroom_students_data.xlsx'
+        existing_wb.save(response)
+
+        messages.success(request, "Classroom data successfully exported to Excel!")
+
+        return response
+
+    except Exception as e:
+        print(f"Error exporting classroom data to Excel: {str(e)}")
+        messages.error(request, "An error occurred while exporting classroom data to Excel. Please try again.")
+
+    return render(request, 'user_page.html') 
+
+#EXPORT classroom
 @allowed_users(allowed_roles=['ADMIN'])
 def export_classrooms_to_excel(request):
     classrooms = Classroom.objects.all().values()

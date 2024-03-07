@@ -72,6 +72,7 @@ urlpatterns = [
     #import export
     path('export_students/', views.export_students_to_excel, name='export_students'),
     path('export/classrooms/', views.export_classrooms_to_excel, name='export_classrooms_to_excel'),
+    path('export-classroom-students/', views.export_classroom_students_to_excel, name='export_classroom_students'),
 
     path('download-template/', views.download_template, name='download_template'),
     path('import/', views.import_students_from_excel, name='import_students'),
@@ -92,4 +93,6 @@ urlpatterns = [
     
     path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(template_name='registration/password_changed.html'), 
         name='password_change_done'),
+
+
 ]
