@@ -95,6 +95,12 @@
               {{ form.other_religion }}
               {{ form.other_religion.errors }}
             </div>
+
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.strand.id_for_label }}">Strand:</label>
+              {{ form.strand }}
+              {{ form.strand.errors }}
+            </div>
     
             <div class="col-sm-3 form-group">
               <label for="{{ form.gradelevel.id_for_label }}">Grade Level:</label>
@@ -186,35 +192,277 @@
             <!-- ACADEMIC BACKGROUND -->
             <div class="col-sm-12 mx-t5 mb-2">
               <br>
-              <h4>Academic Background</h4>
+              <h4>Student History</h4>
               <hr>
             </div>
+
+            <!-- STUDENT HISTORY TABLE -->
+            <div class="container">
+              <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                  <thead>
+                    <tr>
+                      <th class="text-nowrap text-center align-middle">Grade Level</th>
+                      <th class="text-nowrap text-center align-middle">School</th>
+                      <th class="text-nowrap text-center align-middle">School Year</th>
+                      <th class="text-nowrap text-center align-middle">Section</th>
+                      <th class="text-nowrap text-center align-middle">Average Grade</th>
+                      <th class="text-nowrap text-center align-middle">Adviser</th>
+                      <th class="text-nowrap text-center align-middle">Contact</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Grade 7 HISTORY -->
+                    <tr>
+                      <td class="text-center align-middle"><strong>Grade 7</strong></td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g7_school }}
+                          {{ form.g7_school.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g7_schoolYear }}
+                          {{ form.g7_schoolYear.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g7_section }}
+                          {{ form.g7_section.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g7_general_average }}
+                          {{ form.g7_general_average.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g7_adviser }}
+                          {{ form.g7_adviser.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g7_adviserContact }}
+                          {{ form.g7_adviserContact.errors }}
+                        </div>
+                      </td>
+                    </tr>
+
+                    <!-- Grade 8 HISTORY -->
+                    <tr>
+                      <td class="text-center align-middle"><strong>Grade 8</strong></td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g8_school }}
+                          {{ form.g8_school.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g8_schoolYear }}
+                          {{ form.g8_schoolYear.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g8_section }}
+                          {{ form.g8_section.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g8_general_average }}
+                          {{ form.g8_general_average.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g8_adviser }}
+                          {{ form.g8_adviser.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g8_adviserContact }}
+                          {{ form.g8_adviserContact.errors }}
+                        </div>
+                      </td>
+                    </tr>
+
+                    <!-- Grade 9 HISTORY -->
+                    <tr>
+                      <td class="text-center align-middle"><strong>Grade 9</strong></td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g9_school }}
+                          {{ form.g9_school.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g9_schoolYear }}
+                          {{ form.g9_schoolYear.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g9_section }}
+                          {{ form.g9_section.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g9_general_average }}
+                          {{ form.g9_general_average.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g9_adviser }}
+                          {{ form.g9_adviser.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g9_adviserContact }}
+                          {{ form.g9_adviserContact.errors }}
+                        </div>
+                      </td>
+                    </tr>
+
+                    <!-- Grade 10 HISTORY -->
+                    <tr>
+                      <td class="text-center align-middle"><strong>Grade 10</strong></td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g10_school }}
+                          {{ form.g10_school.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g10_schoolYear }}
+                          {{ form.g10_schoolYear.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g10_section }}
+                          {{ form.g10_section.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g10_general_average }}
+                          {{ form.g10_general_average.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g10_adviser }}
+                          {{ form.g10_adviser.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g10_adviserContact }}
+                          {{ form.g10_adviserContact.errors }}
+                        </div>
+                      </td>
+                    </tr>
+
+                    <!-- Grade 11 HISTORY -->
+                    <tr>
+                      <td class="text-center align-middle"><strong>Grade 11</strong></td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g11_school }}
+                          {{ form.g11_school.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g11_schoolYear }}
+                          {{ form.g11_schoolYear.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g11_section }}
+                          {{ form.g11_section.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g11_general_average }}
+                          {{ form.g11_general_average.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g11_adviser }}
+                          {{ form.g11_adviser.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g11_adviserContact }}
+                          {{ form.g11_adviserContact.errors }}
+                        </div>
+                      </td>
+                    </tr>
+
+                    <!-- Grade 12 HISTORY -->
+                    <tr>
+                      <td class="text-center align-middle"><strong>Grade 12</strong></td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g12_school }}
+                          {{ form.g12_school.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g12_schoolYear }}
+                          {{ form.g12_schoolYear.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g12_section }}
+                          {{ form.g12_section.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g12_general_average }}
+                          {{ form.g12_general_average.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g12_adviser }}
+                          {{ form.g12_adviser.errors }}
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          {{ form.g12_adviserContact }}
+                          {{ form.g12_adviserContact.errors }}
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
     
-    
-            <div class="col-sm-3 form-group">
-              <label for="{{ form.last_grade_level.id_for_label }}">Last Grade Level:</label>
-              {{ form.last_grade_level }}
-              {{ form.last_grade_level.errors }}
-            </div>
-            
-            <div class="col-sm-3 form-group">
-              <label for="{{ form.last_school_attended.id_for_label }}">Last School Attended:</label>
-              {{ form.last_school_attended }}
-              {{ form.last_school_attended.errors }}
-            </div>
-            
-            <div class="col-sm-3 form-group">
-              <label for="{{ form.last_schoolyear_completed.id_for_label }}">Last School Year Completed:</label>
-              {{ form.last_schoolyear_completed }}
-              {{ form.last_schoolyear_completed.errors }}
-            </div>
-          
-    
-            <div class="col-sm-3 form-group">
-              <label for="{{ form.strand.id_for_label }}">Strand:</label>
-              {{ form.strand }}
-              {{ form.strand.errors }}
-            </div>
+
     
             <!-- OTHER DETAILS -->
             <div class="col-sm-12 mx-t5 mb-2">
