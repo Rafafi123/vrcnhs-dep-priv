@@ -402,6 +402,12 @@
               <h4>Other Details</h4>
               <hr>
             </div>
+
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.transfer_status.id_for_label }}">Transfer Status:</label>
+              <input class="form-control" type="text" value="{{ student.transfer_status }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+            
     
             <div class="col-sm-3 form-group">
               <label for="{{ form.household_income.id_for_label }}">Household Income:</label>

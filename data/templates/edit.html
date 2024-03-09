@@ -189,7 +189,7 @@
             </div>
           
     
-            <!-- ACADEMIC BACKGROUND -->
+            <!-- STUDENT HISTORY -->
             <div class="col-sm-12 mx-t5 mb-2">
               <br>
               <h4>Student History</h4>
@@ -470,6 +470,12 @@
               <h4>Other Details</h4>
               <hr>
             </div>
+
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.transfer_status.id_for_label }}">Transfer Status:</label>
+              {{ form.transfer_status }}
+              {{ form.transfer_status.errors }}
+            </div>
     
             <div class="col-sm-3 form-group">
               <label for="{{ form.household_income.id_for_label }}">Household Income:</label>
@@ -494,18 +500,7 @@
               {{ form.is_a_working_student }}
               {{ form.is_a_working_student.errors }}
             </div>
-            
-            <div class="col-sm-3 form-group">
-              <label for="{{ form.previous_adviser.id_for_label }}">Previous Adviser:</label>
-              {{ form.previous_adviser }}
-              {{ form.previous_adviser.errors }}
-            </div>
-            
-            <div class="col-sm-3 form-group">
-              <label for="{{ form.adviser_contact.id_for_label }}">Adviser Contact Information:</label>
-              {{ form.adviser_contact }}
-              {{ form.adviser_contact.errors }}
-            </div>
+          
             
             <div class="col-sm-3 form-group">
               <label for="{{ form.health_bmi.id_for_label }}">Health BMI:</label>
