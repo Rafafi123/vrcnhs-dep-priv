@@ -70,7 +70,7 @@ class Student(models.Model):
     middle_name = models.CharField(max_length=30, blank=True, null=True)
     suffix_name = models.CharField(max_length=10, blank=True, null=True)  # "Jr., I, II, III, etc.
     STATUS_CHOICES = [
-        ('Processing', 'Processing'),
+        ('Currently Enrolled', 'Currently Enrolled'),
         ('For Dropout', 'For Dropout'),
         ('For Promotion', 'For Promotion'),
         ('For Retention', 'For Retention'),
@@ -124,9 +124,9 @@ class Student(models.Model):
         ('Grade 12', 'Grade 12'),
         ('Transitioning', 'Transitioning'),
     ]
-    last_grade_level = models.CharField(max_length=15, choices=GRADE_CHOICES, null=True,blank=True)  # this is for the returning learner
-    last_school_attended = models.CharField(max_length=30, null=True,blank=True)
-    last_schoolyear_completed = models.CharField(max_length=12, null=True,blank=True)
+    #last_grade_level = models.CharField(max_length=15, choices=GRADE_CHOICES, null=True,blank=True)  # this is for the returning learner
+    #last_school_attended = models.CharField(max_length=30, null=True,blank=True)
+    #last_schoolyear_completed = models.CharField(max_length=12, null=True,blank=True)
     academic_strand = (
         ('STEM', 'STEM'),
         ('BAM', 'BAM'),
@@ -162,8 +162,8 @@ class Student(models.Model):
         ('No', 'No')
     )
     is_a_working_student = models.CharField(max_length=5, choices=working_student, null=True,blank=True)  ######
-    previous_adviser = models.CharField(max_length=50, null=True,blank=True)
-    adviser_contact = models.IntegerField(null=True,blank=True)
+    #previous_adviser = models.CharField(max_length=50, null=True,blank=True)
+    #adviser_contact = models.IntegerField(null=True,blank=True)
     health_bmi = models.DecimalField(max_digits=10, decimal_places=2, null=True,blank=True)
     general_average = models.DecimalField(max_digits=10, decimal_places=2, null=True,blank=True)
     scholarship_program = (
@@ -175,7 +175,69 @@ class Student(models.Model):
     edited_fields = models.CharField(max_length=255, blank=True, null=True)  # Field to store edited fields
     notes = models.CharField(max_length=300, blank=True, null=True)
 
-  
+    
+    #GRADE 7 STUDENT HISTORY
+    g7_school = models.CharField(max_length=30, null=True,blank=True)
+    g7_schoolYear = models.CharField(max_length=15, null=True,blank=True)
+    g7_section = models.CharField(max_length=15, null=True,blank=True)
+    g7_general_average = models.DecimalField(max_digits=10, decimal_places=2, null=True,blank=True)
+    g7_adviser = models.CharField(max_length=50, null=True,blank=True)
+    g7_adviserContact = models.CharField(max_length=50, null=True,blank=True)
+
+    #GRADE 8 STUDENT HISTORY
+    g8_school = models.CharField(max_length=30, null=True,blank=True)
+    g8_schoolYear = models.CharField(max_length=15, null=True,blank=True)
+    g8_section = models.CharField(max_length=15, null=True,blank=True)
+    g8_general_average = models.DecimalField(max_digits=10, decimal_places=2, null=True,blank=True)
+    g8_adviser = models.CharField(max_length=50, null=True,blank=True)
+    g8_adviserContact = models.CharField(max_length=50, null=True,blank=True)
+
+    #GRADE 9 STUDENT HISTORY
+    g9_school = models.CharField(max_length=30, null=True,blank=True)
+    g9_schoolYear = models.CharField(max_length=15, null=True,blank=True)
+    g9_section = models.CharField(max_length=15, null=True,blank=True)
+    g9_general_average = models.DecimalField(max_digits=10, decimal_places=2, null=True,blank=True)
+    g9_adviser = models.CharField(max_length=50, null=True,blank=True)
+    g9_adviserContact = models.CharField(max_length=50, null=True,blank=True)
+
+    #GRADE 10 STUDENT HISTORY
+    g10_school = models.CharField(max_length=30, null=True,blank=True)
+    g10_schoolYear = models.CharField(max_length=15, null=True,blank=True)
+    g10_section = models.CharField(max_length=15, null=True,blank=True)
+    g10_general_average = models.DecimalField(max_digits=10, decimal_places=2, null=True,blank=True)
+    g10_adviser = models.CharField(max_length=50, null=True,blank=True)
+    g10_adviserContact = models.CharField(max_length=50, null=True,blank=True)
+
+    #GRADE 11 STUDENT HISTORY
+    g11_school = models.CharField(max_length=30, null=True,blank=True)
+    g11_schoolYear = models.CharField(max_length=15, null=True,blank=True)
+    g11_section = models.CharField(max_length=15, null=True,blank=True)
+    g11_general_average = models.DecimalField(max_digits=10, decimal_places=2, null=True,blank=True)
+    g11_adviser = models.CharField(max_length=50, null=True,blank=True)
+    g11_adviserContact = models.CharField(max_length=50, null=True,blank=True)
+
+    #GRADE 11 STUDENT HISTORY
+    g12_school = models.CharField(max_length=30, null=True,blank=True)
+    g12_schoolYear = models.CharField(max_length=15, null=True,blank=True)
+    g12_section = models.CharField(max_length=15, null=True,blank=True)
+    g12_general_average = models.DecimalField(max_digits=10, decimal_places=2, null=True,blank=True)
+    g12_adviser = models.CharField(max_length=50, null=True,blank=True)
+    g12_adviserContact = models.CharField(max_length=50, null=True,blank=True)
+
+    TRANSFER_CHOICES = [
+        ('Transferred In', 'Transferred In'),
+        ('Moved In', 'Moved In'),
+        ('Regular', 'Regular'),  # Default if none of the conditions match
+    ]
+
+    transfer_status = models.CharField(
+        max_length=15,
+        choices=TRANSFER_CHOICES,
+        null=True,
+        blank=True,
+        default='Regular'
+    )
+
     class Meta:
         verbose_name_plural = "Students"   
 

@@ -88,6 +88,12 @@
               <input class="form-control" type="text" value="{{ student.other_religion }}" aria-label="Disabled input example" disabled readonly>
 
             </div>
+
+            <div class="col-sm-3 form-group">
+              <label for="{{ form.strand.id_for_label }}">Strand:</label>
+              <input class="form-control" type="text" value="{{ student.strand }}" aria-label="Disabled input example" disabled readonly>
+            </div>
+    
     
             <div class="col-sm-3 form-group">
               <label for="{{ form.gradelevel.id_for_label }}">Grade Level:</label>
@@ -157,35 +163,239 @@
             </div>
           
     
-            <!-- ACADEMIC BACKGROUND -->
+            <!-- STUDENT HISTORY TITLE -->
             <div class="col-sm-12 mx-t5 mb-2">
               <br>
-              <h4>Academic Background</h4>
+              <h3>Student History</h3>
               <hr>
             </div>
+            <!-- STUDENT HISTORY TABLE -->
+            <div class="container mt-5">
+              <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                  <thead>
+                    <tr>
+                      <th class="text-nowrap text-center align-middle">Grade Level</th>
+                      <th class="text-nowrap text-center align-middle">School</th>
+                      <th class="text-nowrap text-center align-middle">School Year</th>
+                      <th class="text-nowrap text-center align-middle">Section</th>
+                      <th class="text-nowrap text-center align-middle">Average Grade</th>
+                      <th class="text-nowrap text-center align-middle">Adviser</th>
+                      <th class="text-nowrap text-center align-middle">Contact</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Grade 7 HISTORY -->
+                    <tr>
+                      <td class="text-center align-middle"><strong>Grade 7</strong></td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g7_school }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g7_schoolYear }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g7_section }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g7_general_average }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g7_adviser }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g7_adviserContact }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                    </tr>
+                    <!-- Grade 8 HISTORY -->
+                    <tr>
+                      <td class="text-center align-middle"><strong>Grade 8</strong></td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g8_school }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g8_schoolYear }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g8_section }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g8_general_average }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g8_adviser }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g8_adviserContact }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <!-- Grade 9 HISTORY -->
+                    <tr>
+                      <td class="text-center align-middle"><strong>Grade 8</strong></td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g9_school }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g9_schoolYear }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g9_section }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g9_general_average }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g9_adviser }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g9_adviserContact }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+
+                      <!-- Grade 10 HISTORY -->
+                    <tr>
+                      <td class="text-center align-middle"><strong>Grade 10</strong></td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g10_school }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g10_schoolYear }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g10_section }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g10_general_average }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g10_adviser }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g10_adviserContact }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+
+                    <!-- Grade 11 HISTORY -->
+                    <tr>
+                      <td class="text-center align-middle"><strong>Grade 11</strong></td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g11_school }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g11_schoolYear }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g11_section }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g11_general_average }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g11_adviser }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g11_adviserContact }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <!-- Grade 12 HISTORY -->
+                    <tr>
+                      <td class="text-center align-middle"><strong>Grade 12</strong></td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g12_school }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g12_schoolYear }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g12_section }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g12_general_average }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g12_adviser }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-group">
+                          <input class="form-control form-control-plaintext" type="text" value="{{ student.g12_adviserContact }}" aria-label="Disabled input example" disabled readonly>
+                        </div>
+                      </td>
+
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
     
-    
-            <div class="col-sm-3 form-group">
-              <label for="{{ form.last_grade_level.id_for_label }}">Last Grade Level:</label>
-              <input class="form-control" type="text" value="{{ student.last_grade_level }}" aria-label="Disabled input example" disabled readonly>
-            </div>
-            
-            <div class="col-sm-3 form-group">
-              <label for="{{ form.last_school_attended.id_for_label }}">Last School Attended:</label>
-              <input class="form-control" type="text" value="{{ student.last_school_attended }}" aria-label="Disabled input example" disabled readonly>
-            </div>
-            
-            <div class="col-sm-3 form-group">
-              <label for="{{ form.last_schoolyear_completed.id_for_label }}">Last School Year Completed:</label>
-              <input class="form-control" type="text" value="{{ student.last_schoolyear_completed }}" aria-label="Disabled input example" disabled readonly>
-            </div>
           
     
-            <div class="col-sm-3 form-group">
-              <label for="{{ form.strand.id_for_label }}">Strand:</label>
-              <input class="form-control" type="text" value="{{ student.strand }}" aria-label="Disabled input example" disabled readonly>
-            </div>
-    
+            
             <!-- OTHER DETAILS -->
             <div class="col-sm-12 mx-t5 mb-2">
               <br>
@@ -212,16 +422,7 @@
               <label for="{{ form.is_a_working_student.id_for_label }}">Is a Working Student:</label>
               <input class="form-control" type="text" value="{{ student.is_a_working_student }}" aria-label="Disabled input example" disabled readonly>
             </div>
-            
-            <div class="col-sm-3 form-group">
-              <label for="{{ form.previous_adviser.id_for_label }}">Previous Adviser:</label>
-              <input class="form-control" type="text" value="{{ student.previous_adviser }}" aria-label="Disabled input example" disabled readonly>
-            </div>
-            
-            <div class="col-sm-3 form-group">
-              <label for="{{ form.adviser_contact.id_for_label }}">Adviser Contact Information:</label>
-              <input class="form-control" type="text" value="{{ student.adviser_contact }}" aria-label="Disabled input example" disabled readonly>
-            </div>
+
             
             <div class="col-sm-3 form-group">
               <label for="{{ form.health_bmi.id_for_label }}">Health BMI:</label>
