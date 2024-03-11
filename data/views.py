@@ -1008,8 +1008,8 @@ def import_students_from_excel(request):
                     print(f"Row {i}: LRN is empty or None. Stopping further processing.")
                     break  # Stop processing further students
 
-                classroom_identifier = data[12]
-                gradelevel_identifier = data[13]
+                classroom_identifier = data[13]#H
+                gradelevel_identifier = data[14]#J
 
                 # Check if classroom_identifier is None
                 if classroom_identifier is None:
@@ -1041,43 +1041,90 @@ def import_students_from_excel(request):
                     print(f"Row {i}: Gradelevel Instance:", gradelevel_instance)
 
                     value = Student(
-                        LRN=data[1],
-                        last_name=data[2],
-                        first_name=data[3],
-                        middle_name=data[4],
-                        suffix_name=data[5],
-                        status=data[6],
+                        LRN=data[1],#B
+                        last_name=data[2],#C
+                        first_name=data[3], #D
+                        middle_name=data[4],#E
+                        suffix_name=data[5],#F
+                        status=data[6],#G
                         birthday=converted_bday,  # Use the provided date without conversion
-                        religion=data[8],
-                        other_religion=data[9],
-                        age=data[10],
-                        sem=data[11],
-                        classroom=classroom_instance,
-                        gradelevel=gradelevel_instance,
-                        sex=data[14],
-                        birth_place=data[15],
-                        mother_tongue=data[16],
-                        address=data[17],
-                        father_name=data[18],
-                        father_contact=data[19],
-                        mother_name=data[20],
-                        mother_contact=data[21],
-                        guardian_name=data[22],
-                        guardian_contact=data[23],
-                        last_grade_level=data[24],
-                        last_school_attended=data[25],
-                        last_schoolyear_completed=data[26],
-                        strand=data[27],
-                        household_income=data[28],
-                        is_returnee=data[29],
-                        is_a_dropout=data[30],
-                        is_a_working_student=data[31],
-                        previous_adviser=data[32],
-                        adviser_contact=data[33],
-                        health_bmi=data[34],
-                        general_average=data[35],
-                        is_a_four_ps_scholar=data[36],
-                        notes=data[37]
+                        religion=data[8], #I
+                        other_religion=data[9], #J
+                        strand=data[10], #K
+                        age=data[11],#L
+                        sem=data[12], #M
+                        classroom=classroom_instance, #N
+                        gradelevel=gradelevel_instance, #0
+                        sex=data[15], #P
+                        birth_place=data[16], #Q
+                        mother_tongue=data[17], #R
+                        address=data[18], #S
+                        father_name=data[19], #T
+                        father_contact=data[20],#U
+                        mother_name=data[21],#V
+                        mother_contact=data[22],#W
+                        guardian_name=data[23],#X
+                        guardian_contact=data[24],#Y
+                        household_income=data[25], #Z
+                        is_returnee=data[26],#AA
+                        is_a_dropout=data[27], #AB
+                        is_a_working_student=data[28],#AC
+                        health_bmi=data[29],#AD
+                        general_average=data[30], #AE
+                        is_a_four_ps_scholar=data[31], #AF
+                        notes=data[32], #AG
+
+                        #Grade 7
+                        g7_school = data[35], #AJ
+                        g7_schoolYear = data[36],
+                        g7_section = data[37],
+                        g7_general_average = data[38],
+                        g7_adviser = data[39],
+                        g7_adviserContact = data[40],
+
+                        #Grade 8
+                        g8_school = data[42], #AJ
+                        g8_schoolYear = data[43],
+                        g8_section = data[44],
+                        g8_general_average = data[45],
+                        g8_adviser = data[46],
+                        g8_adviserContact = data[47],
+
+                        #Grade 9
+                        g9_school = data[49], #AJ
+                        g9_schoolYear = data[50],
+                        g9_section = data[51],
+                        g9_general_average = data[52],
+                        g9_adviser = data[53],
+                        g9_adviserContact = data[54],
+
+
+                        #Grade 10
+                        g10_school = data[56], 
+                        g10_schoolYear = data[57],
+                        g10_section = data[58],
+                        g10_general_average = data[59],
+                        g10_adviser = data[60],
+                        g10_adviserContact = data[61],
+
+
+                        #Grade 11
+                        g11_school = data[63], #AJ
+                        g11_schoolYear = data[64],
+                        g11_section = data[65],
+                        g11_general_average = data[66],
+                        g11_adviser = data[67],
+                        g11_adviserContact = data[68],
+
+
+                        #Grade 12
+                        g12_school = data[70], #AJ
+                        g12_schoolYear = data[71],
+                        g12_section = data[72],
+                        g12_general_average = data[73],
+                        g12_adviser = data[74],
+                        g12_adviserContact = data[75],
+
                     )
                     value.save()
                     successfully_imported += 1

@@ -27,7 +27,7 @@ class StudentMultiAdmin(SimpleHistoryAdmin, ImportExportModelAdmin):
         'father_name', 'father_contact', 'mother_name', 'mother_contact',
         'guardian_name', 'guardian_contact', 'strand', 'household_income',
         'is_returnee', 'is_a_dropout', 'is_a_working_student', 'health_bmi',
-        'general_average', 'is_a_four_ps_scholar', 'edited_fields', 'notes',
+        'general_average', 'is_a_four_ps_scholar', 'notes',
         'g7_school', 'g7_schoolYear', 'g7_adviser', 'g7_adviserContact',
         'g8_school', 'g8_schoolYear', 'g8_adviser', 'g8_adviserContact',
         'g9_school', 'g9_schoolYear', 'g9_adviser', 'g9_adviserContact',
