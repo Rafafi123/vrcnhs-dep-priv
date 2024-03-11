@@ -71,7 +71,7 @@ class Student(models.Model):
     suffix_name = models.CharField(max_length=10, blank=True, null=True)  # "Jr., I, II, III, etc.
     STATUS_CHOICES = [
         ('Currently Enrolled', 'Currently Enrolled'),
-        ('For Dropout', 'For Dropout'),
+        ('For Dropout/Transfer', 'For Dropout/Transfer'),
         ('For Promotion', 'For Promotion'),
         ('For Retention', 'For Retention'),
         ('For Graduation', 'For Graduation'),

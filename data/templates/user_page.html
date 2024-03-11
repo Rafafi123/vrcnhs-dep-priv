@@ -6,8 +6,9 @@
 
     <!-- Link to Bootstrap CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    
     
 
 
@@ -178,48 +179,73 @@
       </a>
     </div>
     <button id="promoteButton"
-    style="background-color: #1392c0; color: white; padding: 10px 20px; text-decoration: none; font-weight: bold; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);margin: 10px;">
+    style="background-color: #1392c0; color: white; padding: 10px 20px; text-decoration: none; font-weight: bold; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);margin: 10px;"  data-bs-toggle="modal" data-bs-target="#bulkPromoteModal">
     BULK PROMOTE
     </button>
+    
   </div>
+<!-- Bulk Promote Modal Confirmation-->
+<div class="modal fade" id="bulkPromoteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Bulk Promote Confirmation</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <p>Are you sure you want to promote these students?</p>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <a type="button" href="{% url 'bulk_promote_students' %}" class="btn btn-success">Bulk Promote</a>
+      </div>
+    </div>
+  </div>
+</div>
 
 </center>
 
 
 <script>
+  $(document).ready(function () {
+      $('#studentTable').DataTable();
 
-    $(document).ready(function () {
-      $('#studentTable').DataTable({
+      $('#promoteButton').on('click', function () {
+          // Show the confirmation modal
+          $('#bulkPromoteModal').modal('show');
       });
 
-    promoteButton.addEventListener('click', function () {
-          if (confirm('Are you sure you want to promote these students?')) {
-              // Make an AJAX request to trigger the promotion
-              fetch("{% url 'bulk_promote_students' %}", {
-                  method: 'POST',
-                  headers: {
-                      'X-CSRFToken': document.querySelector('input[name=csrfmiddlewaretoken]').value
-                  }
-              })
-              .then(response => response.json())
-              .then(data => {
-                  if (data.success) {
-                      // Handle success
-                      alert(data.message);
-                  } else {
-                      // Handle failure
-                      throw new Error(data.message);
-                  }
-              })
-              .catch(error => {
-                  // Handle error
-                  console.error(error);
-                  alert('Failed to promote students');
-              });
-          }
+      // Handle the "Bulk Promote" button click inside the modal
+      $('#bulkPromoteModal .btn-success').on('click', function () {
+          // Make an AJAX request to trigger the promotion
+          fetch("{% url 'bulk_promote_students' %}", {
+              method: 'POST',
+              headers: {
+                  'X-CSRFToken': document.querySelector('input[name=csrfmiddlewaretoken]').value
+              }
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  // Handle success
+                  alert(data.message);  // You can replace this with a more user-friendly notification
+              } else {
+                  // Handle failure
+                  throw new Error(data.message);
+              }
+          })
+          .catch(error => {
+              // Handle error
+              console.error(error);
+              alert('Failed to promote students');  // You can replace this with a more user-friendly notification
+          })
+          .finally(() => {
+              // Close the modal after processing
+              $('#bulkPromoteModal').modal('hide');
+              // Reload the page to display any Django messages
+              location.reload();
+          });
       });
-
-
   });
 </script>
 
