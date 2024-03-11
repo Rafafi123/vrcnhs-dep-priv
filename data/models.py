@@ -91,6 +91,19 @@ class Student(models.Model):
     ]
     religion = models.CharField(max_length=30, choices=RELIGION_CHOICES, default='other', null=True)
     other_religion = models.CharField(max_length=30, blank=True, null=True)  # This is finally working can now be added inside the information of the students
+    academic_strand = (
+        ('STEM', 'STEM'),
+        ('BAM', 'BAM'),
+        ('HESS', 'HESS'),
+        ('SPORTS & ARTS', 'SPORTS & ARTS'),
+        ('TVL', 'TVL'),
+        ('GAS', 'GAS'),  # added for the strand
+        ('HE', 'HE'),
+        ('ICT', 'ICT'),
+        ('IA', 'IA'),
+        ('Not Applicable (JHS)', 'Not Applicable (JHS)'),
+    )
+    strand = models.CharField(choices=academic_strand, max_length=50, null=True,blank=True)
     age = models.IntegerField(null=True)
     semester = (
         ('Yearly', 'Yearly'),
@@ -115,31 +128,22 @@ class Student(models.Model):
     mother_contact = models.CharField(max_length=15, null=True,blank=True)
     guardian_name = models.CharField(max_length=120, null=True,blank=True)  # this section is for the parents and guardian
     guardian_contact = models.CharField(max_length=15, null=True,blank=True)
-    GRADE_CHOICES = [
-        ('Grade 7', 'Grade 7'),
-        ('Grade 8', 'Grade 8'),
-        ('Grade 9', 'Grade 9'),
-        ('Grade 10', 'Grade 10'),
-        ('Grade 11', 'Grade 11'),
-        ('Grade 12', 'Grade 12'),
-        ('Transitioning', 'Transitioning'),
-    ]
     #last_grade_level = models.CharField(max_length=15, choices=GRADE_CHOICES, null=True,blank=True)  # this is for the returning learner
     #last_school_attended = models.CharField(max_length=30, null=True,blank=True)
     #last_schoolyear_completed = models.CharField(max_length=12, null=True,blank=True)
-    academic_strand = (
-        ('STEM', 'STEM'),
-        ('BAM', 'BAM'),
-        ('HESS', 'HESS'),
-        ('SPORTS & ARTS', 'SPORTS & ARTS'),
-        ('TVL', 'TVL'),
-        ('GAS', 'GAS'),  # added for the strand
-        ('HE', 'HE'),
-        ('ICT', 'ICT'),
-        ('IA', 'IA'),
-        ('Not Applicable (JHS)', 'Not Applicable (JHS)'),
+    TRANSFER_CHOICES = [
+        ('Transferred In', 'Transferred In'),
+        ('Moved In', 'Moved In'),
+        ('Regular', 'Regular'),  # Default if none of the conditions match
+    ]
+
+    transfer_status = models.CharField(
+        max_length=15,
+        choices=TRANSFER_CHOICES,
+        null=True,
+        blank=True,
+        default='Regular'
     )
-    strand = models.CharField(choices=academic_strand, max_length=50, null=True,blank=True)
     household_income_choices = (
         ('above Php 35,000', 'above Php 35,000'),
         ('from Php 18,000 - Php 35,000', 'from Php 18,000 - Php 35,000'),
@@ -172,7 +176,7 @@ class Student(models.Model):
     )
     is_a_four_ps_scholar = models.CharField(max_length=5, choices=scholarship_program, null=True,blank=True)  # 4ps scholarship program ##########
     history = HistoricalRecords()
-    edited_fields = models.CharField(max_length=255, blank=True, null=True)  # Field to store edited fields
+    #edited_fields = models.CharField(max_length=255, blank=True, null=True)  # Field to store edited fields
     notes = models.CharField(max_length=300, blank=True, null=True)
 
     
@@ -224,19 +228,7 @@ class Student(models.Model):
     g12_adviser = models.CharField(max_length=50, null=True,blank=True)
     g12_adviserContact = models.CharField(max_length=50, null=True,blank=True)
 
-    TRANSFER_CHOICES = [
-        ('Transferred In', 'Transferred In'),
-        ('Moved In', 'Moved In'),
-        ('Regular', 'Regular'),  # Default if none of the conditions match
-    ]
-
-    transfer_status = models.CharField(
-        max_length=15,
-        choices=TRANSFER_CHOICES,
-        null=True,
-        blank=True,
-        default='Regular'
-    )
+    
 
     class Meta:
         verbose_name_plural = "Students"   

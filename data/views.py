@@ -842,9 +842,12 @@ def export_students_to_excel(request):
     try:
         students = Student.objects.all()
 
-        existing_wb = load_workbook('data/static/media/VRCNHS_STUDENT_TEMPLATE.xlsx')
+        # Load the template workbook
+        template_path = 'data/static/media/VRCNHS_STUDENT_TEMPLATE.xlsx'
+        existing_wb = load_workbook(template_path)
         sheet = existing_wb.active
 
+        # Clear existing data
         for row in sheet.iter_rows(min_row=2, min_col=2, max_row=sheet.max_row, max_col=sheet.max_column):
             for cell in row:
                 cell.value = None
@@ -854,24 +857,57 @@ def export_students_to_excel(request):
 
         date_style = NamedStyle(name='date_style', number_format='MM-DD-YYYY')
 
+        # Define a list representing the order of columns in the Excel file
+        excel_columns_order = [
+            'LRN', 'last_name', 'first_name', 'middle_name', 'suffix_name', 'status', 'birthday',
+            'religion', 'other_religion', 'strand', 'age', 'sem', 'classroom', 'gradelevel', 'sex',
+            'birth_place', 'mother_tongue', 'address', 'father_name', 'father_contact', 'mother_name',
+            'mother_contact', 'guardian_name', 'guardian_contact', 'transfer_status', 'household_income',
+            'is_returnee', 'is_a_dropout', 'is_a_working_student', 'health_bmi', 'general_average',
+            'is_a_four_ps_scholar', 'notes',
+            '',  # Blank column
+            '',
+            # Grade 7
+            'g7_school', 'g7_schoolYear', 'g7_section', 'g7_general_average', 'g7_adviser', 'g7_adviserContact',
+            '',  # Blank column
+            # Grade 8
+            'g8_school', 'g8_schoolYear', 'g8_section', 'g8_general_average', 'g8_adviser', 'g8_adviserContact',
+            '',  # Blank column
+            # Grade 9
+            'g9_school', 'g9_schoolYear', 'g9_section', 'g9_general_average', 'g9_adviser', 'g9_adviserContact',
+            '',  # Blank column
+            # Grade 10
+            'g10_school', 'g10_schoolYear', 'g10_section', 'g10_general_average', 'g10_adviser', 'g10_adviserContact',
+            '',  # Blank column
+            # Grade 11
+            'g11_school', 'g11_schoolYear', 'g11_section', 'g11_general_average', 'g11_adviser', 'g11_adviserContact',
+            '',  # Blank column
+            # Grade 12
+            'g12_school', 'g12_schoolYear', 'g12_section', 'g12_general_average', 'g12_adviser', 'g12_adviserContact',
+        ]
+
         for row_num, student in enumerate(students, start_row):
-            for col_num, field in enumerate(Student._meta.fields, start_column):
+            for col_num, attribute in enumerate(excel_columns_order, start_column):
                 col_letter = get_column_letter(col_num)
 
-                field_value = getattr(student, field.name)
+                if attribute == '':
+                    # Skip blank columns
+                    continue
 
-                if field.name in ['LRN', 'age', 'father_contact', 'mother_contact', 'guardian_contact', 'adviser_contact']:
+                field_value = getattr(student, attribute, None)
+
+                if attribute in ['LRN', 'age', 'father_contact', 'mother_contact', 'guardian_contact', 'adviser_contact']:
                     if field_value is not None:
                         field_value = int(field_value)
-                elif field.name in ['health_bmi', 'general_average']:
+                elif attribute in ['health_bmi', 'general_average']:
                     if field_value is not None:
                         field_value = float(field_value)
-                elif field.name == 'birthday':
+                elif attribute == 'birthday':
                     # Export date in MM-DD-YYYY format
                     field_value = student.birthday.strftime('%m-%d-%Y') if student.birthday else None
                     sheet[f"{col_letter}{row_num}"] = field_value
-                    sheet[f"{col_letter}{row_num}"].style = date_style
-                elif field.name == 'last_grade_level':
+                    sheet[f"{col_letter}{row_num}"].number_format = 'MM-DD-YYYY'
+                elif attribute == 'last_grade_level':
                     # Check if last_grade_level is a string with non-numeric characters
                     if field_value is not None and any(c.isalpha() for c in field_value):
                         # If it contains non-numeric characters, export as a string
@@ -903,10 +939,8 @@ def export_students_to_excel(request):
         print(f"Error exporting data to Excel: {str(e)}")
         messages.error(request, "An error occurred while exporting data to Excel. Please try again.")
 
-    return render(request, 'view_students.html')  # Redirect to the desired page after export
+    return render(request, 'view_students.html')
 
-
-@allowed_users(allowed_roles=['TEACHER'])
 @allowed_users(allowed_roles=['TEACHER'])
 def export_classroom_students_to_excel(request):
     try:
@@ -926,20 +960,51 @@ def export_classroom_students_to_excel(request):
         start_row = 2
         start_column = 2
 
-        date_style = NamedStyle(name='date_style', number_format='MM-DD-YYYY')
+        # Define a list representing the order of columns in the Excel file
+        excel_columns_order = [
+            'LRN', 'last_name', 'first_name', 'middle_name', 'suffix_name', 'status', 'birthday',
+            'religion', 'other_religion', 'strand', 'age', 'sem', 'classroom', 'gradelevel', 'sex',
+            'birth_place', 'mother_tongue', 'address', 'father_name', 'father_contact', 'mother_name',
+            'mother_contact', 'guardian_name', 'guardian_contact', 'transfer_status', 'household_income',
+            'is_returnee', 'is_a_dropout', 'is_a_working_student', 'health_bmi', 'general_average',
+            'is_a_four_ps_scholar', 'notes',
+            '',  # Blank column
+            '',
+            # Grade 7
+            'g7_school', 'g7_schoolYear', 'g7_section', 'g7_general_average', 'g7_adviser', 'g7_adviserContact',
+            '',  # Blank column
+            # Grade 8
+            'g8_school', 'g8_schoolYear', 'g8_section', 'g8_general_average', 'g8_adviser', 'g8_adviserContact',
+            '',  # Blank column
+            # Grade 9
+            'g9_school', 'g9_schoolYear', 'g9_section', 'g9_general_average', 'g9_adviser', 'g9_adviserContact',
+            '',  # Blank column
+            # Grade 10
+            'g10_school', 'g10_schoolYear', 'g10_section', 'g10_general_average', 'g10_adviser', 'g10_adviserContact',
+            '',  # Blank column
+            # Grade 11
+            'g11_school', 'g11_schoolYear', 'g11_section', 'g11_general_average', 'g11_adviser', 'g11_adviserContact',
+            '',  # Blank column
+            # Grade 12
+            'g12_school', 'g12_schoolYear', 'g12_section', 'g12_general_average', 'g12_adviser', 'g12_adviserContact',
+        ]
 
         for row_num, student in enumerate(students, start_row):
-            for col_num, field in enumerate(Student._meta.fields, start_column):
+            for col_num, attribute in enumerate(excel_columns_order, start_column):
                 col_letter = get_column_letter(col_num)
 
-                if field.name == 'classroom':
+                if attribute == '':
+                    # Skip blank columns
+                    continue
+
+                if attribute == 'classroom':
                     # Extract the relevant information from the Classroom object
                     field_value = getattr(student.classroom, 'classroom', '')
-                elif field.name == 'gradelevel':
+                elif attribute == 'gradelevel':
                     # Extract the relevant information from the Gradelevel object
                     field_value = getattr(student.gradelevel, 'grade', '')
                 else:
-                    field_value = getattr(student, field.name)
+                    field_value = getattr(student, attribute, '')
 
                 # Your existing logic for handling different field types
 
@@ -957,7 +1022,7 @@ def export_classroom_students_to_excel(request):
         print(f"Error exporting classroom data to Excel: {str(e)}")
         messages.error(request, "An error occurred while exporting classroom data to Excel. Please try again.")
 
-    return render(request, 'user_page.html') 
+    return render(request, 'user_page.html')
 
 #EXPORT classroom
 @allowed_users(allowed_roles=['ADMIN'])
@@ -1065,65 +1130,66 @@ def import_students_from_excel(request):
                         mother_contact=data[22],#W
                         guardian_name=data[23],#X
                         guardian_contact=data[24],#Y
-                        household_income=data[25], #Z
-                        is_returnee=data[26],#AA
-                        is_a_dropout=data[27], #AB
-                        is_a_working_student=data[28],#AC
-                        health_bmi=data[29],#AD
-                        general_average=data[30], #AE
-                        is_a_four_ps_scholar=data[31], #AF
-                        notes=data[32], #AG
+                        transfer_status=data[25],
+                        household_income=data[26], #Z
+                        is_returnee=data[27],#AA
+                        is_a_dropout=data[28], #AB
+                        is_a_working_student=data[29],#AC
+                        health_bmi=data[30],#AD
+                        general_average=data[31], #AE
+                        is_a_four_ps_scholar=data[32], #AF
+                        notes=data[33], #AG
 
                         #Grade 7
-                        g7_school = data[35], #AJ
-                        g7_schoolYear = data[36],
-                        g7_section = data[37],
-                        g7_general_average = data[38],
-                        g7_adviser = data[39],
-                        g7_adviserContact = data[40],
+                        g7_school = data[36], #AJ
+                        g7_schoolYear = data[37],
+                        g7_section = data[38],
+                        g7_general_average = data[39],
+                        g7_adviser = data[40],
+                        g7_adviserContact = data[41],
 
                         #Grade 8
-                        g8_school = data[42], #AJ
-                        g8_schoolYear = data[43],
-                        g8_section = data[44],
-                        g8_general_average = data[45],
-                        g8_adviser = data[46],
-                        g8_adviserContact = data[47],
+                        g8_school = data[43], #AJ
+                        g8_schoolYear = data[44],
+                        g8_section = data[45],
+                        g8_general_average = data[46],
+                        g8_adviser = data[47],
+                        g8_adviserContact = data[48],
 
                         #Grade 9
-                        g9_school = data[49], #AJ
-                        g9_schoolYear = data[50],
-                        g9_section = data[51],
-                        g9_general_average = data[52],
-                        g9_adviser = data[53],
-                        g9_adviserContact = data[54],
+                        g9_school = data[50], #AJ
+                        g9_schoolYear = data[51],
+                        g9_section = data[52],
+                        g9_general_average = data[53],
+                        g9_adviser = data[54],
+                        g9_adviserContact = data[55],
 
 
                         #Grade 10
-                        g10_school = data[56], 
-                        g10_schoolYear = data[57],
-                        g10_section = data[58],
-                        g10_general_average = data[59],
-                        g10_adviser = data[60],
-                        g10_adviserContact = data[61],
+                        g10_school = data[57], 
+                        g10_schoolYear = data[58],
+                        g10_section = data[59],
+                        g10_general_average = data[60],
+                        g10_adviser = data[61],
+                        g10_adviserContact = data[62],
 
 
                         #Grade 11
-                        g11_school = data[63], #AJ
-                        g11_schoolYear = data[64],
-                        g11_section = data[65],
-                        g11_general_average = data[66],
-                        g11_adviser = data[67],
-                        g11_adviserContact = data[68],
+                        g11_school = data[64], #AJ
+                        g11_schoolYear = data[65],
+                        g11_section = data[66],
+                        g11_general_average = data[67],
+                        g11_adviser = data[68],
+                        g11_adviserContact = data[69],
 
 
                         #Grade 12
-                        g12_school = data[70], #AJ
-                        g12_schoolYear = data[71],
-                        g12_section = data[72],
-                        g12_general_average = data[73],
-                        g12_adviser = data[74],
-                        g12_adviserContact = data[75],
+                        g12_school = data[71], #AJ
+                        g12_schoolYear = data[72],
+                        g12_section = data[73],
+                        g12_general_average = data[74],
+                        g12_adviser = data[75],
+                        g12_adviserContact = data[76],
 
                     )
                     value.save()
