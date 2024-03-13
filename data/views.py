@@ -168,13 +168,21 @@ def user_page(request):
         # If at least one classroom exists
         classroom = classrooms[0]  # Get the first classroom
         students = Student.objects.filter(classroom=classroom)  # Filter students based on the classroom
+        teacher_name = f"{request.user.teacher.first_name} {request.user.teacher.last_name}"
     else:
         # If no classrooms exist
         classroom = None  # Set classroom to None
         students = []  # Set students as an empty list
+        teacher_name = None  # Set teacher_name to None
 
-    context = {'classroom': classroom, 'students': students}  # Prepare the context for rendering the template
-    return render(request, 'user_page.html', context)  # Render the template with the context
+    # Check if the teacher is not assigned a classroom
+    if request.user.teacher.classroom_set.count() == 0:
+        classroom_name = None
+    else:
+        classroom_name = classroom.gradelevel.grade + ' "' + classroom.classroom + '"'
+
+    context = {'classroom_name': classroom_name, 'teacher_name': teacher_name, 'students': students}
+    return render(request, 'user_page.html', context)
 
 @login_required
 def classroom_detail(request, classroom_id): # this is for the individual classrooms selected which will bring the user to the class list
@@ -429,7 +437,7 @@ def students_page(request):
     return render(request, 'view_students.html', {'form': form, 'students': students})
 
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['ADMIN'])
+@allowed_users(allowed_roles=['ADMIN','TEACHER'])
 def teachers_page(request):
     form = TeacherSearchForm(request.GET or None)
     teachers = Teacher.objects.all()
@@ -1292,6 +1300,10 @@ def students_for_promotion(request):
         gradelevel__grade='Grade 12',
     )
 
+    for_departure= Student.objects.filter(
+        Q(status='For Graduation') | Q(status='For Dropout/Transfer'),
+    )
+
     classrooms = Classroom.objects.all()
 
     # A dictionary to hold classrooms for each grade level
@@ -1314,6 +1326,7 @@ def students_for_promotion(request):
         'students_grade_11': students_grade_11,
         'students_grade_12': students_grade_12,
         'classrooms' : classrooms,
+        'for_departure':for_departure, 
     }
 
     return render(request, 'students_for_promotion.html', context)
@@ -1333,7 +1346,8 @@ def assign_classroom_bulk(request, grade):
                     student = Student.objects.get(LRN=str(student_lrn_str))  # Convert LRN to string for comparison
                     classroom = Classroom.objects.get(id=classroom_id)
                     student.classroom = classroom
-                    student.status = 'Currently '  # Update status to "Processing"
+                    student.status = 'Currently Enrolled'  # Update status to "Processing"
+                    student.general_average = None
                     student.save()
                     student_lrns.append(student_lrn_str)  # Use LRN_str here
 
@@ -1346,7 +1360,7 @@ def assign_classroom_bulk(request, grade):
                     continue
 
         # Update status for all selected students
-        Student.objects.filter(LRN__in=student_lrns).update(status='Processing')
+        Student.objects.filter(LRN__in=student_lrns).update(status='Currently Enrolled')
 
         messages.success(request, 'Students assigned to classrooms successfully.')
         return redirect('students_for_promotion')  # Redirect back to the promotion page
@@ -1354,6 +1368,12 @@ def assign_classroom_bulk(request, grade):
 @login_required(login_url='login')
 def bulk_promote_students(request):
     response_data = {'success': False, 'message': 'Failed to promote students'}
+
+    # Check if there are students with the status "Currently Enrolled"
+    if Student.objects.filter(classroom__teacher__user=request.user, status='Currently Enrolled').exists():
+        messages.error(request, 'Please update the status of all students before bulk promotion.')
+        return redirect('user_page')
+
     if request.method == 'POST':
         try:    
             try:
@@ -1383,50 +1403,75 @@ def bulk_promote_students(request):
                     if current_grade == 'Grade 7':
                         student.g7_section = user_classroom.classroom
                         student.g7_general_average = student.general_average
-                        student.general_average = None
                         student.g7_adviser = f"{request.user.first_name} {request.user.last_name}"
                     elif current_grade == 'Grade 8':
                         student.g8_section = user_classroom.classroom
                         student.g8_general_average = student.general_average
-                        student.general_average = None
                         student.g8_adviser = f"{request.user.first_name} {request.user.last_name}"
                     elif current_grade == 'Grade 9':
                         student.g9_section = user_classroom.classroom
                         student.g9_general_average = student.general_average
-                        student.general_average = None
                         student.g9_adviser = f"{request.user.first_name} {request.user.last_name}"
                     elif current_grade == 'Grade 10':
                         student.g10_section = user_classroom.classroom
                         student.g10_general_average = student.general_average
-                        student.general_average = None
                         student.g10_adviser = f"{request.user.first_name} {request.user.last_name}"
                     elif current_grade == 'Grade 11':
                         student.g11_section = user_classroom.classroom
                         student.g11_general_average = student.general_average
-                        student.general_average = None
                         student.g11_adviser = f"{request.user.first_name} {request.user.last_name}"
                     elif current_grade == 'Grade 12':
                         student.g12_section = user_classroom.classroom
                         student.g12_general_average = student.general_average
-                        student.general_average = None
                         student.g12_adviser = f"{request.user.first_name} {request.user.last_name}"
                     student.gradelevel = next_grade_instance
                     student.classroom = Classroom.objects.get(classroom='SECTIONING')
 
                 elif student.status == 'For Retention':
+                    # Specific cases based on the current grade
+                    if current_grade == 'Grade 7':
+                        student.g7_section = user_classroom.classroom
+                        student.g7_general_average = student.general_average
+                        student.g7_adviser = f"{request.user.first_name} {request.user.last_name}"
+                    elif current_grade == 'Grade 8':
+                        student.g8_section = user_classroom.classroom
+                        student.g8_general_average = student.general_average
+                        student.g8_adviser = f"{request.user.first_name} {request.user.last_name}"
+                    elif current_grade == 'Grade 9':
+                        student.g9_section = user_classroom.classroom
+                        student.g9_general_average = student.general_average
+                        student.g9_adviser = f"{request.user.first_name} {request.user.last_name}"
+                    elif current_grade == 'Grade 10':
+                        student.g10_section = user_classroom.classroom
+                        student.g10_general_average = student.general_average
+                        student.g10_adviser = f"{request.user.first_name} {request.user.last_name}"
+                    elif current_grade == 'Grade 11':
+                        student.g11_section = user_classroom.classroom
+                        student.g11_general_average = student.general_average
+                        student.g11_adviser = f"{request.user.first_name} {request.user.last_name}"
+                    elif current_grade == 'Grade 12':
+                        student.g12_section = user_classroom.classroom
+                        student.g12_general_average = student.general_average
+                        student.g12_adviser = f"{request.user.first_name} {request.user.last_name}"
                     student.classroom = Classroom.objects.get(classroom='SECTIONING')
                 elif student.status in ['For Graduation', 'For Dropout/Transfer']:
                     student.classroom = Classroom.objects.get(classroom='FOR DEPARTURE')
-
                 student.save()
+                
 
             response_data['success'] = True
             response_data['message'] = f'Bulk promotion to {next_grade} successful!'
             messages.success(request, response_data['message'])
+
+            return JsonResponse(response_data)
         except Exception as e:
             print(e)
-            messages.error(request, 'Failed to promote students')
+            response_data['message'] = 'Failed to promote students'
+            messages.error(request, response_data['message'])
+            return JsonResponse(response_data)
 
+    
+    messages.success(request, 'Students Promoted! Please Refresh')
     return redirect('user_page')
 
 

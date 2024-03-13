@@ -96,10 +96,16 @@
                 <li class="nav-item {% if url_name == 'teachers' %}active{% endif %}">
                   <a class="nav-link" href="{% url 'teachers' %}">View Teachers</a>
                 </li>
-                </li>
-                  <li class="nav-item {% if url_name == 'report_page' %}active{% endif %}">
-                  <a class="nav-link" href="{% url 'report_page' %}">Report</a>
-                </li>
+              </li>
+              <li class="nav-item {% if url_name == 'report_page' %}active{% endif %}">
+              <a class="nav-link" href="{% url 'report_page' %}">Report</a>
+              </li>
+              <li class="nav-item {% if url_name == 'students_for_promotion' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'students_for_promotion' %}">Sectioning</a>
+              </li>
+              <li class="nav-item {% if url_name == 'student_record' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'student_record' %}">Student Record</a>
+              </li>
               {% endif %}
 
 

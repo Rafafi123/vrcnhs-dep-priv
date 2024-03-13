@@ -37,9 +37,12 @@
 {% block content %}
 
 <div class="text-center">
-  <h1>{{ classroom.gradelevel }} "{{ classroom.classroom }}"</h1>
-
-  <h3>TEACHER: {{ classroom.teacher.first_name }} {{ classroom.teacher.last_name }}</h3>
+  {% if classroom_name %}
+    <h1>{{ classroom_name }}</h1>
+    <h3>TEACHER: {{ teacher_name }}</h3>
+  {% else %}
+    <h1 style="color: red;">WAITING FOR ADMIN TO ASSIGN A CLASSROOM FOR YOU</h1>
+  {% endif %}
 </div>
 <br>
 <center>
@@ -69,6 +72,7 @@
                 class="alert alert-danger float-center text-center message-text">{{ message }}</p>
         {% endif %}
     {% endfor %}
+
 
   <!-- SEARCH -->
   <a>Use this to search students throughout VRCNHS</a>
@@ -168,13 +172,10 @@
     <div style="text-align: left;">
       <a>
           <strong style="display: block; text-align: center;">BULK PROMOTE: </strong>
-          <span style="display: inline-block; text-align: center; margin: 10px;">
-              Updates student records for the teacher's classroom, changing their grade, status, and classroom to signify promotion to the next grade level.
-          </span>
-          <strong style="display: block; text-align: center;">Please only use this button once you have:</strong>
           <span style="margin-left: 10px; display: inline-block;margin: 10px;">
-              - Finished grading all of your students.<br>
-              - It is the end of the school year.
+              <strong>For Promotion</strong>: Saves Gen Average, Classroom, and Adviser to Student History and moves up a grade level for Sectioning.<br>
+              <strong>For Retention</strong>: Saves Gen Average, Classroom, and Adviser to Student History but MAINTAINS grade level for Sectioning.<br>
+              <strong>For Dropout/Transfer & For Graduation</strong>: Moved to FOR DEPARTURE.
           </span>
       </a>
     </div>
@@ -193,7 +194,11 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-          <p>Are you sure you want to promote these students?</p>
+          <strong><p>Are you sure you want to promote these students?</p></strong>
+          <p>If so, make sure:</p>
+          <p>- All students are graded properly</p>
+          <p>- No student should have a status of "Currently Enrolled"</p>
+
       </div>
       <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -204,7 +209,6 @@
 </div>
 
 </center>
-
 
 <script>
   $(document).ready(function () {
@@ -225,29 +229,15 @@
               }
           })
           .then(response => response.json())
-          .then(data => {
-              if (data.success) {
-                  // Handle success
-                  alert(data.message);  // You can replace this with a more user-friendly notification
-              } else {
-                  // Handle failure
-                  throw new Error(data.message);
-              }
-          })
-          .catch(error => {
-              // Handle error
-              console.error(error);
-              alert('Failed to promote students');  // You can replace this with a more user-friendly notification
-          })
           .finally(() => {
               // Close the modal after processing
               $('#bulkPromoteModal').modal('hide');
-              // Reload the page to display any Django messages
-              location.reload();
           });
       });
   });
 </script>
+
+
 
 
 {% endblock content %}

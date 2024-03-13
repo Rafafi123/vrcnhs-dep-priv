@@ -276,6 +276,46 @@
 </center>
 
 
+<br>
+<hr>
+<hr>
+<br>
+
+<center>
+    <h1 id="or_departure">Students For Departure</h1>
+</center>
+<br>
+    <div class="table-container">
+        <table class="table table-striped" id="for_departure">
+            <thead>
+                <tr>
+                    <th>LRN</th>
+                    <th>Name</th>
+                    <th>Status</th>
+                    <th>Grade & Section</th>
+                    <th>General Average</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in for_departure %}
+                <tr>
+                    <td>{{ student.LRN }}</td>
+                    <td>{{ student.last_name }}, {{ student.first_name }} {{ student.middle_name }} {{ student.suffix_name }}</td>
+                    <td>{{ student.status }}</td>
+                    <td>{{ student.gradelevel.grade }} {{ student.classroom }}            
+                    </td>
+                    <td>{{ student.general_average }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+<center>
+    <button type="submit" class="btn btn-primary" onclick="submitForm('form-grade-12')"></button>
+</center>
+
+
+
 
 <script src="{% static 'js/script.js' %}"></script>
 {% for student in students %}
@@ -359,6 +399,7 @@
         $('#student-table-grade-10').DataTable();
         $('#student-table-grade-11').DataTable();
         $('#student-table-grade-12').DataTable();
+        $('#for_departure').DataTable();
     });
 </script>
 
