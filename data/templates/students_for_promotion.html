@@ -22,7 +22,7 @@
 </div>
 
 <h1 style="text-align: center;">SECTIONING PAGE</h1>
-<h6 style="text-align: center;">  <a href="#grade8">Grade 8</a> |   <a href="#grade9">Grade 9</a>   |   <a href="#grade10">Grade 10</a>   |   <a href="#grade11">Grade 11</a>   |   <a href="#grade12">Grade 12</a></h6>
+<h6 style="text-align: center;">  <a href="#grade8">Grade 8</a> |   <a href="#grade9">Grade 9</a>   |   <a href="#grade10">Grade 10</a>   |   <a href="#grade11">Grade 11</a>   |   <a href="#grade12">Grade 12</a> |   <a href="#for_Departure">DEPARTURE</a></h6>
 <br>
 <br>
 
@@ -282,7 +282,7 @@
 <br>
 
 <center>
-    <h1 id="or_departure">Students For Departure</h1>
+    <h1 id="for_Departure">Students For Departure</h1>
 </center>
 <br>
     <div class="table-container">
@@ -302,8 +302,7 @@
                     <td>{{ student.LRN }}</td>
                     <td>{{ student.last_name }}, {{ student.first_name }} {{ student.middle_name }} {{ student.suffix_name }}</td>
                     <td>{{ student.status }}</td>
-                    <td>{{ student.gradelevel.grade }} {{ student.classroom }}            
-                    </td>
+                    <td>{{ student.gradelevel.grade }} {{ student.classroom }}</td>
                     <td>{{ student.general_average }}</td>
                 </tr>
                 {% endfor %}
@@ -311,11 +310,9 @@
         </table>
     </div>
 <center>
-    <button type="submit" class="btn btn-primary" onclick="submitForm('form-grade-12')"></button>
+    <a type="button" href="{% url 'export_and_delete_students_for_departure' %}" class="btn btn-danger">Export and Delete</a>
 </center>
-
-
-
+    
 
 <script src="{% static 'js/script.js' %}"></script>
 {% for student in students %}

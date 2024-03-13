@@ -94,5 +94,6 @@ urlpatterns = [
     path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(template_name='registration/password_changed.html'), 
         name='password_change_done'),
 
+    path('export_and_delete_students_for_departure/', views.export_and_delete_students_for_departure, name='export_and_delete_students_for_departure'),
 
 ]
