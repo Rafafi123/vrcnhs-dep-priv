@@ -1371,7 +1371,7 @@ def bulk_promote_students(request):
 
     # Check if there are students with the status "Currently Enrolled"
     if Student.objects.filter(classroom__teacher__user=request.user, status='Currently Enrolled').exists():
-        messages.error(request, 'Please update the status of all students before bulk promotion.')
+        messages.error(request, 'No student should have a status of "Currently Enrolled" anymore if you want to Promote in Bulk')
         return redirect('user_page')
 
     if request.method == 'POST':

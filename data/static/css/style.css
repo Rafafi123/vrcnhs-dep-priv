@@ -418,7 +418,7 @@ margin-top: -3rem;
 }
 
 .logo {
-  width: 40%; /* Set the desired percentage width */
+  width: 30%; /* Set the desired percentage width */
   height: auto; /* Maintain the aspect ratio by setting height to auto */
 }
 
@@ -456,4 +456,56 @@ margin-top: -3rem;
   .card-login {
       width: 100%; /* Set a percentage width for larger screens */
   }
+}
+
+.card-container {
+  text-align: center; /* Center the content */
+}
+
+.card {
+  display: inline-block;
+  vertical-align: top; /* Align cards to the top of the container */
+  margin: 10px; /* Add margin between cards */
+}
+
+.card a {
+  text-align: left; /* Align text inside the card to the left */
+}
+
+/* Style for the EXPORT button */
+.export-button {
+        background-color: #f89900;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+        margin: 10px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s; /* Add transition for smooth color change */
+    }
+
+/* Hover effect for the EXPORT button */
+.export-button:hover {
+    background-color: #f1a922; /* Change to your desired hover color */
+}
+
+/* Style for the Bulk Promote button */
+.bulk-promote-button {
+    background-color: #1392c0;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+    margin: 10px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Add transition for smooth color change */
+}
+
+/* Hover effect for the Bulk Promote button */
+.bulk-promote-button:hover {
+    background-color: #127aad; /* Change to your desired hover color */
 }

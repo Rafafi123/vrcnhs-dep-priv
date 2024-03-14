@@ -95,9 +95,12 @@
     <br>
 
     <center>
-        <a href="{% url 'add_student' %}" style="background-color: #4CAF50; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);">
-            Manually Add A Student
-        </a>
+        <form action="{% url 'add_student' %}" method="get">
+            <button type="submit" class="btn btn-primary">
+                Manually Add A Student
+            </button>
+        </form>
+      
     </center>
 
     <br>
@@ -124,7 +127,11 @@
         <br>
         <!-- End of Import button and form -->
         <br>
-        <a href="{% url 'export_students' %}" class="btn btn-primary">Export Students</a>
+        <a href="{% url 'export_students' %}">
+            <button type="button" class="export-button">
+                EXPORT ALL STUDENTS
+            </button>
+        </a>
     </center>
     <br>
     <br>

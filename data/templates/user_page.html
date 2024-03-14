@@ -14,24 +14,6 @@
 
     <!-- Link to Bootstrap JavaScript -->
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-
-    <!-- Your custom CSS styles -->
-  <style>
-    .card-container {
-      text-align: center; /* Center the content */
-    }
-
-    .card {
-      display: inline-block;
-      vertical-align: top; /* Align cards to the top of the container */
-      margin: 10px; /* Add margin between cards */
-    }
-
-    .card a {
-      text-align: left; /* Align text inside the card to the left */
-    }
-
-  </style>
 {% endblock %}
 
 {% block content %}
@@ -124,9 +106,11 @@
     </div>
   <br>
 
-  <a href="{% url 'add_student' %}" style="background-color: #4CAF50; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-weight: bold; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);">
-      Manually Add A Student
-  </a>
+  <form action="{% url 'add_student' %}" method="get">
+      <button type="submit" class="btn btn-primary">
+          Manually Add A Student
+      </button>
+  </form>
 
   <br>
   <br>
@@ -159,11 +143,10 @@
     </a>
   </div>
   <a href="{% url 'export_classroom_students' %}">
-  <button
-  style="background-color: #f89900; color: white; padding: 10px 20px; text-decoration: none; font-weight: bold; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);margin: 10px;">
-  EXPORT
-  </button>
-    </a>
+    <button type="button" class="export-button">
+        EXPORT
+    </button>
+  </a>
 </div>
 
 
@@ -173,15 +156,14 @@
       <a>
           <strong style="display: block; text-align: center;">BULK PROMOTE: </strong>
           <span style="margin-left: 10px; display: inline-block;margin: 10px;">
-              <strong>For Promotion</strong>: Saves Gen Average, Classroom, and Adviser to Student History and moves up a grade level for Sectioning.<br>
-              <strong>For Retention</strong>: Saves Gen Average, Classroom, and Adviser to Student History but MAINTAINS grade level for Sectioning.<br>
+              <strong>For Promotion</strong>: Saves 'Gen Average', 'Classroom', and 'Adviser' to Student History and MOVES UP the grade level of students for Sectioning.<br>
+              <strong>For Retention</strong>: Saves 'Gen Average', 'Classroom', and 'Adviser' to Student History but MAINTAINS grade level of students for Sectioning.<br>
               <strong>For Dropout/Transfer & For Graduation</strong>: Moved to FOR DEPARTURE.
           </span>
       </a>
     </div>
-    <button id="promoteButton"
-    style="background-color: #1392c0; color: white; padding: 10px 20px; text-decoration: none; font-weight: bold; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);margin: 10px;"  data-bs-toggle="modal" data-bs-target="#bulkPromoteModal">
-    BULK PROMOTE
+    <button id="promoteButton" type="button" class="bulk-promote-button" data-bs-toggle="modal" data-bs-target="#bulkPromoteModal">
+      BULK PROMOTE
     </button>
     
   </div>
@@ -193,12 +175,12 @@
         <h1 class="modal-title fs-5" id="exampleModalLabel">Bulk Promote Confirmation</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-          <strong><p>Are you sure you want to promote these students?</p></strong>
-          <p>If so, make sure:</p>
-          <p>- All students are graded properly</p>
-          <p>- No student should have a status of "Currently Enrolled"</p>
-
+      <div class="modal-body text-align" style="text-align: left;">
+        <strong><p>Are you sure you want to promote these students?</p></strong>
+        <p>If so, make sure:</p>
+        <p>- All students are graded properly</p>
+        <p>- No student should have a status of "Currently Enrolled"</p>
+        <p>- You may use Excel in Bulk editing by Exporting your students, edit, then import again in order to properly Promote in BULK.</p>
       </div>
       <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -210,7 +192,12 @@
 
 </center>
 
+
+
+
 <script>
+
+  
   $(document).ready(function () {
       $('#studentTable').DataTable();
 
@@ -236,7 +223,6 @@
       });
   });
 </script>
-
 
 
 
