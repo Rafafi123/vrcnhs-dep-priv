@@ -732,7 +732,7 @@ def add_classroom(request):
 
 ############################### this is for editting the classrooms and their assigned teacher
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['ADMIN'])
+@allowed_users(allowed_roles=['ADMIN', 'TEACHER'])
 def edit_classroom(request, classroom_id):
     try:
         # Retrieve the classroom object based on the provided classroom_id
