@@ -37,6 +37,8 @@
           </form>
         </div>
     </center>
+    
+
     <br>
 
     <!-- MESSAGES -->
@@ -53,7 +55,15 @@
             <button type="submit" class="search-button">Search</button>
         </form>
     </div>
-
+    <br>
+    <center>
+        <form action="{% url 'add_student' %}" method="get">
+            <button type="submit" class="btn btn-primary">
+                Manually Add A Student
+            </button>
+        </form>
+      
+    </center>
 
     <!-- TABLE DATA -->
     <div class="table-container">
@@ -94,14 +104,6 @@
     </div>
     <br>
 
-    <center>
-        <form action="{% url 'add_student' %}" method="get">
-            <button type="submit" class="btn btn-primary">
-                Manually Add A Student
-            </button>
-        </form>
-      
-    </center>
 
     <br>
 
