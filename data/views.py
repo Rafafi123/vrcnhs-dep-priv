@@ -58,87 +58,98 @@ def signup(request):
 
 #OG Login, signup pages
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['ADMIN', 'TEACHER'])
 def home(request):
-
-    
-    count = User.objects.count()
-    
-    # Calculate male and female student counts
-    male_count = Student.objects.filter(Q(sex='M') | Q(sex='Male')).count()
-    female_count = Student.objects.filter(Q(sex='F') | Q(sex='Female')).count()
-
-    # Calculate total student count
-    total_students = male_count + female_count
-
-    # Create pie chart data for gender distribution
-    gender_labels = ['Male', 'Female']
-    gender_values = [male_count, female_count]
-    gender_colors = ['#1f77b4', '#ff7f0e'] # blue and orange colors for male and female respectively
-    gender_trace = go.Pie(labels=gender_labels, values=gender_values, 
-                          marker=dict(colors=gender_colors))
-    gender_layout = go.Layout(title='Student Gender Distribution')
-    gender_fig = go.Figure(data=[gender_trace], layout=gender_layout)
-    gender_chart_div = pio.to_html(gender_fig, full_html=False)
-
-    students = Student.objects.all()
-    # Calculate religion distribution
-    religion_counts = dict()
-    for student in students:
-        religion = student.religion
-        religion_counts[religion] = religion_counts.get(religion, 0) + 1
+    if request.user.groups.filter(name='ADMIN').exists():
+        # Logic for ADMIN users
+        # Keep the existing logic for the home page for ADMIN users
         
-    # Prepare data for religion bar chart
-    religion_labels = [religion[1] for religion in Student.RELIGION_CHOICES]
-    religion_sizes = [religion_counts.get(religion[0], 0) for religion in Student.RELIGION_CHOICES]
-    religion_title = 'Distribution of Religions'
+        count = User.objects.count()
+        
+        # Calculate male and female student counts
+        male_count = Student.objects.filter(Q(sex='M') | Q(sex='Male')).count()
+        female_count = Student.objects.filter(Q(sex='F') | Q(sex='Female')).count()
 
-    religion_fig = create_bar_chart(religion_labels, religion_sizes, religion_title, colorscale='bright')
+        # Calculate total student count
+        total_students = male_count + female_count
+
+        # Create pie chart data for gender distribution
+        gender_labels = ['Male', 'Female']
+        gender_values = [male_count, female_count]
+        gender_colors = ['#1f77b4', '#ff7f0e'] # blue and orange colors for male and female respectively
+        gender_trace = go.Pie(labels=gender_labels, values=gender_values, 
+                            marker=dict(colors=gender_colors))
+        gender_layout = go.Layout(title='Student Gender Distribution')
+        gender_fig = go.Figure(data=[gender_trace], layout=gender_layout)
+        gender_chart_div = pio.to_html(gender_fig, full_html=False)
+
+        students = Student.objects.all()
+        # Calculate religion distribution
+        religion_counts = dict()
+        for student in students:
+            religion = student.religion
+            religion_counts[religion] = religion_counts.get(religion, 0) + 1
+            
+        # Prepare data for religion bar chart
+        religion_labels = [religion[1] for religion in Student.RELIGION_CHOICES]
+        religion_sizes = [religion_counts.get(religion[0], 0) for religion in Student.RELIGION_CHOICES]
+        religion_title = 'Distribution of Religions'
+
+        religion_fig = create_bar_chart(religion_labels, religion_sizes, religion_title, colorscale='bright')
+        
+        scholarship_labels = []  
+        scholarship_sizes = []  
+        scholarship_title = ''  
+        scholarship_counts = dict()
+        for student in students:
+            scholarship = student.is_a_four_ps_scholar
+            scholarship_counts[scholarship] = scholarship_counts.get(scholarship, 0) + 1
+
+        scholarship_labels = [scholarship[1] for scholarship in Student.scholarship_program]
+        scholarship_sizes = [scholarship_counts.get(scholarship[0], 0) for scholarship in Student.scholarship_program]
+
+
+        scholarship_fig = create_bar_chart(scholarship_labels, scholarship_sizes, scholarship_title, colorscale='bright')
+        # Get the current date and time
+        current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        
+        # Retrieve total teachers and classrooms
+        total_teachers = Teacher.objects.count()
+        total_classrooms = Classroom.objects.count()
+
+        # Add variables to context dictionary
+        context = {
+            'total_students': total_students,
+            'gender_chart_div': gender_chart_div,
+            'religion_chart': religion_fig.to_html(full_html=False, include_plotlyjs='cdn'),
+            'current_datetime': current_datetime,
+            'count': count,
+            'total_teachers': total_teachers,
+            'total_classrooms': total_classrooms,
+            'scholarship_chart': scholarship_fig.to_html(full_html=False, include_plotlyjs='cdn'),
+        }
+        # Debug statement to print total students
+        print("Debug Statement: Total Students -", total_students)
+        print("Debug Statement: Total Teachers -", total_teachers)
+        print("Debug Statement: Total Classrooms -", total_classrooms)
+        
+        # Render the home.html template with the context data
+        return render(request, 'home.html', context)
     
-    scholarship_labels = []  
-    scholarship_sizes = []  
-    scholarship_title = ''  
-    scholarship_counts = dict()
-    for student in students:
-        scholarship = student.is_a_four_ps_scholar
-        scholarship_counts[scholarship] = scholarship_counts.get(scholarship, 0) + 1
+    elif request.user.groups.filter(name='TEACHER').exists():
+        if request.user.groups.filter(name='ADMIN').exists():
+            # Logic for users in both 'TEACHER' and 'ADMIN' groups
+            # Redirect to the home page
+            return render(request, 'home.html', context)
+        else:
+            # Logic for users only in 'TEACHER' group
+            # Redirect to the user_page for TEACHER users
+            return redirect('user_page')
 
-    scholarship_labels = [scholarship[1] for scholarship in Student.scholarship_program]
-    scholarship_sizes = [scholarship_counts.get(scholarship[0], 0) for scholarship in Student.scholarship_program]
-
-
-    scholarship_fig = create_bar_chart(scholarship_labels, scholarship_sizes, scholarship_title, colorscale='bright')
-    # Get the current date and time
-    current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     
-    # Retrieve total teachers and classrooms
-    total_teachers = Teacher.objects.count()
-    total_classrooms = Classroom.objects.count()
-
-    # Add variables to context dictionary
-    context = {
-        'total_students': total_students,
-        'gender_chart_div': gender_chart_div,
-        'religion_chart': religion_fig.to_html(full_html=False, include_plotlyjs='cdn'),
-        'current_datetime': current_datetime,
-        'count': count,
-        'total_teachers': total_teachers,
-        'total_classrooms': total_classrooms,
-        'scholarship_chart': scholarship_fig.to_html(full_html=False, include_plotlyjs='cdn'),
-    }
-    # Debug statement to print total students
-    print("Debug Statement: Total Students -", total_students)
-    print("Debug Statement: Total Teachers -", total_teachers)
-    print("Debug Statement: Total Classrooms -", total_classrooms)
-    
-    # Render the home.html template with the context data
-    return render(request, 'home.html', context)
-
 
 ################################################## for class organization
 
 @login_required
-@allowed_users(allowed_roles=['ADMIN', 'TEACHER'])
 def grade_sections(request):
     classrooms_grade_7= Classroom.objects.filter(gradelevel__grade='Grade 7')
     classrooms_grade_8= Classroom.objects.filter(gradelevel__grade='Grade 8')
