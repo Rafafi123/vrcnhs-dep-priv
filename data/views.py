@@ -195,7 +195,7 @@ def classroom_detail(request, classroom_id): # this is for the individual classr
 
 #####################################################################
 @login_required
-@admin_only
+@allowed_users(allowed_roles=['ADMIN', 'TEACHER'])
 def edit_teacher(request, teacher_id):
     teacher = Teacher.objects.get(id=teacher_id)
     user = teacher.user
@@ -261,7 +261,7 @@ def add_student(request):
 
 #DELETE TEACHER/USER
 @login_required
-@allowed_users(allowed_roles=['ADMIN'])
+@allowed_users(allowed_roles=['ADMIN', 'TEACHER'])
 def destroy_teacher(request, teacher_id):
     teacher = get_object_or_404(Teacher, id=teacher_id)
 
