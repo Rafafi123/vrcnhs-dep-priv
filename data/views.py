@@ -856,7 +856,7 @@ def download_template(request):
 
 #EXPORT student
 
-@allowed_users(allowed_roles=['ADMIN'])
+@allowed_users(allowed_roles=['ADMIN', 'TEACHER'])
 def export_students_to_excel(request):
     try:
         students = Student.objects.all()

@@ -118,9 +118,9 @@ class Student(models.Model):
         ('Female', 'Female'),
     )
     sex = models.CharField(max_length=10, choices=sex_student, null=True)
-    birth_place = models.CharField(max_length=20, null=True,blank=True)
+    birth_place = models.CharField(max_length=100, null=True,blank=True)
     mother_tongue = models.CharField(max_length=20, null=True,blank=True)
-    address = models.CharField(max_length=200, null=True,blank=True)
+    address = models.CharField(max_length=100, null=True,blank=True)
 
     father_name = models.CharField(max_length=120, null=True,blank=True)  # this section is for the parents and guardian
     father_contact = models.CharField(max_length=15, null=True,blank=True)
