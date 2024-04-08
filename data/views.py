@@ -915,10 +915,7 @@ def export_students_to_excel(request):
 
                 field_value = getattr(student, attribute, None)
 
-                if attribute in ['LRN', 'age', 'father_contact', 'mother_contact', 'guardian_contact', 'adviser_contact']:
-                    if field_value is not None:
-                        field_value = int(field_value)
-                elif attribute in ['health_bmi', 'general_average']:
+                if attribute in ['health_bmi', 'general_average']:
                     if field_value is not None:
                         field_value = float(field_value)
                 elif attribute == 'birthday':
@@ -926,18 +923,6 @@ def export_students_to_excel(request):
                     field_value = student.birthday.strftime('%m-%d-%Y') if student.birthday else None
                     sheet[f"{col_letter}{row_num}"] = field_value
                     sheet[f"{col_letter}{row_num}"].number_format = 'MM-DD-YYYY'
-                elif attribute == 'last_grade_level':
-                    # Check if last_grade_level is a string with non-numeric characters
-                    if field_value is not None and any(c.isalpha() for c in field_value):
-                        # If it contains non-numeric characters, export as a string
-                        field_value = str(field_value)
-                    else:
-                        # Otherwise, try converting to integer
-                        try:
-                            field_value = int(field_value)
-                        except (ValueError, TypeError):
-                            print(f"Error converting last_grade_level to int: {field_value}")
-                            field_value = None
                 else:
                     if field_value is not None:
                         field_value = str(field_value)
