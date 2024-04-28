@@ -390,6 +390,25 @@
 
 <!-- DataTables Initialization -->
 <script>
+    
+    // Check if there is a stored scroll position
+    var storedScrollPos = sessionStorage.getItem('scrollPos');
+    if (storedScrollPos !== null) {
+        // Scroll to the stored position after the page has loaded
+        window.onload = function () {
+            window.scrollTo(0, storedScrollPos);
+        };
+
+        // Clear the stored scroll position
+        sessionStorage.removeItem('scrollPos');
+    }
+
+    // Store the scroll position when leaving the page
+    window.onbeforeunload = function () {
+        sessionStorage.setItem('scrollPos', window.scrollY);
+    };
+
+    //Datatables
     $(document).ready(function () {
         $('#student-table-grade-8').DataTable();
         $('#student-table-grade-9').DataTable();

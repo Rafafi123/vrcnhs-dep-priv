@@ -1269,60 +1269,64 @@ def import_classrooms_from_excel(request):
 
 @login_required(login_url='login')
 def students_for_promotion(request):
-    # Get students for promotion
+    # Filter students who are either 'For Promotion' or 'For Retention' and are in the "SECTIONING" classroom
+    query_conditions = Q(
+        (Q(status='For Promotion') | Q(status='For Retention')) &
+        Q(classroom__classroom='SECTIONING')
+    )
+
+    # Apply these conditions to each grade level query
     students_grade_8 = Student.objects.filter(
-        Q(status='For Promotion') | Q(status='For Retention'),
+        query_conditions,
         gradelevel__grade='Grade 8',
     )
 
-    # Add queries for other grade levels
     students_grade_9 = Student.objects.filter(
-        Q(status='For Promotion') | Q(status='For Retention'),
+        query_conditions,
         gradelevel__grade='Grade 9',
     )
 
     students_grade_10 = Student.objects.filter(
-        Q(status='For Promotion') | Q(status='For Retention'),
+        query_conditions,
         gradelevel__grade='Grade 10',
     )
 
     students_grade_11 = Student.objects.filter(
-        Q(status='For Promotion') | Q(status='For Retention'),
+        query_conditions,
         gradelevel__grade='Grade 11',
     )
 
     students_grade_12 = Student.objects.filter(
-        Q(status='For Promotion') | Q(status='For Retention'),
+        query_conditions,
         gradelevel__grade='Grade 12',
     )
 
-    for_departure= Student.objects.filter(
-        Q(status='For Graduation') | Q(status='For Dropout/Transfer'),
+    # Filter students for departure based on status
+    for_departure = Student.objects.filter(
+        Q(status='For Graduation') | Q(status='For Dropout/Transfer')
     )
 
     classrooms = Classroom.objects.all()
 
-    # A dictionary to hold classrooms for each grade level
-
-     # Assuming you have a predefined list of grade levels
+    # Assuming you have a predefined list of grade levels
     grade_levels = Gradelevel.objects.all()
     grade_level_classrooms = {grade.id: Classroom.objects.filter(gradelevel=grade) for grade in grade_levels}
 
-    for grade, students in [('Grade 8', students_grade_8), ('Grade 9', students_grade_9), ('Grade 10', students_grade_10), ('Grade 11', students_grade_11), ('Grade 12', students_grade_12)]:  # and so on for each grade
+    for grade, students in [('Grade 8', students_grade_8), ('Grade 9', students_grade_9), ('Grade 10', students_grade_10), ('Grade 11', students_grade_11), ('Grade 12', students_grade_12)]:
         for student in students:
-            student.classroom_options = grade_level_classrooms[student.gradelevel_id]
-            student.LRN_str = str(student.LRN)  # Add LRN as a string to the context
+            student.classroom_options = grade_level_classrooms.get(student.gradelevel_id, [])
+            student.LRN_str = str(student.LRN)
+            print(student.LRN, student.classroom_options)  # Debugging line to check values
 
-
-    # Other necessary context data (if needed)
+    # Prepare context data with the updated queries
     context = {
         'students_grade_8': students_grade_8,
         'students_grade_9': students_grade_9,
         'students_grade_10': students_grade_10,
         'students_grade_11': students_grade_11,
         'students_grade_12': students_grade_12,
-        'classrooms' : classrooms,
-        'for_departure':for_departure, 
+        'classrooms': classrooms,
+        'for_departure': for_departure,
     }
 
     return render(request, 'students_for_promotion.html', context)
