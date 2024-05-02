@@ -1397,8 +1397,10 @@ def bulk_promote_students(request):
             students_to_promote = Student.objects.filter(classroom=user_classroom)
 
             for student in students_to_promote:
+                # Store current classroom name as the previous section before changing it
+                student.previous_section = str(student.classroom)
+                
                 if student.status == 'For Promotion':
-
                     # Specific cases based on the current grade
                     if current_grade == 'Grade 7':
                         student.g7_section = user_classroom.classroom

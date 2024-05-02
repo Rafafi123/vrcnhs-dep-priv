@@ -51,6 +51,7 @@
                     <th>LRN</th>
                     <th>Name</th>
                     <th>Status</th>
+                    <th>Previous Section</th>
                     <th>Grade & Section</th>
                     <th>General Average</th>
                 </tr>
@@ -61,6 +62,7 @@
                     <td>{{ student.LRN }}</td>
                     <td>{{ student.last_name }}, {{ student.first_name }} {{ student.middle_name }} {{ student.suffix_name }}</td>
                     <td>{{ student.status }}</td>
+                    <td>{{ student.previous_section }}</td>
                     <td>{{ student.gradelevel.grade }} {{ student.classroom }}
                         <select name="classroom_{{ student.LRN_str }}" class="form-select" required>
                             {% for classroom in student.classroom_options %}
@@ -99,6 +101,7 @@
                     <th>LRN</th>
                     <th>Name</th>
                     <th>Status</th>
+                    <th>Previous Section</th>
                     <th>Grade & Section</th>
                     <th>General Average</th>
                 </tr>
@@ -109,6 +112,7 @@
                     <td>{{ student.LRN }}</td>
                     <td>{{ student.last_name }}, {{ student.first_name }} {{ student.middle_name }} {{ student.suffix_name }}</td>
                     <td>{{ student.status }}</td>
+                    <td>{{ student.previous_section }}</td>
                     <td>{{ student.gradelevel.grade }} {{ student.classroom }}
                         <select name="classroom_{{ student.LRN_str }}" class="form-select" required>
                             {% for classroom in student.classroom_options %}
@@ -148,6 +152,7 @@
                     <th>LRN</th>
                     <th>Name</th>
                     <th>Status</th>
+                    <th>Previous Section</th>
                     <th>Grade & Section</th>
                     <th>General Average</th>
                 </tr>
@@ -158,6 +163,7 @@
                     <td>{{ student.LRN }}</td>
                     <td>{{ student.last_name }}, {{ student.first_name }} {{ student.middle_name }} {{ student.suffix_name }}</td>
                     <td>{{ student.status }}</td>
+                    <td>{{ student.previous_section }}</td>
                     <td>{{ student.gradelevel.grade }} {{ student.classroom }}
                         <select name="classroom_{{ student.LRN_str }}" class="form-select" required>
                             {% for classroom in student.classroom_options %}
@@ -196,6 +202,7 @@
                     <th>LRN</th>
                     <th>Name</th>
                     <th>Status</th>
+                    <th>Previous Section</th>
                     <th>Grade & Section</th>
                     <th>General Average</th>
                 </tr>
@@ -206,6 +213,7 @@
                     <td>{{ student.LRN }}</td>
                     <td>{{ student.last_name }}, {{ student.first_name }} {{ student.middle_name }} {{ student.suffix_name }}</td>
                     <td>{{ student.status }}</td>
+                    <td>{{ student.previous_section }}</td>
                     <td>{{ student.gradelevel.grade }} {{ student.classroom }}
                         <select name="classroom_{{ student.LRN_str }}" class="form-select" required>
                             {% for classroom in student.classroom_options %}
@@ -245,6 +253,7 @@
                     <th>LRN</th>
                     <th>Name</th>
                     <th>Status</th>
+                    <th>Previous Section</th>
                     <th>Grade & Section</th>
                     <th>General Average</th>
                 </tr>
@@ -255,6 +264,7 @@
                     <td>{{ student.LRN }}</td>
                     <td>{{ student.last_name }}, {{ student.first_name }} {{ student.middle_name }} {{ student.suffix_name }}</td>
                     <td>{{ student.status }}</td>
+                    <td>{{ student.previous_section }}</td>
                     <td>{{ student.gradelevel.grade }} {{ student.classroom }}
                         <select name="classroom_{{ student.LRN_str }}" class="form-select" required>
                             {% for classroom in student.classroom_options %}
@@ -292,6 +302,7 @@
                     <th>LRN</th>
                     <th>Name</th>
                     <th>Status</th>
+                    <th>Previous Section</th>
                     <th>Grade & Section</th>
                     <th>General Average</th>
                 </tr>
@@ -302,6 +313,7 @@
                     <td>{{ student.LRN }}</td>
                     <td>{{ student.last_name }}, {{ student.first_name }} {{ student.middle_name }} {{ student.suffix_name }}</td>
                     <td>{{ student.status }}</td>
+                    <td>{{ student.previous_section }}</td>
                     <td>{{ student.gradelevel.grade }} {{ student.classroom }}</td>
                     <td>{{ student.general_average }}</td>
                 </tr>

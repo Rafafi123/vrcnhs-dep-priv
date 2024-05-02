@@ -228,7 +228,9 @@ class Student(models.Model):
     g12_adviser = models.CharField(max_length=50, null=True,blank=True)
     g12_adviserContact = models.CharField(max_length=50, null=True,blank=True)
 
-    
+    #save previous section
+    previous_section = models.CharField(max_length=30, blank=True, null=True)
+
 
     class Meta:
         verbose_name_plural = "Students"   
