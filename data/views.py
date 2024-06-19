@@ -1,9 +1,15 @@
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.db.models import Count, Q, F, Value as V
+from django.db.models.functions import Coalesce
+from datetime import datetime
+import plotly.graph_objs as go
+import plotly.express as px
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.views import PasswordChangeView, PasswordChangeDoneView
 from dateutil import parser as date_parser
 from django.urls import reverse, reverse_lazy
 from io import BytesIO
-from datetime import datetime
 from openpyxl.styles import NamedStyle
 from openpyxl.utils import get_column_letter
 from django.shortcuts import render, redirect, get_object_or_404
@@ -486,174 +492,137 @@ def add_teacher(request):
     context = {'form': form}
     return render(request, 'add_teacher.html', context)
 
-################## This is for the report page
+############################## This is for the report page ###########################################
+
+def create_pie_chart(labels, sizes, title, chart_width=None, chart_height=None):
+    fig = go.Figure(data=[go.Pie(labels=labels, values=sizes)])
+    fig.update_layout(title=title, autosize=True, width=chart_width, height=chart_height)
+    return fig
+
+def create_bar_chart(labels, sizes, title, chart_width=None, chart_height=None, colorscale='bright'):
+    colors = px.colors.qualitative.Plotly
+    fig = go.Figure(data=[go.Bar(x=labels, y=sizes, marker_color=colors)])
+    
+    fig.update_xaxes(fixedrange=True)
+    fig.update_yaxes(fixedrange=True)
+    fig.update_layout(title=title, autosize=True, width=chart_width, height=chart_height)
+
+    fig.update_layout(
+        autosize=True,
+        margin=dict(l=0, r=0, b=0, t=30),
+        template="plotly",
+    )
+
+    return fig
 
 @login_required
 def report_page(request):
-    scholarship_labels = []  
-    scholarship_sizes = []  
-    scholarship_title = ''  
-
     selected_gradelevel = request.GET.get('gradelevel')
-    print("Debug Statement: Selected Grade Level -", selected_gradelevel)
-
     gradelevels = Gradelevel.objects.all()
-
     user_is_teacher = request.user.groups.filter(name='TEACHER').exists()
+    user_is_admin = request.user.groups.filter(name='ADMIN').exists()
 
-    selected_classroom = None
-    selected_gradelevel_name = "All Grade Levels"
+    # Default to 'all' for admin users if no grade level is selected
+    if user_is_admin and not selected_gradelevel:
+        selected_gradelevel = 'all'
+    elif user_is_teacher and not selected_gradelevel:
+        selected_gradelevel = 'myclassroom'
 
-    if request.user.is_authenticated:
-        if user_is_teacher:
-            teacher_classrooms = request.user.teacher.classroom_set.all()
-
-            if teacher_classrooms.exists():
-                selected_classroom = None
-
-                if 'gradelevel' in request.GET:
-                    selected_gradelevel_id = request.GET.get('gradelevel')
-
-                    if selected_gradelevel_id == 'all':
-                        students = Student.objects.all()  # Show all students in the school
-                    else:
-                        students = Student.objects.filter(gradelevel_id=selected_gradelevel_id, classroom__in=teacher_classrooms)
-                else:
-                    students = Student.objects.filter(classroom__in=teacher_classrooms)
-
-                print("Debug Statement: Number of Students for Teacher -", students.count())
-
-                if 'classroom' in request.GET:
-                    selected_classroom_id = request.GET.get('classroom')
-                    selected_classroom = get_object_or_404(teacher_classrooms, id=selected_classroom_id)
-
-                if not selected_classroom:
-                    selected_classroom = teacher_classrooms.first()
-
-                if selected_gradelevel != "all":
-                    selected_gradelevel_name = f"My Classroom: {selected_classroom.classroom} - Grade Level: {selected_gradelevel}"
-                else:
-                    selected_gradelevel_name = f"All Grade Levels - Classroom: {selected_classroom.classroom}"
-            else:
-                students = Student.objects.none()  # No classrooms assigned to the teacher
-        elif request.user.groups.filter(name='ADMIN').exists():
-            if selected_gradelevel == "all":
-                students = Student.objects.all()
-            elif selected_gradelevel:
-                selected_gradelevel_id = int(selected_gradelevel)
-                students = Student.objects.filter(gradelevel_id=selected_gradelevel_id)
-            else:
-                students = Student.objects.all()
+    if user_is_teacher:
+        teacher_classrooms = request.user.teacher.classroom_set.all()
+        if selected_gradelevel == 'myclassroom':
+            students = Student.objects.filter(classroom__in=teacher_classrooms).select_related('gradelevel')
+        elif selected_gradelevel == 'all':
+            students = Student.objects.all().select_related('gradelevel')
         else:
-            students = Student.objects.all()
+            try:
+                selected_gradelevel = int(selected_gradelevel)
+                students = Student.objects.filter(gradelevel_id=selected_gradelevel).select_related('gradelevel')
+            except ValueError:
+                students = Student.objects.none()
+    elif user_is_admin:
+        if selected_gradelevel == 'all':
+            students = Student.objects.all().select_related('gradelevel')
+        else:
+            try:
+                selected_gradelevel = int(selected_gradelevel)
+                students = Student.objects.filter(gradelevel_id=selected_gradelevel).select_related('gradelevel')
+            except ValueError:
+                students = Student.objects.none()
     else:
-        students = Student.objects.all()
+        students = Student.objects.all().select_related('gradelevel')
 
-    print("Debug Statement: Total Number of Students -", students.count())
+    # Aggregate counts using Django ORM, ensuring to give unique names to the annotations
+    strand_counts = students.values(strand_value=Coalesce('strand', V('None'))).annotate(count=Count('strand_value'))
+    economic_counts = students.values(household_income_value=Coalesce('household_income', V('None'))).annotate(count=Count('household_income_value'))
+    religion_counts = students.values(religion_value=Coalesce('religion', V('None'))).annotate(count=Count('religion_value'))
+    dropout_counts = students.values(is_a_dropout_value=Coalesce('is_a_dropout', V('None'))).annotate(count=Count('is_a_dropout_value'))
+    working_student_counts = students.values(is_a_working_student_value=Coalesce('is_a_working_student', V('None'))).annotate(count=Count('is_a_working_student_value'))
+    scholarship_counts = students.values(is_a_four_ps_scholar_value=Coalesce('is_a_four_ps_scholar', V('None'))).annotate(count=Count('is_a_four_ps_scholar_value'))
+    sex_counts = students.values(sex_value=Coalesce('sex', V('None'))).annotate(count=Count('sex_value'))
+    returnee_counts = students.values(is_returnee_value=Coalesce('is_returnee', V('None'))).annotate(count=Count('is_returnee_value'))
 
+    # Create charts
+    strand_fig = create_bar_chart(
+        [item['strand_value'] for item in strand_counts],
+        [item['count'] for item in strand_counts],
+        'Distribution of Academic Strands'
+    )
+    
+    economic_fig = create_bar_chart(
+        [item['household_income_value'] for item in economic_counts],
+        [item['count'] for item in economic_counts],
+        'Distribution of Household Income'
+    )
 
-    strand_counts = dict()
-    for student in students:
-        strand = student.strand
-        strand_counts[strand] = strand_counts.get(strand, 0) + 1
+    religion_fig = create_bar_chart(
+        [item['religion_value'] for item in religion_counts],
+        [item['count'] for item in religion_counts],
+        'Distribution of Religions'
+    )
 
-    strand_labels = [strand[1] for strand in Student.academic_strand]
-    strand_sizes = [strand_counts.get(strand[0], 0) for strand in Student.academic_strand]
-    strand_title = 'Distribution of Academic Strands'
+    dropout_fig = create_pie_chart(
+        [item['is_a_dropout_value'] for item in dropout_counts],
+        [item['count'] for item in dropout_counts],
+        'Distribution of Dropout Status'
+    )
 
-    economic_counts = dict()
-    for student in students:
-        economic = student.household_income
-        economic_counts[economic] = economic_counts.get(economic, 0) + 1
+    working_student_fig = create_pie_chart(
+        [item['is_a_working_student_value'] for item in working_student_counts],
+        [item['count'] for item in working_student_counts],
+        'Distribution of Working Students'
+    )
 
-    economic_labels = [choice[1] for choice in Student.household_income_choices]
-    economic_sizes = [economic_counts.get(choice[0], 0) for choice in Student.household_income_choices]
-    economic_title = 'Distribution of household income'
+    scholarship_fig = create_bar_chart(
+        [item['is_a_four_ps_scholar_value'] for item in scholarship_counts],
+        [item['count'] for item in scholarship_counts],
+        'Distribution of Scholars'
+    )
 
-    religion_counts = dict()
-    for student in students:
-        religion = student.religion
-        religion_counts[religion] = religion_counts.get(religion, 0) + 1
+    sex_fig = create_pie_chart(
+        [item['sex_value'] for item in sex_counts],
+        [item['count'] for item in sex_counts],
+        'Males and Females'
+    )
 
-    religion_labels = [religion[1] for religion in Student.RELIGION_CHOICES]
-    religion_sizes = [religion_counts.get(religion[0], 0) for religion in Student.RELIGION_CHOICES]
-    religion_title = 'Distribution of Religions'
-
-    dropout_counts = dict()
-    for student in students:
-        dropout = student.is_a_dropout
-        dropout_counts[dropout] = dropout_counts.get(dropout, 0) + 1
-
-    dropout_labels = [dropout[1] for dropout in Student.drop_out]
-    dropout_sizes = [dropout_counts.get(dropout[0], 0) for dropout in Student.drop_out]
-    dropout_title = 'Distribution of Dropout Status'
-
-    working_student_counts = dict()
-    for student in students:
-        working_student = student.is_a_working_student
-        working_student_counts[working_student] = working_student_counts.get(working_student, 0) + 1
-
-    working_student_labels = [working_student[1] for working_student in Student.working_student]
-    working_student_sizes = [working_student_counts.get(working_student[0], 0) for working_student in Student.working_student]
-    working_student_title = 'Distribution of Working Students'
-
-    scholarship_counts = dict()
-    for student in students:
-        scholarship = student.is_a_four_ps_scholar
-        scholarship_counts[scholarship] = scholarship_counts.get(scholarship, 0) + 1
-
-    scholarship_labels = [scholarship[1] for scholarship in Student.scholarship_program]
-    scholarship_sizes = [scholarship_counts.get(scholarship[0], 0) for scholarship in Student.scholarship_program]
-
-    sex_counts = dict()
-    for student in students:
-        sex = student.sex
-        sex_counts[sex] = sex_counts.get(sex, 0) + 1
-
-    sex_labels = [sex[1] for sex in Student.sex_student]
-    sex_sizes = [sex_counts.get(sex[0], 0) for sex in Student.sex_student]
-    sex_title = 'Males and Females'
-
-    returnee_counts = dict()
-    for student in students:
-        returnee = student.is_returnee
-        returnee_counts[returnee] = returnee_counts.get(returnee, 0) + 1
-
-    returnee_labels = [returnee[1] for returnee in Student.is_returnee_student]
-    returnee_sizes = [returnee_counts.get(returnee[0], 0) for returnee in Student.is_returnee_student]
-    returnee_title = 'Distribution of Returnee Students'
-
-    dropout_fig = create_pie_chart(dropout_labels, dropout_sizes, dropout_title)
-    working_student_fig = create_pie_chart(working_student_labels, working_student_sizes, working_student_title)
-    scholarship_fig = create_bar_chart(scholarship_labels, scholarship_sizes, scholarship_title, colorscale='bright')
-    sex_fig = create_pie_chart(sex_labels, sex_sizes, sex_title)
-    returnee_fig = create_pie_chart(returnee_labels, returnee_sizes, returnee_title)
-
-    religion_fig = create_bar_chart(religion_labels, religion_sizes, religion_title, colorscale='bright')
-    strand_fig = create_bar_chart(strand_labels, strand_sizes, strand_title, colorscale='bright')
-    economic_fig = create_bar_chart(economic_labels, economic_sizes, economic_title, colorscale='bright')
+    returnee_fig = create_pie_chart(
+        [item['is_returnee_value'] for item in returnee_counts],
+        [item['count'] for item in returnee_counts],
+        'Distribution of Returnee Students'
+    )
 
     current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-
-    selected_filter_name = request.session.get('selected_filter_name', None)
-
-    if selected_filter_name is None:
-        # If not in session, use your existing logic to determine it
-        if selected_classroom:
-            selected_filter_name = f"My Classroom: {selected_classroom.classroom}"
-        elif selected_gradelevel == "all":
-            selected_filter_name = "All Grade Levels"
-        else:
-            try:
-                selected_grade_object = Gradelevel.objects.get(id=selected_gradelevel)
-                selected_filter_name = f"Grade Level: {selected_grade_object.grade}"
-            except Gradelevel.DoesNotExist:
-                pass
-
-    # Save the selected filter name to the session
-    request.session['selected_filter_name'] = selected_filter_name
-    request.session.save()
+    if selected_gradelevel == 'myclassroom':
+        selected_filter_name = "My Classroom"
+    elif selected_gradelevel == "all":
+        selected_filter_name = "All Grade Levels"
+    else:
+        try:
+            selected_grade_object = Gradelevel.objects.get(id=selected_gradelevel)
+            selected_filter_name = f"{selected_grade_object.grade}"
+        except Gradelevel.DoesNotExist:
+            selected_filter_name = "Unknown Grade Level"
 
     return render(request, 'report_page.html', {
         'current_datetime': current_datetime,
@@ -666,34 +635,10 @@ def report_page(request):
         'sex_chart': sex_fig.to_html(full_html=False, include_plotlyjs='cdn'),
         'returnee_chart': returnee_fig.to_html(full_html=False, include_plotlyjs='cdn'),
         'gradelevels': gradelevels,
-        'selected_filter_name': selected_filter_name,  # Pass the new variable
-        'selected_classroom': selected_classroom,
+        'selected_filter_name': selected_filter_name,
         'user_is_teacher': user_is_teacher,
+        'selected_gradelevel': selected_gradelevel,  # Pass the selected grade level to the template
     })
-def create_pie_chart(labels, sizes, title, chart_width=None, chart_height=None):
-    fig = go.Figure(data=[go.Pie(labels=labels, values=sizes)])
-    fig.update_layout(title=title, autosize=True, width=chart_width, height=chart_height)
-    return fig
-
-def create_bar_chart(labels, sizes, title, chart_width=None, chart_height=None, colorscale='bright'):
-    colors = px.colors.qualitative.Plotly
-    fig = go.Figure(data=[go.Bar(x=labels, y=sizes, marker_color=colors)])
-    
-    # Disable zoom and panning
-    fig.update_xaxes(fixedrange=True)
-    fig.update_yaxes(fixedrange=True)
-    
-    # Hide the mode bar (zoom/pan controls)
-    fig.update_layout(title=title, autosize=True, width=chart_width, height=chart_height)
-
-    # Make the chart responsive
-    fig.update_layout(
-        autosize=True,
-        margin=dict(l=0, r=0, b=0, t=30),  # Adjust margin as needed
-        template="plotly",  # Choose a responsive template
-    )
-
-    return fig
 
 ############################### this is for adding classrooms and assigning a teacher to those classrooms
 def add_classroom(request):

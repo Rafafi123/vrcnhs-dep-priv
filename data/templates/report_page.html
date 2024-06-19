@@ -5,8 +5,6 @@
     <!-- Link to Bootstrap CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-    
-
 
     <!-- Link to Bootstrap JavaScript -->
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
@@ -24,26 +22,22 @@
       <h5 id="selectedFilter">Use this to filter the data accordingly</h5>
       
       <select name="gradelevel" id="gradelevelDropdown">
+            {% if user_is_teacher %}
+                <option value="myclassroom" {% if selected_gradelevel == "myclassroom" %}selected{% endif %}>My Classroom</option>
+            {% endif %}
             <option value="all" {% if selected_gradelevel == "all" %}selected{% endif %}>All Grade Levels</option>
             {% for gradelevel in gradelevels %}
-                <option value="{{ gradelevel.id }}" {% if selected_gradelevel == gradelevel.id %}selected{% endif %}>
+                <option value="{{ gradelevel.id }}" {% if selected_gradelevel|stringformat:"s" == gradelevel.id|stringformat:"s" %}selected{% endif %}>
                     {{ gradelevel.grade }}
                 </option>
             {% endfor %}
-            {% if user_is_teacher %}
-                {% if selected_classroom %}
-                    <option value="{{ selected_classroom.id }}" selected>
-                        My Classroom: {{ selected_classroom.classroom }}
-                    </option>
-                {% endif %}
-            {% endif %}
         </select>
         <button type="submit">Filter</button>
+        <h3>Currently Filtering: <br><span style="color: green;">{{ selected_filter_name }}</span></h3>
     </form>
-</center>
-  <!--<h1>Report Page</h1> -->
+    
+  </center>
 
- 
   <div class="chart-container">
     <div class="chart-box">
       <h2>Academic Strand Distribution</h2>
@@ -53,15 +47,6 @@
       {% endautoescape %}
     </div>
     
-    <!--
-    <div class="chart-box">
-      <h2>Preferred Distance Modality</h2>
-      <p>Generated on: {{ current_datetime }}</p>
-      {% autoescape off %}
-      {{ modality_chart|safe }}
-      {% endautoescape %}
-    </div> -->
-  
     <div class="chart-box">
       <h2>Household Status</h2>
       <p>Generated on: {{ current_datetime }}</p>
@@ -118,8 +103,4 @@
       {% endautoescape %}
     </div>
   </div>
-  
-      
-
-
 {% endblock content %}
