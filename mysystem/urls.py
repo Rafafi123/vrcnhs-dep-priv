@@ -65,6 +65,7 @@ urlpatterns = [
 
     #STUDENT RECORD
     path('student_record/', views.student_record, name='student_record'),
+    path('delete_all_student_history/', views.delete_all_student_history, name='delete_all_student_history'),
 
     #Back button from register a student to view all students
     path('students/', views.students_page, name='students'),

@@ -43,6 +43,7 @@ import datetime
 import plotly.graph_objects as go
 import logging
 from django.forms.models import model_to_dict
+from plotly.io import to_html as pio_to_html
 # Create your views here.
 
 @unauthenticated_user
@@ -63,12 +64,31 @@ def signup(request):
     })
 
 #OG Login, signup pages
+def create_pie_chart(labels, sizes, title, chart_width=None, chart_height=None):
+    fig = go.Figure(data=[go.Pie(labels=labels, values=sizes)])
+    fig.update_layout(title=title, autosize=True, width=chart_width, height=chart_height)
+    return fig
+
+def create_bar_chart(labels, sizes, title, chart_width=None, chart_height=None, colorscale='bright'):
+    colors = px.colors.qualitative.Plotly
+    fig = go.Figure(data=[go.Bar(x=labels, y=sizes, marker_color=colors)])
+    
+    fig.update_xaxes(fixedrange=True)
+    fig.update_yaxes(fixedrange=True)
+    fig.update_layout(title=title, autosize=True, width=chart_width, height=chart_height)
+
+    fig.update_layout(
+        autosize=True,
+        margin=dict(l=0, r=0, b=0, t=30),
+        template="plotly",
+    )
+
+    return fig
+
 @login_required(login_url='login')
 def home(request):
     if request.user.groups.filter(name='ADMIN').exists():
         # Logic for ADMIN users
-        # Keep the existing logic for the home page for ADMIN users
-        
         count = User.objects.count()
         
         # Calculate male and female student counts
@@ -78,43 +98,34 @@ def home(request):
         # Calculate total student count
         total_students = male_count + female_count
 
-        # Create pie chart data for gender distribution
-        gender_labels = ['Male', 'Female']
-        gender_values = [male_count, female_count]
-        gender_colors = ['#1f77b4', '#ff7f0e'] # blue and orange colors for male and female respectively
-        gender_trace = go.Pie(labels=gender_labels, values=gender_values, 
-                            marker=dict(colors=gender_colors))
-        gender_layout = go.Layout(title='Student Gender Distribution')
-        gender_fig = go.Figure(data=[gender_trace], layout=gender_layout)
-        gender_chart_div = pio.to_html(gender_fig, full_html=False)
+        # Create pie chart for gender distribution
+        gender_fig = create_pie_chart(
+            labels=['Male', 'Female'],
+            sizes=[male_count, female_count],
+            title='Student Gender Distribution'
+        )
+        gender_chart_div = pio_to_html(gender_fig, full_html=False, include_plotlyjs='cdn')
 
         students = Student.objects.all()
+
         # Calculate religion distribution
-        religion_counts = dict()
-        for student in students:
-            religion = student.religion
-            religion_counts[religion] = religion_counts.get(religion, 0) + 1
-            
-        # Prepare data for religion bar chart
-        religion_labels = [religion[1] for religion in Student.RELIGION_CHOICES]
-        religion_sizes = [religion_counts.get(religion[0], 0) for religion in Student.RELIGION_CHOICES]
-        religion_title = 'Distribution of Religions'
+        religion_counts = students.values(religion_value=Coalesce('religion', V('None'))).annotate(count=Count('religion_value'))
 
-        religion_fig = create_bar_chart(religion_labels, religion_sizes, religion_title, colorscale='bright')
-        
-        scholarship_labels = []  
-        scholarship_sizes = []  
-        scholarship_title = ''  
-        scholarship_counts = dict()
-        for student in students:
-            scholarship = student.is_a_four_ps_scholar
-            scholarship_counts[scholarship] = scholarship_counts.get(scholarship, 0) + 1
+        religion_fig = create_bar_chart(
+            [item['religion_value'] for item in religion_counts],
+            [item['count'] for item in religion_counts],
+            'Distribution of Religions'
+        )
 
-        scholarship_labels = [scholarship[1] for scholarship in Student.scholarship_program]
-        scholarship_sizes = [scholarship_counts.get(scholarship[0], 0) for scholarship in Student.scholarship_program]
+        # Calculate scholarship distribution
+        scholarship_counts = students.values(scholarship_value=Coalesce('is_a_four_ps_scholar', V('None'))).annotate(count=Count('scholarship_value'))
 
+        scholarship_fig = create_bar_chart(
+            [item['scholarship_value'] for item in scholarship_counts],
+            [item['count'] for item in scholarship_counts],
+            'Distribution of Scholars'
+        )
 
-        scholarship_fig = create_bar_chart(scholarship_labels, scholarship_sizes, scholarship_title, colorscale='bright')
         # Get the current date and time
         current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         
@@ -133,11 +144,7 @@ def home(request):
             'total_classrooms': total_classrooms,
             'scholarship_chart': scholarship_fig.to_html(full_html=False, include_plotlyjs='cdn'),
         }
-        # Debug statement to print total students
-        print("Debug Statement: Total Students -", total_students)
-        print("Debug Statement: Total Teachers -", total_teachers)
-        print("Debug Statement: Total Classrooms -", total_classrooms)
-        
+
         # Render the home.html template with the context data
         return render(request, 'home.html', context)
     
@@ -150,7 +157,6 @@ def home(request):
             # Logic for users only in 'TEACHER' group
             # Redirect to the user_page for TEACHER users
             return redirect('user_page')
-
     
 
 ################################################## for class organization
@@ -775,14 +781,33 @@ def delete_classroom(request, classroom_id):
 
 ########################### STUDENT RECORD
 @login_required(login_url='login')
-@allowed_users(allowed_roles=['ADMIN', 'TEACHER'])
 def student_record(request):
-    # Get the desired fields from the StudentRecord model
-    #student_records = StudentRecord.objects.values('LRN', 'last_name', 'first_name', 'gradelevel__grade_level', 'classroom__section')
-    student_records = Student.history.all()
-    
-    context = {'student_records': student_records}
+    students = Student.history.all()  # Retrieve all historical records
+    history_data = []
+
+    for record in students:
+        changes = record.instance.get_changes()  # Use instance to call get_changes on the actual student instance
+        if changes:
+            history_data.append({
+                'student': record.instance,
+                'changes': changes,
+                'history_date': record.history_date,
+                'history_user': record.history_user,
+                'history_type': record.history_type,
+            })
+
+    context = {'history_data': history_data}
     return render(request, 'student_record.html', context)
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['ADMIN'])
+def delete_all_student_history(request):
+    if request.method == 'POST':
+        Student.history.all().delete()
+        messages.success(request, "All historical records have been deleted.")
+        return redirect('student_record')
+
+    return render(request, 'confirm_delete.html')
 
 #TEMPLATE
 def download_template(request):

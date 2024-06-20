@@ -244,8 +244,30 @@ class Student(models.Model):
 
         # Call the save method of the parent class to save the object
         super().save(*args, **kwargs)
+
+    def get_changes(self):
+        """
+        Get the changes made to this record.
+        """
+        history = self.history.all()
+        changes = []
+        for h in history:
+            delta = h.diff_against(h.prev_record) if h.prev_record else None
+            if delta:
+                for change in delta.changes:
+                    changes.append({
+                        'field': change.field,
+                        'old': change.old,
+                        'new': change.new,
+                        'date': h.history_date,
+                        'user': h.history_user.get_username() if h.history_user else 'Unknown'
+                    })
+        return changes
+
     def __str__(self):
 	    return self.last_name + ' ' + self.first_name
+    
+
 
  # The Meta class inside the student class is used to specify the name of the database table that will be used to store instances of the student model.
 class Meta:  
