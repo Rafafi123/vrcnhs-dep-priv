@@ -263,6 +263,7 @@ class Student(models.Model):
                         'user': h.history_user.get_username() if h.history_user else 'Unknown'
                     })
         return changes
+    
 
     def __str__(self):
 	    return self.last_name + ' ' + self.first_name
