@@ -12,10 +12,8 @@
     <title>VRCNHS</title>
 
     <link href="{% static "images/logo.ico" %}" rel="shortcut icon">
-
     <link href="{% static "images/logo.ico" %}" rel="logo icon">
 </head>
-
 
 <body>
     <!-- Navbar! -->
@@ -24,30 +22,27 @@
             <ul class="navbar-nav mr-auto">
                 <!-- Log in  button -->
                 <form class="form-inline my-2 my-lg-0 nav-item">
-                <h9 style="color: white;">Back</h9>
-                <a href="{% url 'login' %}" class="btn btn-primary ml-3">Log in</a>
+                    <h9 style="color: white;">Back</h9>
+                    <a href="{% url 'login' %}" class="btn btn-primary ml-3">Log in</a>
                 </form>
             </ul>
         </div>
     </nav>
 
-    
     <div>
         <div class="container">
             <div class="card card-login">
                 <br>
                 <h2 style="text-align: center;">Teacher Sign up</h2>
                 <br>
-                    <form method="post">
-                        {% csrf_token %}
-                        {{ user_form.as_p }}
-                        {{ teacher_form.as_p }}
-                        <button type="submit" class="btn btn-primary d-block mx-auto">Save</button>
-                    </form>
-                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ teacher_form.as_p }}
+                    <button type="submit" class="btn btn-primary d-block mx-auto">Save</button>
+                </form>
             </div>
         </div>
-    </div>    
+    </div>
 
     <style>
         /* Base styles */
@@ -56,24 +51,24 @@
             padding: 20px; /* Add padding to the card body */
             margin: 0; /* Center the card horizontally */
         }
-    
+
         /* Responsive styles */
         @media (max-width: 576px) {
             /* Adjust styles for screens smaller than 576px (e.g., mobile devices) */
             .card-login {
                 width: 100%; /* Make the card take the full width */
             }
-    
+
             /* Additional styles for better responsiveness on small screens */
             .card-login form {
                 margin-top: 15px; /* Add some spacing between form and top of the card */
             }
-    
+
             .card-login button {
                 margin-top: 15px; /* Add some spacing above the button */
             }
         }
-    
+
         @media (min-width: 577px) {
             /* Adjust styles for screens larger than 576px (e.g., tablets and larger) */
             .card-login {
@@ -82,4 +77,3 @@
         }
     </style>
 </body>
-

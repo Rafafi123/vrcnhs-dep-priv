@@ -52,10 +52,7 @@ def signup(request):
         teacher_form = TeacherSignupForm(request.POST)
         if teacher_form.is_valid():
             user = teacher_form.save()
-            
             messages.success(request, "User registration was successful!")
-
-            print("User saved:", user)  # Print debug statement
             return redirect('login')
     else:
         teacher_form = TeacherSignupForm()

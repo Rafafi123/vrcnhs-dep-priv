@@ -6,6 +6,7 @@ from datetime import date
 from django.contrib.auth.forms import UserCreationForm
 from django.forms import DateInput, SelectDateWidget
 import datetime
+from captcha.fields import CaptchaField
 
 class StudentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -69,6 +70,7 @@ class TeacherSignupForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True)
     middle_name = forms.CharField(max_length=30, required=False)
     rank = forms.ChoiceField(choices=Teacher.RANK_CHOICES, required=True)
+    captcha = CaptchaField()  # Add captcha field
 
     class Meta(UserCreationForm.Meta):
         model = User
@@ -99,7 +101,6 @@ class TeacherSignupForm(UserCreationForm):
             )
 
         return user
-
 
         
 class TeacherForm(forms.ModelForm):

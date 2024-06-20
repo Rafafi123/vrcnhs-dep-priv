@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'data.apps.DataConfig',
     'simple_history',
     'import_export',
+    'captcha',
     
 ]
 
@@ -169,3 +170,7 @@ LOGOUT_REDIRECT_URL = 'login'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' #Added
+
+
+CAPTCHA_IMAGE_SIZE = (300, 100)  # Width and height in pixels
+CAPTCHA_FONT_SIZE = 48  # Font size for the CAPTCHA text

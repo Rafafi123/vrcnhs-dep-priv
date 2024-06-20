@@ -96,5 +96,8 @@ urlpatterns = [
         name='password_change_done'),
 
     path('export_and_delete_students_for_departure/', views.export_and_delete_students_for_departure, name='export_and_delete_students_for_departure'),
+    
+    #captcha
+    path('captcha/', include('captcha.urls')),
 
 ]
