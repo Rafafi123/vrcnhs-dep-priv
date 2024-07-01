@@ -377,6 +377,17 @@ def view_student_detail(request, lrn):
     context = {'student': student, 'has_authorization': has_authorization}
     return render(request, 'view_student_detail.html', context)
 
+def back_student_detail(request):
+    previous_page = request.session.get('previous_page', None)
+    if previous_page:
+        return redirect(previous_page)
+    else:
+        user = request.user
+        if Group.objects.get(name='TEACHER') in user.groups.all():
+            return redirect('user_page')  
+        else:
+            return redirect('students')
+
 def has_authorization(user, lrn):
     # Check if the user is in the ADMIN group
     if Group.objects.get(name='ADMIN') in user.groups.all():

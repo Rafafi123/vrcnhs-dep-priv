@@ -39,6 +39,7 @@ urlpatterns = [
     
     path('students/', views.students_page, name='students'),
     path('view_student_detail/<int:lrn>/', views.view_student_detail, name='view_student_detail'),
+    path('returning', views.back_student_detail, name='back_student_detail'),
     
     path('teachers/', views.teachers_page, name='teachers'),
     #DELETE TEACHER
