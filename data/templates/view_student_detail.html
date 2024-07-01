@@ -28,8 +28,8 @@
       <div class="container">
           <div class="row jumbotron box8">
             <div class="col-sm-12 mt-3 mb-4 card-header">
-              <div class ='margin'>
-                <a href="{% url 'back_student_detail' %}" class="btn btn-primary">Back</a>
+              <div class='margin'>
+                  <button onclick="goBack()" class="btn btn-primary">Back</button>
               </div>
               <h2 class="text-center">Student Profile</h2>
               <br>
@@ -478,7 +478,12 @@
           </div>
         </form>
       </div>
-
+    
+    <script>
+      function goBack() {
+          window.history.back();
+      }
+    </script>
 
       <!-- Bootstrap JS and Popper.js -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

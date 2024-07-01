@@ -31,7 +31,7 @@ import plotly.io as pio
 from .forms import StudentSearchForm, StudentForm, TeacherSearchForm, TeacherSignupForm, AdminTeacherStudentForm  # this is for the search function
 import pandas as pd # this is for the data analysis
 from django.db.models import Count, Avg
-from django.http import FileResponse, HttpResponseForbidden, JsonResponse
+from django.http import FileResponse, HttpResponseForbidden, HttpResponseRedirect, JsonResponse
 from django.views.decorators.cache import cache_page #
 from chartjs.views.lines import BaseLineChartView 
 from django.http import HttpResponse
@@ -409,14 +409,6 @@ def students_page(request):
     }
 
     return render(request, 'view_students.html', context)
-
-def back_student_detail(request):
-    user = request.user
-    if Group.objects.get(name='TEACHER') in user.groups.all():
-        # Redirect to teacher's user_page.html
-        return redirect('user_page')  
-    else:
-        return redirect('students')
 
 @login_required(login_url='login')
 def update(request, id):

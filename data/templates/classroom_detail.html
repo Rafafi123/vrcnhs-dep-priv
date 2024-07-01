@@ -56,9 +56,9 @@
           <td>{{ student.classroom }}</td>
           <td>{{ student.get_sem_display }}</td>
           <td>
-            <button type="button" class="btn btn-primary view-button" data-bs-toggle="modal" data-bs-target="#studentModal{{ student.lrn }}{{ forloop.counter }}">
+            <a href="{% url 'view_student_detail' lrn=student.LRN %}" class="btn btn-primary view-button">
               View Profile
-            </button>
+            </a>
         </tr>
         {% endfor %}
       </tbody>
@@ -115,34 +115,6 @@
     </div>
   </div>
   {% endfor %}
-  
-  <script>
-    const viewButtons = document.querySelectorAll('.view-button');
-  
-    viewButtons.forEach((button) => {
-      button.addEventListener('click', (e) => {
-        e.preventDefault();
-        const target = button.dataset.bsTarget;
-        const modal = document.querySelector(target);
-        const backdrop = document.querySelector('.modal-backdrop');
-        modal.classList.add('show');
-        modal.style.display = 'block';
-        backdrop.classList.add('show');
-      });
-    });
-  
-    // Close modal when close button is clicked
-    const closeButtons = document.querySelectorAll('.btn-close[data-bs-dismiss="modal"]');
-    closeButtons.forEach((button) => {
-      button.addEventListener('click', () => {
-        const modal = button.closest('.modal');
-        const backdrop = document.querySelector('.modal-backdrop');
-        modal.classList.remove('show');
-        modal.style.display = 'none';
-        backdrop.classList.remove('show');
-      });
-    });
-  </script>
 
 
 {% endblock content %}
