@@ -1270,7 +1270,7 @@ def students_for_promotion(request):
 
     # Filter students for departure based on status
     for_departure = Student.objects.filter(
-        Q(status='For Graduation') | Q(status='For Dropout/Transfer')
+        Q(status='For Graduation') | Q(status='For Dropout') | Q(status='For Transfer')
     )
 
     classrooms = Classroom.objects.all()
@@ -1423,7 +1423,7 @@ def bulk_promote_students(request):
                         student.g12_general_average = student.general_average
                         student.g12_adviser = f"{request.user.first_name} {request.user.last_name}"
                     student.classroom = Classroom.objects.get(classroom='SECTIONING')
-                elif student.status in ['For Graduation', 'For Dropout/Transfer']:
+                elif student.status in ['For Graduation', 'For Dropout', 'For Transfer']:
                     student.classroom = Classroom.objects.get(classroom='FOR DEPARTURE')
                 student.save()
                 
@@ -1464,7 +1464,7 @@ def export_and_delete_students_for_departure(request):
     try:
         # Retrieve students for departure
         students_for_departure = Student.objects.filter(
-            Q(status='For Graduation') | Q(status='For Dropout/Transfer'),
+            Q(status='For Graduation') | Q(status='For Dropout') | Q(status='For Transfer'),
         )
 
         # Load the template workbook
