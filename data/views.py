@@ -500,27 +500,6 @@ def add_teacher(request):
 
 ############################## This is for the report page ###########################################
 
-def create_pie_chart(labels, sizes, title, chart_width=None, chart_height=None):
-    fig = go.Figure(data=[go.Pie(labels=labels, values=sizes)])
-    fig.update_layout(title=title, autosize=True, width=chart_width, height=chart_height)
-    return fig
-
-def create_bar_chart(labels, sizes, title, chart_width=None, chart_height=None, colorscale='bright'):
-    colors = px.colors.qualitative.Plotly
-    fig = go.Figure(data=[go.Bar(x=labels, y=sizes, marker_color=colors)])
-    
-    fig.update_xaxes(fixedrange=True)
-    fig.update_yaxes(fixedrange=True)
-    fig.update_layout(title=title, autosize=True, width=chart_width, height=chart_height)
-
-    fig.update_layout(
-        autosize=True,
-        margin=dict(l=0, r=0, b=0, t=30),
-        template="plotly",
-    )
-
-    return fig
-
 @login_required
 def report_page(request):
     selected_gradelevel = request.GET.get('gradelevel')
@@ -567,6 +546,9 @@ def report_page(request):
     scholarship_counts = students.values(is_a_four_ps_scholar_value=Coalesce('is_a_four_ps_scholar', V('None'))).annotate(count=Count('is_a_four_ps_scholar_value'))
     sex_counts = students.values(sex_value=Coalesce('sex', V('None'))).annotate(count=Count('sex_value'))
     returnee_counts = students.values(is_returnee_value=Coalesce('is_returnee', V('None'))).annotate(count=Count('is_returnee_value'))
+
+    # Add the student status counts
+    status_counts = students.values(status_value=Coalesce('status', V('None'))).annotate(count=Count('status_value'))
 
     # Create charts
     strand_fig = create_bar_chart(
@@ -617,6 +599,13 @@ def report_page(request):
         'Distribution of Returnee Students'
     )
 
+    # Create the student status chart
+    status_fig = create_bar_chart(
+        [item['status_value'] for item in status_counts],
+        [item['count'] for item in status_counts],
+        'Distribution of Student Status'
+    )
+
     current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     if selected_gradelevel == 'myclassroom':
@@ -644,7 +633,9 @@ def report_page(request):
         'selected_filter_name': selected_filter_name,
         'user_is_teacher': user_is_teacher,
         'selected_gradelevel': selected_gradelevel,  # Pass the selected grade level to the template
+        'status_chart': status_fig.to_html(full_html=False, include_plotlyjs='cdn')  # Add the status chart to the context
     })
+
 
 ############################### this is for adding classrooms and assigning a teacher to those classrooms
 def add_classroom(request):

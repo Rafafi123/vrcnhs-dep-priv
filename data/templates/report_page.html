@@ -94,6 +94,14 @@
       <div id="sex_chart">{{ sex_chart|safe }}</div>
       {% endautoescape %}
     </div>
+
+    <div class="chart-box">
+      <h2>Student Status Distribution</h2>
+      <p>Generated on: {{ current_datetime }}</p>
+      {% autoescape off %}
+      <div id="status_chart">{{ status_chart|safe }}</div>
+      {% endautoescape %}
+    </div>
   
     <div class="chart-box">
       <h2>Returnees</h2>
